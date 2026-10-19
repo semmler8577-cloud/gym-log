@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.0.0';
+const APP_VERSION = '1.1.0';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -68,6 +68,43 @@ const METRICS = [
   { k: 'waist', l: 'Taille', u: 'cm', d: 1, goodDown: true },
   { k: 'thigh', l: 'Oberschenkel', u: 'cm', d: 1 }
 ];
+/* Erweiterter Übungskatalog (v1.1). Flags: p = pro Seite, s = Sekunden, e = ellenbogenfreundlich (Tennisarm), w = Vorsicht bei Tennisarm */
+const CATALOG = [
+  ['r-klimm', 'Rücken', '', 'Klimmzüge Obergriff', ''], ['r-klimm-neutral', 'Rücken', '', 'Klimmzüge neutraler Griff', 'e'], ['r-chinup', 'Rücken', '', 'Klimmzüge Untergriff (Chin-ups)', ''],
+  ['r-klimm-assist', 'Rücken', '', 'Klimmzüge Maschine (assistiert)', 'e'],
+  ['r-lat-breit', 'Rücken', '', 'Latzug breit', ''], ['r-lat-eng', 'Rücken', '', 'Latzug eng (V-Griff)', 'e'], ['r-lat-unter', 'Rücken', '', 'Latzug Untergriff', ''],
+  ['r-lat-einarm', 'Rücken', '', 'Latzug einarmig Kabel', 'e'], ['r-lat-maschine', 'Rücken', '', 'Latzug Maschine (Hammer Strength)', 'e'],
+  ['r-row-lh', 'Rücken', '', 'Rudern Langhantel vorgebeugt', ''], ['r-row-kh', 'Rücken', '', 'Rudern Kurzhantel einarmig', 'e'], ['r-row-tbar', 'Rücken', '', 'T-Bar Rudern', 'e'],
+  ['r-row-kabel', 'Rücken', '', 'Rudern Kabel sitzend (V-Griff)', 'e'], ['r-row-breit', 'Rücken', '', 'Rudern Maschine breiter Griff', ''], ['r-row-brust', 'Rücken', '', 'Rudern mit Brustauflage (Kurzhantel)', 'pe'],
+  ['r-pullover', 'Rücken', '', 'Pullover am Kabel (Seil)', 'e'], ['r-facepull', 'Rücken', '', 'Face Pulls (Seil)', 'e'], ['r-revfly', 'Rücken', '', 'Reverse Butterfly (hintere Schulter)', 'e'],
+  ['r-hyper', 'Rücken', '', 'Hyperextensions', ''], ['r-deadlift', 'Rücken', '', 'Kreuzheben', ''], ['r-rackpull', 'Rücken', '', 'Rack Pulls', ''],
+  ['r-shrug-kh', 'Rücken', '', 'Shrugs Kurzhantel', 'pe'], ['r-shrug-lh', 'Rücken', '', 'Shrugs Langhantel', ''],
+  ['b-bank-flach', 'Brust', '', 'Bankdrücken Langhantel flach', ''], ['b-bank-schraeg', 'Brust', '', 'Bankdrücken Langhantel schräg', ''], ['b-bank-negativ', 'Brust', '', 'Bankdrücken Langhantel negativ', ''],
+  ['b-kh-neutral', 'Brust', '', 'Kurzhantel-Drücken neutraler Griff', 'pe'], ['b-multi-schraeg', 'Brust', '', 'Multipresse Schrägbank', ''],
+  ['b-presse', 'Brust', '', 'Brustpresse Maschine', 'e'], ['b-presse-schraeg', 'Brust', '', 'Schrägbankpresse Maschine', 'e'],
+  ['b-butterfly', 'Brust', '', 'Butterfly Maschine', 'e'], ['b-pecdeck', 'Brust', '', 'Pec Deck (Ellenbogenpolster)', 'e'],
+  ['b-cross-hoch', 'Brust', '', 'Kabelzug Crossover von oben', 'e'], ['b-cross-tief', 'Brust', '', 'Kabelzug Crossover von unten', 'e'], ['b-cross-mitte', 'Brust', '', 'Kabelzug Fliegende mittig', 'e'],
+  ['b-fly-schraeg', 'Brust', '', 'Fliegende Kurzhantel schräg', 'p'], ['b-dips', 'Brust', '', 'Dips (Brustfokus)', ''], ['b-push-griffe', 'Brust', '', 'Liegestütze an Griffen (neutral)', 'e'],
+  ['a-sz', 'Arme', 'Bizeps', 'SZ-Curls', ''], ['a-lh', 'Arme', 'Bizeps', 'Langhantelcurls', ''], ['a-konz', 'Arme', 'Bizeps', 'Konzentrationscurls', ''],
+  ['a-scott', 'Arme', 'Bizeps', 'Scottcurls (SZ)', ''], ['a-scott-masch', 'Arme', 'Bizeps', 'Bizepscurl Maschine', ''], ['a-spider', 'Arme', 'Bizeps', 'Spider Curls', 'p'],
+  ['a-bayes', 'Arme', 'Bizeps', 'Bayesian Kabelcurls', ''], ['a-schraeg', 'Arme', 'Bizeps', 'Schrägbank-Curls Kurzhantel', 'p'], ['a-drag', 'Arme', 'Bizeps', 'Drag Curls', ''],
+  ['a-hammer-seil', 'Arme', 'Bizeps', 'Hammercurls am Seil', 'e'], ['a-hammer-cross', 'Arme', 'Bizeps', 'Cross-Body Hammercurls', 'pe'],
+  ['t-french', 'Arme', 'Trizeps', 'French Press (SZ)', ''], ['t-stange', 'Arme', 'Trizeps', 'Trizepsdrücken Kabel Stange', ''], ['t-vgriff', 'Arme', 'Trizeps', 'Trizepsdrücken Kabel V-Griff', 'e'],
+  ['t-ueberkopf', 'Arme', 'Trizeps', 'Überkopf-Trizeps Kabel (Seil)', 'e'], ['t-ueberkopf-kh', 'Arme', 'Trizeps', 'Überkopf-Trizeps Kurzhantel', ''],
+  ['t-dips-geraet', 'Arme', 'Trizeps', 'Dips am Gerät', 'e'], ['t-dips-bank', 'Arme', 'Trizeps', 'Bankdips', ''], ['t-kickback', 'Arme', 'Trizeps', 'Kickbacks Kurzhantel', 'p'],
+  ['t-kickback-kabel', 'Arme', 'Trizeps', 'Kickbacks Kabel', 'e'], ['t-eng-bank', 'Arme', 'Trizeps', 'Enges Bankdrücken', ''], ['t-maschine', 'Arme', 'Trizeps', 'Trizeps Maschine', 'e'],
+  ['t-einarm', 'Arme', 'Trizeps', 'Trizepsdrücken einarmig Untergriff', ''],
+  ['u-reverse', 'Arme', 'Unterarme', 'Reverse Curls (SZ)', 'w'], ['u-wrist', 'Arme', 'Unterarme', 'Handgelenkcurls', ''], ['u-wrist-rev', 'Arme', 'Unterarme', 'Reverse Handgelenkcurls', 'w'],
+  ['u-pronation', 'Arme', 'Unterarme', 'Pronation/Supination Kurzhantel', 'e'], ['u-finger', 'Arme', 'Unterarme', 'Fingercurls Langhantel', ''],
+  ['u-farmer', 'Arme', 'Unterarme', "Farmer's Walk", 'ps'], ['u-hang', 'Arme', 'Unterarme', 'Dead Hang', 's']
+];
+/* Nachträgliche Infos für bestehende Standard-Übungen */
+const DEFAULT_PATCH = { x7: { elbow: 'e' }, x8: { elbow: 'e' }, x12: { sub: 'Bizeps', elbow: 'e' }, x13: { sub: 'Bizeps' }, x14: { sub: 'Bizeps' }, x15: { sub: 'Bizeps' }, x16: { sub: 'Trizeps', elbow: 'e' } };
+const CATALOG_VERSION = 1;
+const PICK_FILTERS = ['Brust', 'Rücken', 'Bizeps', 'Trizeps', 'Unterarme', 'Schultern', 'Bauch', 'Beine', 'Reha'];
+const SUB_ORDER = { Bizeps: 0, Trizeps: 1, Unterarme: 2 };
+const elbowBadge = ex => ex.elbow === 'e' ? '<span class="badge badge-elbow" title="Neutraler Griff – ellenbogenfreundlich">🟢 Tennisarm-ok</span>' : ex.elbow === 'w' ? '<span class="badge badge-warn" title="Belastet die Unterarmstrecker">⚠ Tennisarm</span>' : '';
+const filterOf = ex => ex.group === 'Arme' ? (ex.sub || 'Bizeps') : ex.group;
 const FEEL = ['', 'Schlecht', 'Mäßig', 'Okay', 'Gut', 'Top'];
 
 /* ---------- IndexedDB ---------- */
@@ -114,6 +151,16 @@ async function loadAll() {
     for (const [g, n, ps, unit] of DEFAULT_EX) await save('exercises', { id: 'x' + (i + 1), name: n, group: g, unit: unit || 'reps', perSide: !!ps, order: i++, photo: null });
     await setMeta('seeded', true);
     await setMeta('weekGoal', 6);
+  }
+  if ((S.meta.catalogVersion || 0) < CATALOG_VERSION) {
+    // Merge per ID: bestehende Übungen/Daten bleiben unangetastet, neue Katalog-Übungen kommen ausgeblendet dazu
+    for (const [id, p] of Object.entries(DEFAULT_PATCH)) { const ex = exById(id); if (ex) { let ch = false; for (const [k, v] of Object.entries(p)) if (ex[k] === undefined) { ex[k] = v; ch = true; } if (ch) await save('exercises', ex); } }
+    let i = 0;
+    for (const [id, g, sub, name, f] of CATALOG) {
+      if (!exById(id)) await save('exercises', { id, name, group: g, sub: sub || undefined, unit: f.includes('s') ? 'sec' : 'reps', perSide: f.includes('p'), elbow: f.includes('e') ? 'e' : f.includes('w') ? 'w' : undefined, order: 100 + i, photo: null, hidden: true, catalog: true });
+      i++;
+    }
+    await setMeta('catalogVersion', CATALOG_VERSION);
   }
 }
 
@@ -307,17 +354,17 @@ function exRow(ex, act) {
   const ls = lastSessionSets(ex.id, act ? act.start : Date.now() + 1);
   const sub = ls ? 'Zuletzt: ' + ls.sets.filter(x => !x.warmup).slice(0, 3).map(x => setLabel(x, ex)).join(', ') : 'Noch nicht trainiert';
   return `<a class="ex ${n ? 'done' : ''}" href="#/ex/${ex.id}"><div class="th" ${ex.photo ? `style="background-image:url('${ex.photo}')"` : ''}>${ex.photo ? '' : GROUP_ICON[ex.group] || '•'}</div>
-    <div class="nm"><b>${esc(ex.name)}</b><span>${esc(sub)}</span></div><div class="cnt ${n ? 'has' : ''}">${n}</div></a>`;
+    <div class="nm"><b>${esc(ex.name)}</b>${ex.elbow === 'e' ? '<i class="elbow-dot" title="ellenbogenfreundlich"></i>' : ''}<span>${ex.sub ? esc(ex.sub) + ' · ' : ''}${esc(sub)}</span></div><div class="cnt ${n ? 'has' : ''}">${n}</div></a>`;
 }
 function viewTrain() {
   const act = activeSession();
   const type = act ? act.type : (trainType || todayType() || 'upper');
   const day = DAYS[type];
   const list = [...day.groups, 'Reha'].map(g => {
-    const exs = S.exercises.filter(e => e.group === g && !e.hidden).sort((a, b) => a.order - b.order);
+    const exs = S.exercises.filter(e => e.group === g && !e.hidden).sort((a, b) => (SUB_ORDER[a.sub] ?? 0) - (SUB_ORDER[b.sub] ?? 0) || a.order - b.order);
     if (!exs.length) return '';
     return `<div class="sec-h"><span>${g}${g === 'Reha' ? ' · Tennisarm' : ''}</span><span class="line"></span></div>${exs.map(e => exRow(e, act)).join('')}`;
-  }).join('');
+  }).join('') + `<button class="btn btn-outline-gold btn-sm" data-act="picker" style="margin-top:14px">＋ Weitere Übungen auswählen (${S.exercises.filter(e => e.hidden).length} im Katalog)</button>`;
   let head;
   if (act) {
     const st = sessionStats(act);
@@ -328,6 +375,7 @@ function viewTrain() {
     head = `<div class="seg"><button class="${type === 'upper' ? 'on' : ''}" data-act="ttype" data-type="upper">Oberkörper</button><button class="${type === 'lower' ? 'on' : ''}" data-act="ttype" data-type="lower">Bauch + Beine</button></div>
       <button class="btn btn-red" data-act="start" data-type="${type}">Training starten</button><div class="hint" style="text-align:center">Oder direkt eine Übung antippen – das Training startet automatisch.</div>`;
   }
+  head += `<button class="btn btn-ghost btn-sm" data-act="picker" style="margin-top:10px">🔍 Übungen suchen & auswählen</button>`;
   return { html: topbar(day.name, act ? 'Training aktiv' : (todayType() === type ? 'Heute laut Plan' : 'Trainingstag'), null, `<button class="icon-btn" data-act="go" data-to="#/exercises" aria-label="Übungen verwalten">✎</button>`) + head + list };
 }
 
@@ -444,7 +492,7 @@ function exSeries(ex) {
   return arr;
 }
 function viewProgress(id) {
-  const visible = S.exercises.filter(e => !e.hidden).sort((a, b) => GROUPS.indexOf(a.group) - GROUPS.indexOf(b.group) || a.order - b.order);
+  const visible = S.exercises.filter(e => !e.hidden || S.sets.some(x => x.exerciseId === e.id)).sort((a, b) => GROUPS.indexOf(a.group) - GROUPS.indexOf(b.group) || a.order - b.order);
   const ex = exById(id) || exById(S.meta.lastProgEx) || visible.find(e => S.sets.some(s => s.exerciseId === e.id)) || visible[0];
   if (!ex) return { html: topbar('Fortschritt') + '<div class="empty">Keine Übungen</div>' };
   if (ex.id !== S.meta.lastProgEx) setMeta('lastProgEx', ex.id);
@@ -615,7 +663,7 @@ function viewExercises() {
     const exs = S.exercises.filter(e => e.group === g && !e.hidden).sort((a, b) => a.order - b.order);
     return `<div class="sec-h"><span>${g}</span><span class="line"></span></div>` + exs.map(e => `<button class="ex" style="width:100%;text-align:left" data-act="editEx" data-id="${e.id}"><div class="th" ${e.photo ? `style="background-image:url('${e.photo}')"` : ''}>${e.photo ? '' : GROUP_ICON[g]}</div><div class="nm"><b>${esc(e.name)}</b><span>${isSec(e) ? 'Sekunden' : 'Wiederholungen'}${e.perSide ? ' · pro Seite' : ''}</span></div><span class="chev">›</span></button>`).join('');
   }).join('');
-  return { html: topbar('Übungen', 'Verwalten', '#/train') + `<button class="btn btn-red btn-sm" data-act="editEx" data-id="">+ Eigene Übung hinzufügen</button>` + html };
+  return { html: topbar('Übungen', 'Verwalten', '#/train') + `<div class="row"><button class="btn btn-red btn-sm" data-act="picker">🔍 Aus Katalog wählen</button><button class="btn btn-ghost btn-sm" data-act="editEx" data-id="">+ Eigene Übung</button></div>` + html };
 }
 let exDraftPhoto;
 function exSheet(id) {
@@ -625,12 +673,44 @@ function exSheet(id) {
     <label class="lbl">Name</label><input class="field" id="ex-name" value="${esc(e.name)}" placeholder="z. B. Butterfly Maschine">
     <label class="lbl">Muskelgruppe</label><select class="field" id="ex-group">${GROUPS.map(g => `<option ${g === e.group ? 'selected' : ''}>${g}</option>`).join('')}</select>
     <label class="lbl">Erfassung</label><div class="seg sm" id="ex-unit"><button class="${e.unit !== 'sec' ? 'on' : ''}" data-act="exUnit" data-u="reps">Wiederholungen</button><button class="${e.unit === 'sec' ? 'on' : ''}" data-act="exUnit" data-u="sec">Sekunden</button></div>
-    <div class="toggles" style="margin-top:0"><button class="tgl ${e.perSide ? 'on' : ''}" id="ex-ps" data-act="exPs">Gewicht pro Seite (Standard)</button></div>
+    <label class="lbl">Bereich (nur Arme)</label><select class="field" id="ex-sub">${['', 'Bizeps', 'Trizeps', 'Unterarme'].map(x => `<option value="${x}" ${x === (e.sub || '') ? 'selected' : ''}>${x || '–'}</option>`).join('')}</select>
+    <div class="toggles"><button class="tgl ${e.perSide ? 'on' : ''}" id="ex-ps" data-act="exPs">Gewicht pro Seite (Standard)</button><button class="tgl ${e.elbow === 'e' ? 'on' : ''}" id="ex-elbow" data-act="exPs">🟢 Tennisarm-freundlich</button></div>
     <label class="lbl">Foto</label><div id="ex-photo" class="photo-hero" style="${e.photo ? `background-image:url('${e.photo}')` : 'display:none'}"></div>
     <div class="row"><button class="btn btn-ghost btn-sm" data-act="exPhoto" data-cam="1">📷 Aufnehmen</button><button class="btn btn-ghost btn-sm" data-act="exPhoto" data-cam="">🖼 Mediathek</button></div>
     <div style="height:16px"></div><button class="btn btn-red" data-act="saveEx" data-id="${e.id}">Speichern</button>
     ${id ? `<div style="height:8px"></div><button class="btn btn-danger btn-sm" data-act="hideEx" data-id="${e.id}">Übung entfernen</button><div class="hint">Bisherige Sätze bleiben im Verlauf erhalten.</div>` : ''}`);
 }
+
+/* --- Übungs-Katalog / Picker --- */
+let pick = { f: null, q: '', elbow: false };
+function pickerList() {
+  const q = pick.q.trim().toLowerCase();
+  let exs = S.exercises.filter(e => (q ? true : filterOf(e) === pick.f) && (!pick.elbow || e.elbow === 'e') && (!q || e.name.toLowerCase().includes(q) || filterOf(e).toLowerCase().includes(q)));
+  exs.sort((a, b) => PICK_FILTERS.indexOf(filterOf(a)) - PICK_FILTERS.indexOf(filterOf(b)) || (!!a.hidden - !!b.hidden) || a.name.localeCompare(b.name, 'de'));
+  if (!exs.length) return '<div class="empty">Nichts gefunden. Eigene Übung über „Übungen verwalten“ anlegen.</div>';
+  let out = '', last = '';
+  exs.forEach(e => {
+    const f = filterOf(e); if (q && f !== last) { out += `<div class="sec-h" style="margin:14px 2px 8px"><span>${f}</span><span class="line"></span></div>`; last = f; }
+    out += `<div class="pick-row ${e.hidden ? '' : 'in'}"><div class="nm"><b>${esc(e.name)}</b><div>${elbowBadge(e)}${e.perSide ? '<span class="badge badge-warm">pro Seite</span>' : ''}${isSec(e) ? '<span class="badge badge-warm">Sekunden</span>' : ''}</div></div>
+      <button class="pick-btn" data-act="pickToggle" data-id="${e.id}" aria-label="${e.hidden ? 'Hinzufügen' : 'Entfernen'}">${e.hidden ? '＋' : '✓'}</button></div>`;
+  });
+  return out;
+}
+function pickerChips() {
+  return PICK_FILTERS.map(f => { const n = S.exercises.filter(e => filterOf(e) === f && !e.hidden).length; return `<button class="pchip ${pick.f === f && !pick.q ? 'on' : ''}" data-act="pickF" data-f="${f}">${f}<small>${n}</small></button>`; }).join('');
+}
+function openPicker() {
+  const act = activeSession(); const t = act ? act.type : (trainType || todayType() || 'upper');
+  if (!pick.f) pick.f = t === 'lower' ? 'Bauch' : 'Brust';
+  pick.q = '';
+  openSheet(`<h3>Übungen auswählen</h3><div class="muted small" style="margin-bottom:10px">＋ nimmt die Übung in deinen Plan, ✓ entfernt sie wieder. Deine Daten bleiben erhalten.</div>
+    <div class="pick-head"><input class="field" id="picker-q" type="search" placeholder="🔍 Suchen, z. B. Latzug, Curls, Kabel…" autocomplete="off">
+    <div class="pchips" id="picker-chips">${pickerChips()}</div>
+    <button class="tgl ${pick.elbow ? 'on' : ''}" data-act="pickElbow" style="margin-bottom:6px">🟢 Nur Tennisarm-freundlich</button></div>
+    <div id="picker-list">${pickerList()}</div>
+    <div style="height:12px"></div><button class="btn btn-red" data-act="pickDone">Fertig</button>`);
+}
+function refreshPicker() { const l = $('#picker-list'); if (l) l.innerHTML = pickerList(); const c = $('#picker-chips'); if (c) c.innerHTML = pickerChips(); }
 
 /* ---------- Router ---------- */
 function render(keepScroll) {
@@ -739,9 +819,14 @@ const A = {
   saveEx: async d => {
     const name = $('#ex-name').value.trim(); if (!name) return toast('Bitte einen Namen eingeben');
     const ex = exById(d.id) || { id: 'c' + uid(), order: Math.max(0, ...S.exercises.map(e => e.order || 0)) + 1, custom: true };
-    Object.assign(ex, { name, group: $('#ex-group').value, unit: $('#ex-unit .on').dataset.u, perSide: $('#ex-ps').classList.contains('on'), photo: exDraftPhoto || null });
+    Object.assign(ex, { name, group: $('#ex-group').value, unit: $('#ex-unit .on').dataset.u, perSide: $('#ex-ps').classList.contains('on'), photo: exDraftPhoto || null, sub: $('#ex-group').value === 'Arme' ? ($('#ex-sub').value || 'Bizeps') : undefined, elbow: $('#ex-elbow').classList.contains('on') ? 'e' : (ex.elbow === 'w' ? 'w' : undefined) });
     await save('exercises', ex); closeSheet(); toast('Übung gespeichert ✓'); render(true);
   },
+  picker: () => openPicker(),
+  pickF: d => { pick.f = d.f; pick.q = ''; const i = $('#picker-q'); if (i) i.value = ''; refreshPicker(); },
+  pickElbow: (d, el) => { pick.elbow = !pick.elbow; el.classList.toggle('on', pick.elbow); refreshPicker(); },
+  pickToggle: async d => { const ex = exById(d.id); ex.hidden = !ex.hidden; await save('exercises', ex); toast(ex.hidden ? 'Aus dem Plan entfernt' : '„' + ex.name + '“ hinzugefügt ✓', 1400); refreshPicker(); },
+  pickDone: () => { closeSheet(); render(true); },
   hideEx: async d => { if (!confirm('Übung aus der Liste entfernen?')) return; const ex = exById(d.id); ex.hidden = true; await save('exercises', ex); closeSheet(); render(true); }
 };
 document.addEventListener('click', e => {
@@ -749,7 +834,7 @@ document.addEventListener('click', e => {
   const fn = A[el.dataset.act]; if (!fn) return; e.preventDefault(); fn(el.dataset, el);
 });
 document.addEventListener('change', e => { if (e.target.dataset.change === 'progEx') go('#/progress/' + e.target.value); });
-document.addEventListener('input', e => { const el = e.target; if (ED && el.dataset && el.dataset.f && el.closest('#editor')) setEdField(el.dataset.f, el.value, el.dataset.f !== 'note'); });
+document.addEventListener('input', e => { const el = e.target; if (el.id === 'picker-q') { pick.q = el.value; refreshPicker(); return; } if (ED && el.dataset && el.dataset.f && el.closest('#editor')) setEdField(el.dataset.f, el.value, el.dataset.f !== 'note'); });
 document.addEventListener('focusin', e => { if (e.target.matches('.stp input')) setTimeout(() => { try { e.target.select(); } catch (_) { } }, 30); });
 // Stepper: Tippen = 1 Schritt, Gedrückthalten = schnell
 let holdT, holdI;
