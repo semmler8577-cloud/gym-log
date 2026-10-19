@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.1.0';
+const APP_VERSION = '1.1.1';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -105,6 +105,8 @@ const PICK_FILTERS = ['Brust', 'Rücken', 'Bizeps', 'Trizeps', 'Unterarme', 'Sch
 const SUB_ORDER = { Bizeps: 0, Trizeps: 1, Unterarme: 2 };
 const elbowBadge = ex => ex.elbow === 'e' ? '<span class="badge badge-elbow" title="Neutraler Griff – ellenbogenfreundlich">🟢 Tennisarm-ok</span>' : ex.elbow === 'w' ? '<span class="badge badge-warn" title="Belastet die Unterarmstrecker">⚠ Tennisarm</span>' : '';
 const filterOf = ex => ex.group === 'Arme' ? (ex.sub || 'Bizeps') : ex.group;
+const painCol = v => v == null || isNaN(v) ? '#a1a1a6' : v <= 3 ? '#30d158' : v <= 6 ? '#ffd60a' : '#ff3b30';
+const painTxt = v => v == null || isNaN(v) ? 'nicht erfasst' : v === 0 ? 'kein Schmerz' : v <= 3 ? 'leicht' : v <= 6 ? 'mittel' : 'stark';
 const FEEL = ['', 'Schlecht', 'Mäßig', 'Okay', 'Gut', 'Top'];
 
 /* ---------- IndexedDB ---------- */
@@ -550,11 +552,11 @@ const cLab = (w, r, ps, ex) => (w ? fmt(w, 2) + (ps ? 'kg p.S.' : 'kg') + '×' :
 function carterText(s) {
   const st = sessionStats(s); const d = new Date(s.start);
   let t = `🏋️ Training ${WDL[d.getDay()]}, ${dateDE(dkey(s.start))} – ${DAYS[s.type].name}\n`;
-  t += `Dauer ${dur(st.dur)} · ${st.sets} Arbeitssätze · Volumen ${fmt(st.vol, 0)} kg${s.kcal ? ' · ' + fmt(s.kcal, 0) + ' kcal aktiv' : ''}\n`;
+  t += `Dauer ${dur(st.dur)} · ${pl(st.sets, "Arbeitssatz", "Arbeitssätze")} · Volumen ${fmt(st.vol, 0)} kg${s.kcal ? ' · ' + fmt(s.kcal, 0) + ' kcal aktiv' : ''}\n`;
   const extra = [];
   if (s.bodyweight) extra.push(`Körpergewicht ${fmt(s.bodyweight, 1)} kg`);
   if (s.feeling) extra.push(`Gefühl ${s.feeling}/5`);
-  if (s.elbow != null) extra.push(`Ellenbogen ${s.elbow}/10`);
+  if (s.elbow != null) extra.push(`Ellenbogen-Schmerz ${s.elbow}/10`);
   if (extra.length) t += extra.join(' · ') + '\n';
   t += '\n';
   st.exIds.forEach(eid => {
@@ -581,8 +583,12 @@ function viewSession(id, fresh) {
       <div class="card">
         <div class="row"><div><label class="lbl" style="margin-top:0">Körpergewicht (kg)</label><input class="field" inputmode="decimal" data-sf="bodyweight" value="${fmtIn(s.bodyweight)}" placeholder="z. B. 78,4"></div>
         <div><label class="lbl" style="margin-top:0">Aktivkalorien</label><input class="field" inputmode="numeric" data-sf="kcal" value="${fmtIn(s.kcal)}" placeholder="kcal (Fitness)"></div></div>
-        <label class="lbl">Gefühl <span id="feel-l">${s.feeling ? '· ' + FEEL[s.feeling] : ''}</span></label><div class="chips">${[1, 2, 3, 4, 5].map(i => `<button class="${s.feeling === i ? 'on' : ''}" data-act="feel" data-v="${i}" data-id="${s.id}">${i}</button>`).join('')}</div>
-        <label class="lbl">Ellenbogen-Schmerz: <b id="elbow-v" style="color:#fff">${s.elbow ?? '–'}</b> / 10</label><input type="range" min="0" max="10" step="1" value="${s.elbow ?? 0}" data-sf="elbow">
+        <label class="lbl">Gefühl <span class="scale-hint">(1 = schlecht · 5 = top)</span> <span id="feel-l">${s.feeling ? '· ' + FEEL[s.feeling] : ''}</span></label><div class="chips">${[1, 2, 3, 4, 5].map(i => `<button class="${s.feeling === i ? 'on' : ''}" data-act="feel" data-v="${i}" data-id="${s.id}">${i}</button>`).join('')}</div>
+        <div class="scale-ends"><span>1 · schlecht</span><span>5 · top</span></div>
+        <label class="lbl">Ellenbogen-Schmerz <span class="scale-hint">(0 = kein Schmerz · 10 = stark)</span></label>
+        <div class="pain-val" id="elbow-box" style="color:${painCol(s.elbow)}"><b id="elbow-v">${s.elbow ?? '–'}</b><span>/ 10</span><em id="elbow-t">${painTxt(s.elbow)}</em></div>
+        <input type="range" min="0" max="10" step="1" value="${s.elbow ?? 0}" data-sf="elbow">
+        <div class="scale-ends"><span style="color:#30d158">0 · kein Schmerz</span><span style="color:#ffd60a">5</span><span style="color:#ff3b30">10 · stark</span></div>
         <label class="lbl">Notiz</label><textarea class="field" data-sf="note" placeholder="Schlaf, Energie, Besonderheiten…">${esc(s.note || '')}</textarea>
       </div>
       <button class="btn btn-gold" data-act="carter" data-id="${s.id}">📋 Für Carter exportieren</button>
@@ -592,7 +598,7 @@ function viewSession(id, fresh) {
       <button class="btn btn-danger btn-sm" data-act="delSession" data-id="${s.id}">Einheit löschen</button>`,
     mount() {
       $$('[data-sf]').forEach(el => {
-        const h = () => { const f = el.dataset.sf; let v = f === 'note' ? el.value : num(el.value); if (f === 'elbow') { v = parseInt(el.value, 10); $('#elbow-v').textContent = v; } s[f] = v; save('sessions', s); };
+        const h = () => { const f = el.dataset.sf; let v = f === 'note' ? el.value : num(el.value); if (f === 'elbow') { v = parseInt(el.value, 10); $('#elbow-v').textContent = v; $('#elbow-t').textContent = painTxt(v); $('#elbow-box').style.color = painCol(v); } s[f] = v; save('sessions', s); };
         el.addEventListener(el.type === 'range' ? 'input' : 'change', h);
       });
     }

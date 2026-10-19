@@ -308,3 +308,9 @@ a.card{display:flex}
 .ex .nm b{display:inline}
 .ex .nm span{display:block}
 .pick-head{position:sticky;top:-10px;z-index:3;background:#0e0e10;margin:0 -16px;padding:8px 16px 4px;border-bottom:1px solid #1c1c1f}
+.scale-hint{font-weight:600;color:var(--tx3);letter-spacing:0}
+.scale-ends{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--tx2);margin:8px 2px 0}
+.pain-val{display:flex;align-items:baseline;gap:6px;margin:0 4px 10px;transition:color .2s}
+.pain-val b{font-size:34px;font-weight:900;letter-spacing:-1px}
+.pain-val span{font-size:15px;font-weight:700;color:var(--tx2)}
+.pain-val em{font-style:normal;font-size:15px;font-weight:800;margin-left:6px}
