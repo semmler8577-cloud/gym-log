@@ -333,19 +333,28 @@ a.card{display:flex}
 .drop .dex{grid-column:1/-1;font-size:14px;font-weight:700;color:var(--goldL);display:flex;flex-wrap:wrap;align-items:center;gap:6px}
 .photo-hero .photo-edit{position:absolute;right:10px;bottom:10px;z-index:1;padding:6px 12px;border-radius:999px;background:rgba(0,0,0,.65);border:1px solid rgba(212,175,55,.6);font-size:13px;font-weight:700;color:var(--goldL)}
 
-/* v1.4 Halte-Timer */
-.hold{margin:12px 0;padding:14px;border-radius:16px;background:rgba(0,0,0,.35);border:1px solid #2a2a2e;text-align:center;transition:border-color .3s,box-shadow .3s}
-.hold-tgt{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px}
-.hold-tgt b{min-width:56px;font-size:18px}
-.icon-btn.sm{width:44px;height:36px;font-size:14px;font-weight:800}
-.hold-clock{font-size:56px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-1px;line-height:1.1}
+/* v1.4.1 Halte-Timer */
+.hold{margin:4px 0 14px;padding:14px;border-radius:18px;background:rgba(0,0,0,.4);border:1px solid #2a2a2e;text-align:center;transition:border-color .3s,box-shadow .3s}
+.hold-btn{display:block;width:100%;min-height:84px;border-radius:20px;font-size:30px;font-weight:900;letter-spacing:.5px;color:#fff;background:linear-gradient(180deg,#ff1f1f,#E60000 45%,#b30000);box-shadow:0 12px 34px -10px rgba(230,0,0,.9),inset 0 1px 0 rgba(255,255,255,.25)}
+.hold-btn.stop{background:var(--goldG);color:#1a1405;box-shadow:0 12px 34px -10px rgba(212,175,55,.8)}
+.hold-btn:active{transform:scale(.98)}
+.hold-clock{font-size:84px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-2px;line-height:1;margin:16px 0 4px;color:#5a5a60}
 .hold.run .hold-clock{color:#fff}
-.hold-sub{font-size:14px;color:var(--tx2);margin:2px 0 10px}
+.hold.hit .hold-clock{color:var(--goldL)}
+.hold-sub{font-size:14px;color:var(--tx2);margin-bottom:10px;min-height:18px}
 .hold-bar{height:6px;border-radius:3px;background:#1d1d20;overflow:hidden;margin-bottom:12px}
 .hold-bar i{display:block;height:100%;background:linear-gradient(90deg,#E60000,#ff4d4d);transform:scaleX(0);transform-origin:left;transition:transform .2s linear}
 .hold.hit{border-color:var(--gold);box-shadow:0 0 30px rgba(212,175,55,.45);animation:holdFlash .5s 3}
 .hold.hit .hold-bar i{background:var(--goldG)}
 .hold.hit .hold-sub{color:var(--goldL);font-weight:700}
-.hold-btn{min-height:64px;font-size:20px}
+.hold-tgt{display:flex;align-items:center;justify-content:center;gap:10px;font-size:13px;color:var(--tx3)}
+.hold-tgt b{min-width:48px;font-size:15px;color:var(--tx2)}
+.icon-btn.sm{width:44px;height:34px;font-size:13px;font-weight:800}
+.steppers.one{grid-template-columns:1fr}
+details.manual{margin-top:4px;color:var(--tx3);font-size:14px}
+details.manual summary{cursor:pointer;padding:8px 0;list-style:none;text-align:center;text-decoration:underline;text-underline-offset:3px}
+details.manual[open] summary{margin-bottom:8px}
+.brand .ver{font-size:11px;letter-spacing:2px;color:var(--tx3);margin-top:2px}
+#upd{position:fixed;left:50%;transform:translateX(-50%);top:calc(var(--sat) + 10px);z-index:60;padding:10px 16px;border-radius:999px;background:var(--goldG);color:#1a1405;font-weight:800;font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.6)}
 @keyframes holdFlash{50%{background:rgba(212,175,55,.25)}}
 @media (prefers-reduced-motion:reduce){.hold.hit{animation:none}}

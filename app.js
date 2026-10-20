@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.4.0';
+const APP_VERSION = '1.4.1';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -359,7 +359,7 @@ function viewHome() {
   const recent = [...S.sessions].sort((a, b) => b.start - a.start)[0];
   return {
     html: `<section class="hero">
-      <div class="brand">${emblem(64)}<div class="name gold">Voccola Gym Log</div></div>
+      <div class="brand">${emblem(64)}<div class="name gold">Voccola Gym Log</div><div class="ver">v${APP_VERSION}</div></div>
       <div style="flex:1;min-height:40px"></div>
       <div class="greet">${greet}, <b>Markus</b></div>
       <div class="quote" id="quote">„${esc(q[0])}“</div>
@@ -438,14 +438,16 @@ function editorHTML(ex, act) {
   const sec = isSec(ex); const n = act ? setsOfEx(act.id, ex.id).filter(x => !x.warmup).length : 0;
   const editSt = ED.editId && S.sets.find(x => x.id === ED.editId);
   const editing = editSt ? (editSt.warmup ? 'A' : setsOfEx(act.id, ex.id).filter(x => !x.warmup && x.ts <= editSt.ts).length) : 0;
+  const timed = sec && !editing;
+  const repsStp = `<div class="stepper"><label>${sec ? 'Gehalten (Sek.)' : 'Wiederholungen'}</label><div class="stp"><button data-step="reps" data-d="${sec ? -5 : -1}">−</button><input id="in-reps" data-f="reps" inputmode="numeric" value="${fmtIn(ED.reps)}"><button data-step="reps" data-d="${sec ? 5 : 1}">+</button></div></div>`;
   return `<div class="card gold-frame editor" id="editor">
    <div class="ed-title"><span class="gold">${editing ? (editing === 'A' ? 'Aufwärmsatz' : 'Satz ' + editing) + ' bearbeiten' : (ED.warmup ? 'Aufwärmsatz' : 'Satz ' + (n + 1))}</span><span class="ed-rest" id="ed-rest"></span></div>
    ${ED.from === 'last' && !editing ? '<div class="small muted" style="margin:-6px 0 10px">↺ Vorschlag vom letzten Training</div>' : ''}
-   <div class="steppers">
+   ${timed ? holdHTML(ex) : ''}
+   <div class="steppers ${timed ? 'one' : ''}">
      <div class="stepper"><label>Gewicht (kg${ED.perSide ? ' / Seite' : ''})</label><div class="stp"><button data-step="weight" data-d="${sec ? -0.5 : -2.5}" aria-label="weniger Gewicht">−</button><input id="in-weight" data-f="weight" inputmode="decimal" value="${fmtIn(ED.weight)}"><button data-step="weight" data-d="${sec ? 0.5 : 2.5}" aria-label="mehr Gewicht">+</button></div></div>
-     <div class="stepper"><label>${sec ? 'Gehalten (Sek.)' : 'Wiederholungen'}</label><div class="stp"><button data-step="reps" data-d="${sec ? -5 : -1}">−</button><input id="in-reps" data-f="reps" inputmode="numeric" value="${fmtIn(ED.reps)}"><button data-step="reps" data-d="${sec ? 5 : 1}">+</button></div></div>
+     ${timed ? '' : repsStp}
    </div>
-   ${sec ? holdHTML(ex) : ''}
    <div class="toggles">
      <button class="tgl ${ED.perSide ? 'on' : ''}" data-act="tgl" data-f="perSide">pro Seite</button>
      <button class="tgl ${ED.warmup ? 'on' : ''}" data-act="tgl" data-f="warmup">Aufwärmsatz</button>
@@ -457,6 +459,7 @@ function editorHTML(ex, act) {
      <button class="x" data-act="rmDrop" data-i="${i}" aria-label="Drop entfernen">×</button></div>`; }).join('')}</div>
    <input class="field" data-f="note" placeholder="Notiz (optional)" value="${esc(ED.note || '')}" style="margin-bottom:12px">
    ${editing ? `<div class="row"><button class="btn btn-ghost btn-sm" data-act="cancelEdit">Abbrechen</button><button class="btn btn-danger btn-sm" data-act="delSet">Löschen</button></div><div style="height:8px"></div><button class="btn btn-gold" data-act="saveSet">Änderung speichern</button>`
+      : timed ? `<details class="manual"><summary>Sekunden manuell eintragen</summary><div class="steppers one">${repsStp}</div><button class="btn btn-ghost btn-sm" data-act="saveSet">Manuell speichern</button></details>`
       : `<button class="btn btn-red" data-act="saveSet">Satz speichern ✓</button>`}
   </div>`;
 }
@@ -510,16 +513,18 @@ const tgtOf = ex => ex.target || 45;
 function holdHTML(ex) {
   const run = TMR && TMR.ex === ex.id;
   return `<div class="hold ${run ? 'run' : ''}" id="hold">
-    <div class="hold-tgt"><span class="muted small">Zielzeit</span><button class="icon-btn sm" data-act="tgt" data-d="-5" aria-label="Ziel minus 5 s">−5</button><b id="hold-tgt">${tgtOf(ex)} s</b><button class="icon-btn sm" data-act="tgt" data-d="5" aria-label="Ziel plus 5 s">+5</button></div>
-    <div class="hold-clock" id="hold-clock">${run ? '' : '0:00'}</div><div class="hold-sub" id="hold-sub">${run ? '' : 'Ziel ' + tgtOf(ex) + ' s'}</div>
+    <button class="hold-btn ${run ? 'stop' : ''}" data-act="${run ? 'holdStop' : 'holdStart'}">${run ? '■ Stopp' : '▶ Start'}</button>
+    <div class="hold-clock" id="hold-clock">00:00</div>
+    <div class="hold-sub" id="hold-sub">${run ? '' : 'Stopp speichert den Satz automatisch'}</div>
     <div class="hold-bar"><i id="hold-bar"></i></div>
-    <button class="btn ${run ? 'btn-gold' : 'btn-red'} hold-btn" data-act="${run ? 'holdStop' : 'holdStart'}">${run ? '■ Stopp & speichern' : '▶ Start'}</button></div>`;
+    <div class="hold-tgt"><span>Ziel</span><button class="icon-btn sm" data-act="tgt" data-d="-5" aria-label="Ziel minus 5 s">−5</button><b id="hold-tgt">${tgtOf(ex)} s</b><button class="icon-btn sm" data-act="tgt" data-d="5" aria-label="Ziel plus 5 s">+5</button></div></div>`;
 }
+const mmss = ms => { const t = Math.max(0, Math.floor(ms / 1000)); return pad(Math.floor(t / 60)) + ':' + pad(t % 60); };
 function holdTick() {
   if (!TMR) return; const ex = exById(TMR.ex); const tg = tgtOf(ex);
   const el = (Date.now() - TMR.start) / 1000, c = $('#hold-clock'); if (!c) return;
-  c.textContent = clock(el * 1000); const left = Math.ceil(tg - el);
-  $('#hold-sub').textContent = left > 0 ? `noch ${left} s · Ziel ${tg} s` : `Ziel erreicht ✓ +${Math.floor(el - tg)} s`;
+  c.textContent = mmss(el * 1000); const left = Math.ceil(tg - el);
+  $('#hold-sub').textContent = left > 0 ? `noch ${left} s bis Ziel` : `Ziel erreicht ✓ weiter halten (+${Math.floor(el - tg)} s)`;
   $('#hold-bar').style.transform = `scaleX(${Math.min(1, el / tg)})`;
   if (el >= tg && !TMR.hit) { TMR.hit = true; $('#hold').classList.add('hit'); try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch (e) {} beep(); }
 }
@@ -948,5 +953,16 @@ window.addEventListener('hashchange', () => { closeSheet(); render(); });
   S.meta.qIdx = Math.floor(Math.random() * QUOTES.length);
   if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => { });
   render();
-  if ('serviceWorker' in navigator && location.protocol !== 'file:') navigator.serviceWorker.register('sw.js').catch(() => { });
+  if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+    const hadCtrl = !!navigator.serviceWorker.controller; let reloaded = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => { if (!hadCtrl || reloaded || TMR) return; reloaded = true; location.reload(); });
+    const banner = reg => { if (!reg.waiting || $('#upd')) return; const b = document.createElement('button'); b.id = 'upd'; b.textContent = 'Neue Version – tippen zum Aktualisieren';
+      b.onclick = () => { reg.waiting && reg.waiting.postMessage('skipWaiting'); setTimeout(() => location.reload(), 600); }; document.body.appendChild(b); };
+    navigator.serviceWorker.register('sw.js').then(reg => {
+      banner(reg);
+      reg.addEventListener('updatefound', () => { const w = reg.installing; w && w.addEventListener('statechange', () => { if (w.state === 'installed' && navigator.serviceWorker.controller) banner(reg); }); });
+      const chk = () => reg.update().catch(() => { }); chk();
+      document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') chk(); });
+    }).catch(() => { });
+  }
 })();
