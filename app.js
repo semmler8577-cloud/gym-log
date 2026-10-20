@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.2.0';
+const APP_VERSION = '1.2.1';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -100,7 +100,13 @@ const CATALOG = [
 ];
 /* Nachträgliche Infos für bestehende Standard-Übungen */
 const DEFAULT_PATCH = { x7: { elbow: 'e' }, x8: { elbow: 'e' }, x12: { sub: 'Bizeps', elbow: 'e' }, x13: { sub: 'Bizeps' }, x14: { sub: 'Bizeps' }, x15: { sub: 'Bizeps' }, x16: { sub: 'Trizeps', elbow: 'e' } };
-const CATALOG_VERSION = 1;
+const CATALOG_VERSION = 2;
+/* v1.2.1: neue Standard-Übungen, die direkt im Plan sichtbar sind (Migration fügt fehlende per ID ein) */
+const EXTRA_EX = [
+  { id: 's-presse-kabel-liegend', name: 'Schulterpresse Kabelzug (liegend)', group: 'Schultern', unit: 'reps', perSide: false, elbow: 'w', order: 10.5,
+    desc: 'Bauchlage auf der Schrägbank (Brust aufgelegt, Gesicht nach unten). Kabel vom unteren Zug hinter dir, Griffe oder Seil. Nach vorn/oben über Kopf drücken. Kein Hohlkreuz, Brust bleibt auf dem Polster, konstante Spannung – oben nicht ablegen.',
+    elbowNote: 'Griff locker halten, neutraler Griff (Seil/Hammergriff).' }
+];
 const PICK_FILTERS = ['Brust', 'Rücken', 'Bizeps', 'Trizeps', 'Unterarme', 'Schultern', 'Bauch', 'Beine', 'Reha'];
 const SUB_ORDER = { Bizeps: 0, Trizeps: 1, Unterarme: 2 };
 const elbowBadge = ex => ex.elbow === 'e' ? '<span class="badge badge-elbow" title="Neutraler Griff – ellenbogenfreundlich">🟢 Tennisarm-ok</span>' : ex.elbow === 'w' ? '<span class="badge badge-warn" title="Belastet die Unterarmstrecker">⚠ Tennisarm</span>' : '';
@@ -154,7 +160,7 @@ async function loadAll() {
     await setMeta('seeded', true);
     await setMeta('weekGoal', 6);
   }
-  if ((S.meta.catalogVersion || 0) < CATALOG_VERSION) {
+  if ((S.meta.catalogVersion || 0) < 1) {
     // Merge per ID: bestehende Übungen/Daten bleiben unangetastet, neue Katalog-Übungen kommen ausgeblendet dazu
     for (const [id, p] of Object.entries(DEFAULT_PATCH)) { const ex = exById(id); if (ex) { let ch = false; for (const [k, v] of Object.entries(p)) if (ex[k] === undefined) { ex[k] = v; ch = true; } if (ch) await save('exercises', ex); } }
     let i = 0;
@@ -162,7 +168,12 @@ async function loadAll() {
       if (!exById(id)) await save('exercises', { id, name, group: g, sub: sub || undefined, unit: f.includes('s') ? 'sec' : 'reps', perSide: f.includes('p'), elbow: f.includes('e') ? 'e' : f.includes('w') ? 'w' : undefined, order: 100 + i, photo: null, hidden: true, catalog: true });
       i++;
     }
-    await setMeta('catalogVersion', CATALOG_VERSION);
+    await setMeta('catalogVersion', 1);
+  }
+  if ((S.meta.catalogVersion || 0) < 2) {
+    // Nur fehlende Übungen ergänzen – vorhandene Übungen, Sätze und Einstellungen bleiben unverändert
+    for (const e of EXTRA_EX) if (!exById(e.id)) await save('exercises', { ...e, photo: null });
+    await setMeta('catalogVersion', 2);
   }
 }
 
@@ -438,6 +449,7 @@ function viewEx(id) {
   return {
     html: topbar(ex.name, ex.group + (isSec(ex) ? ' · isometrisch' : ''), '#/train', `<button class="icon-btn" data-act="go" data-to="#/progress/${ex.id}" aria-label="Fortschritt">📈</button>`) +
       (ex.photo ? `<div class="photo-hero" style="background-image:url('${ex.photo}')" data-act="photo" data-id="${ex.id}"></div>` : `<button class="btn btn-ghost btn-sm" data-act="photo" data-id="${ex.id}" style="margin-bottom:12px">📷 Foto der Übung/Maschine hinzufügen</button>`) +
+      (ex.desc || ex.elbowNote ? `<div class="card"><div class="small muted" style="letter-spacing:1px;text-transform:uppercase;font-weight:700;margin-bottom:6px">Ausführung</div>${ex.desc ? `<div style="font-size:14px;line-height:1.45;color:var(--tx2)">${esc(ex.desc)}</div>` : ''}${ex.elbowNote ? `<div style="margin-top:8px;font-size:14px">${elbowBadge(ex)} <span style="color:#ffd60a">${esc(ex.elbowNote)}</span></div>` : ''}</div>` : '') +
       lastHtml +
       (cur.length ? `<div class="sec-h"><span>Heute · ${pl(cur.filter(x => !x.warmup).length, 'Satz', 'Sätze')}</span><span class="line"></span></div>${setsHtml}` : '') +
       `<div style="height:6px"></div>` + editorHTML(ex, act)
