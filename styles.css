@@ -328,3 +328,7 @@ a.card{display:flex}
 .pain-val b{font-size:34px;font-weight:900;letter-spacing:-1px}
 .pain-val span{font-size:15px;font-weight:700;color:var(--tx2)}
 .pain-val em{font-style:normal;font-size:15px;font-weight:800;margin-left:6px}
+
+/* v1.3 Drop mit anderer Übung + Foto-Button */
+.drop .dex{grid-column:1/-1;font-size:14px;font-weight:700;color:var(--goldL);display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.photo-hero .photo-edit{position:absolute;right:10px;bottom:10px;z-index:1;padding:6px 12px;border-radius:999px;background:rgba(0,0,0,.65);border:1px solid rgba(212,175,55,.6);font-size:13px;font-weight:700;color:var(--goldL)}

@@ -1,5 +1,5 @@
 /* Voccola Gym Log – Service Worker (offline-first) */
-const CACHE = 'vgl-v1.2.1';
+const CACHE = 'vgl-v1.3.0';
 const ASSETS = ['./', './index.html', './styles.css', './app.js', './manifest.webmanifest',
   './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png', './icons/icon-maskable-512.png', './assets/dumbbell.webp'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting())); });

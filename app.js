@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.2.1';
+const APP_VERSION = '1.3.0';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -100,13 +100,21 @@ const CATALOG = [
 ];
 /* Nachträgliche Infos für bestehende Standard-Übungen */
 const DEFAULT_PATCH = { x7: { elbow: 'e' }, x8: { elbow: 'e' }, x12: { sub: 'Bizeps', elbow: 'e' }, x13: { sub: 'Bizeps' }, x14: { sub: 'Bizeps' }, x15: { sub: 'Bizeps' }, x16: { sub: 'Trizeps', elbow: 'e' } };
-const CATALOG_VERSION = 2;
+const CATALOG_VERSION = 3;
 /* v1.2.1: neue Standard-Übungen, die direkt im Plan sichtbar sind (Migration fügt fehlende per ID ein) */
 const EXTRA_EX = [
   { id: 's-presse-kabel-liegend', name: 'Schulterpresse Kabelzug (liegend)', group: 'Schultern', unit: 'reps', perSide: false, elbow: 'w', order: 10.5,
     desc: 'Bauchlage auf der Schrägbank (Brust aufgelegt, Gesicht nach unten). Kabel vom unteren Zug hinter dir, Griffe oder Seil. Nach vorn/oben über Kopf drücken. Kein Hohlkreuz, Brust bleibt auf dem Polster, konstante Spannung – oben nicht ablegen.',
     elbowNote: 'Griff locker halten, neutraler Griff (Seil/Hammergriff).' }
 ];
+/* v1.3.0: Körpergewichts-Übungen (bw = ohne Zusatzgewicht, Anzeige „KG“) – im Katalog, für Drops mit anderer Übung */
+const BW_EX = [
+  { id: 'bw-dips', name: 'Dips Körpergewicht', group: 'Arme', sub: 'Trizeps' },
+  { id: 'bw-klimm', name: 'Klimmzüge Körpergewicht', group: 'Rücken' },
+  { id: 'bw-ausfall', name: 'Ausfallschritte Körpergewicht', group: 'Beine' },
+  { id: 'bw-kniebeuge', name: 'Kniebeugen Körpergewicht', group: 'Beine' }
+];
+const BW_PATCH = ['x6', 'b-push-griffe', 'r-klimm', 'r-klimm-neutral', 'r-chinup', 'b-dips', 't-dips-bank'];
 const PICK_FILTERS = ['Brust', 'Rücken', 'Bizeps', 'Trizeps', 'Unterarme', 'Schultern', 'Bauch', 'Beine', 'Reha'];
 const SUB_ORDER = { Bizeps: 0, Trizeps: 1, Unterarme: 2 };
 const elbowBadge = ex => ex.elbow === 'e' ? '<span class="badge badge-elbow" title="Neutraler Griff – ellenbogenfreundlich">🟢 Tennisarm-ok</span>' : ex.elbow === 'w' ? '<span class="badge badge-warn" title="Belastet die Unterarmstrecker">⚠ Tennisarm</span>' : '';
@@ -175,6 +183,12 @@ async function loadAll() {
     for (const e of EXTRA_EX) if (!exById(e.id)) await save('exercises', { ...e, photo: null });
     await setMeta('catalogVersion', 2);
   }
+  if ((S.meta.catalogVersion || 0) < 3) {
+    let i = 0;
+    for (const e of BW_EX) if (!exById(e.id)) await save('exercises', { ...e, unit: 'reps', perSide: false, bw: true, order: 300 + i++, photo: null, hidden: true, catalog: true });
+    for (const id of BW_PATCH) { const ex = exById(id); if (ex && ex.bw === undefined) { ex.bw = true; await save('exercises', ex); } }
+    await setMeta('catalogVersion', 3);
+  }
 }
 
 /* ---------- Berechnungen ---------- */
@@ -188,7 +202,8 @@ const e1rm = (w, r) => !w || !r ? 0 : (r <= 1 ? w : w * (1 + r / 30));
 function setVolume(st) {
   const ex = exById(st.exerciseId); if (st.warmup || isSec(ex)) return 0;
   const f = st.perSide ? 2 : 1; let v = (st.weight || 0) * f * (st.reps || 0);
-  (st.drops || []).forEach(d => v += (d.w || 0) * f * (d.r || 0));
+  // Drops mit anderer Übung: Faktor nach deren „pro Seite“; Körpergewicht-Drops (w = 0) zählen 0 kg
+  (st.drops || []).forEach(d => { const de = d.ex && d.ex !== st.exerciseId ? exById(d.ex) : null; v += (d.w || 0) * (de ? (de.perSide ? 2 : 1) : f) * (d.r || 0); });
   return v;
 }
 function isPR(st) {
@@ -219,7 +234,10 @@ const setLabel = (st, ex) => {
   if (!st.weight && !isSec(ex)) t = fmt(st.reps, 0) + ' Wdh.';
   return t;
 };
-const dropLabel = (st, ex) => (st.drops || []).map(d => (d.w ? fmt(d.w, 2) + ' × ' : '') + fmt(d.r, 0) + (isSec(ex) ? ' s' : '')).join(' → ');
+const dropEx = (d, ex) => d.ex && d.ex !== (ex && ex.id) ? exById(d.ex) : null;
+const dropLabel = (st, ex) => (st.drops || []).map(d => { const de = dropEx(d, ex);
+  if (!de) return (d.w ? fmt(d.w, 2) + ' × ' : '') + fmt(d.r, 0) + (isSec(ex) ? ' s' : '');
+  return esc(de.name) + ' ' + (d.w ? fmt(d.w, 2) + ' kg × ' : 'KG × ') + fmt(d.r, 0) + (isSec(de) ? ' s' : ''); }).join(' → ');
 function weekData(offset = 0) {
   const ws = weekStart(); ws.setDate(ws.getDate() + offset * 7); const we = new Date(ws); we.setDate(we.getDate() + 7);
   const ss = S.sessions.filter(s => s.start >= ws.getTime() && s.start < we.getTime());
@@ -423,10 +441,10 @@ function editorHTML(ex, act) {
      <button class="tgl ${ED.warmup ? 'on' : ''}" data-act="tgl" data-f="warmup">Aufwärmsatz</button>
      <button class="tgl red" data-act="addDrop">+ Drop-Satz</button>
    </div>
-   <div id="drops">${ED.drops.map((d, i) => `<div class="drop"><span class="dl">DROP ${i + 1}</span>
+   <div id="drops">${ED.drops.map((d, i) => { const de = dropEx(d, ex); return `<div class="drop">${de ? `<div class="dex">↳ ${esc(de.name)}${de.bw ? ' <span class="badge badge-warm">KG</span>' : ''} <span class="muted small">${de.bw ? 'Gewicht optional (0 = Körpergewicht)' : ''}</span></div>` : ''}<span class="dl">DROP ${i + 1}</span>
      <div class="stp sm"><button data-step="drop:${i}:w" data-d="-2.5">−</button><input data-f="drop:${i}:w" inputmode="decimal" value="${fmtIn(d.w)}"><button data-step="drop:${i}:w" data-d="2.5">+</button></div>
      <div class="stp sm"><button data-step="drop:${i}:r" data-d="-1">−</button><input data-f="drop:${i}:r" inputmode="numeric" value="${fmtIn(d.r)}"><button data-step="drop:${i}:r" data-d="1">+</button></div>
-     <button class="x" data-act="rmDrop" data-i="${i}" aria-label="Drop entfernen">×</button></div>`).join('')}</div>
+     <button class="x" data-act="rmDrop" data-i="${i}" aria-label="Drop entfernen">×</button></div>`; }).join('')}</div>
    <input class="field" data-f="note" placeholder="Notiz (optional)" value="${esc(ED.note || '')}" style="margin-bottom:12px">
    ${editing ? `<div class="row"><button class="btn btn-ghost btn-sm" data-act="cancelEdit">Abbrechen</button><button class="btn btn-danger btn-sm" data-act="delSet">Löschen</button></div><div style="height:8px"></div><button class="btn btn-gold" data-act="saveSet">Änderung speichern</button>`
       : `<button class="btn btn-red" data-act="saveSet">Satz speichern ✓</button>`}
@@ -448,7 +466,7 @@ function viewEx(id) {
   const lastHtml = ls ? `<div class="card"><div class="small muted" style="letter-spacing:1px;text-transform:uppercase;font-weight:700;margin-bottom:6px">Letztes Mal · ${dateDE(dkey(ls.session.start))}</div><div class="last">${ls.sets.map(x => `<b>${x.warmup ? '<span style="color:#888">A</span> ' : ''}${setLabel(x, ex)}</b>${x.drops && x.drops.length ? ' <span style="color:#ff7070">→ ' + dropLabel(x, ex) + '</span>' : ''}`).join('<br>')}</div></div>` : '';
   return {
     html: topbar(ex.name, ex.group + (isSec(ex) ? ' · isometrisch' : ''), '#/train', `<button class="icon-btn" data-act="go" data-to="#/progress/${ex.id}" aria-label="Fortschritt">📈</button>`) +
-      (ex.photo ? `<div class="photo-hero" style="background-image:url('${ex.photo}')" data-act="photo" data-id="${ex.id}"></div>` : `<button class="btn btn-ghost btn-sm" data-act="photo" data-id="${ex.id}" style="margin-bottom:12px">📷 Foto der Übung/Maschine hinzufügen</button>`) +
+      (ex.photo ? `<div class="photo-hero" style="background-image:url('${ex.photo}')" data-act="photo" data-id="${ex.id}"><span class="photo-edit">📷 Foto vom Gerät ändern</span></div>` : `<button class="btn btn-outline-gold btn-sm" data-act="photo" data-id="${ex.id}" style="margin-bottom:12px">📷 Foto vom Gerät aufnehmen</button>`) +
       (ex.desc || ex.elbowNote ? `<div class="card"><div class="small muted" style="letter-spacing:1px;text-transform:uppercase;font-weight:700;margin-bottom:6px">Ausführung</div>${ex.desc ? `<div style="font-size:14px;line-height:1.45;color:var(--tx2)">${esc(ex.desc)}</div>` : ''}${ex.elbowNote ? `<div style="margin-top:8px;font-size:14px">${elbowBadge(ex)} <span style="color:#ffd60a">${esc(ex.elbowNote)}</span></div>` : ''}</div>` : '') +
       lastHtml +
       (cur.length ? `<div class="sec-h"><span>Heute · ${pl(cur.filter(x => !x.warmup).length, 'Satz', 'Sätze')}</span><span class="line"></span></div>${setsHtml}` : '') +
@@ -483,7 +501,7 @@ async function saveSet() {
   const act = await ensureSession();
   const wasEdit = !!ED.editId;
   const st = wasEdit ? S.sets.find(x => x.id === ED.editId) : { id: uid(), sessionId: act.id, exerciseId: ex.id, ts: Date.now() };
-  Object.assign(st, { weight: ED.weight || 0, reps: ED.reps || 0, perSide: !!ED.perSide, warmup: !!ED.warmup, note: (ED.note || '').trim(), drops: ED.drops.filter(d => d.r || d.w).map(d => ({ w: d.w || 0, r: d.r || 0 })) });
+  Object.assign(st, { weight: ED.weight || 0, reps: ED.reps || 0, perSide: !!ED.perSide, warmup: !!ED.warmup, note: (ED.note || '').trim(), drops: ED.drops.filter(d => d.r || d.w).map(d => d.ex ? { w: d.w || 0, r: d.r || 0, ex: d.ex } : { w: d.w || 0, r: d.r || 0 }) });
   await save('sets', st);
   if (ex.perSide !== st.perSide) { ex.perSide = st.perSide; save('exercises', ex); }
   if (!wasEdit) restStart = Date.now();
@@ -574,7 +592,7 @@ function carterText(s) {
   st.exIds.forEach(eid => {
     const ex = exById(eid); if (!ex) return;
     const parts = setsOfEx(s.id, eid).map(x => (x.warmup ? '(A) ' : '') + cLab(x.weight, x.reps, x.perSide, ex) +
-      (x.drops && x.drops.length ? ' +Drop ' + x.drops.map(dd => cLab(dd.w, dd.r, x.perSide, ex)).join('→') : '') + (isPR(x) ? ' 🏆PR' : '') + (x.note ? ` (${x.note})` : ''));
+      (x.drops && x.drops.length ? ' +Drop ' + x.drops.map(dd => { const de = dropEx(dd, ex); return de ? de.name + ' ' + (dd.w ? cLab(dd.w, dd.r, de.perSide, de) : 'KG×' + fmt(dd.r, 0) + (isSec(de) ? 's' : '')) : cLab(dd.w, dd.r, x.perSide, ex); }).join('→') : '') + (isPR(x) ? ' 🏆PR' : '') + (x.note ? ` (${x.note})` : ''));
     t += `• ${ex.name}: ${parts.join(', ')}\n`;
   });
   if (s.note) t += `\nNotiz: ${s.note}\n`;
@@ -700,27 +718,33 @@ function exSheet(id) {
 }
 
 /* --- Übungs-Katalog / Picker --- */
-let pick = { f: null, q: '', elbow: false };
+let pick = { f: null, q: '', elbow: false, mode: null };
 function pickerList() {
   const q = pick.q.trim().toLowerCase();
-  let exs = S.exercises.filter(e => (q ? true : filterOf(e) === pick.f) && (!pick.elbow || e.elbow === 'e') && (!q || e.name.toLowerCase().includes(q) || filterOf(e).toLowerCase().includes(q)));
+  let exs = S.exercises.filter(e => (q ? true : pick.f === 'Körpergewicht' ? e.bw : filterOf(e) === pick.f) && (!pick.elbow || e.elbow === 'e') && (!q || e.name.toLowerCase().includes(q) || filterOf(e).toLowerCase().includes(q)));
   exs.sort((a, b) => PICK_FILTERS.indexOf(filterOf(a)) - PICK_FILTERS.indexOf(filterOf(b)) || (!!a.hidden - !!b.hidden) || a.name.localeCompare(b.name, 'de'));
   if (!exs.length) return '<div class="empty">Nichts gefunden. Eigene Übung über „Übungen verwalten“ anlegen.</div>';
   let out = '', last = '';
   exs.forEach(e => {
     const f = filterOf(e); if (q && f !== last) { out += `<div class="sec-h" style="margin:14px 2px 8px"><span>${f}</span><span class="line"></span></div>`; last = f; }
-    out += `<div class="pick-row ${e.hidden ? '' : 'in'}"><div class="nm"><b>${esc(e.name)}</b><div>${elbowBadge(e)}${e.perSide ? '<span class="badge badge-warm">pro Seite</span>' : ''}${isSec(e) ? '<span class="badge badge-warm">Sekunden</span>' : ''}</div></div>
-      <button class="pick-btn" data-act="pickToggle" data-id="${e.id}" aria-label="${e.hidden ? 'Hinzufügen' : 'Entfernen'}">${e.hidden ? '＋' : '✓'}</button></div>`;
+    out += `<div class="pick-row ${e.hidden ? '' : 'in'}"><div class="nm"><b>${esc(e.name)}</b><div>${e.bw ? '<span class="badge badge-warm">KG</span>' : ''}${elbowBadge(e)}${e.perSide ? '<span class="badge badge-warm">pro Seite</span>' : ''}${isSec(e) ? '<span class="badge badge-warm">Sekunden</span>' : ''}</div></div>
+      ${pick.mode === 'drop' ? `<button class="btn btn-red btn-sm" style="width:auto;flex:none;padding:0 14px" data-act="pickDrop" data-id="${e.id}">Wählen</button>` : `<button class="pick-btn" data-act="pickToggle" data-id="${e.id}" aria-label="${e.hidden ? 'Hinzufügen' : 'Entfernen'}">${e.hidden ? '＋' : '✓'}</button>`}</div>`;
   });
   return out;
 }
 function pickerChips() {
-  return PICK_FILTERS.map(f => { const n = S.exercises.filter(e => filterOf(e) === f && !e.hidden).length; return `<button class="pchip ${pick.f === f && !pick.q ? 'on' : ''}" data-act="pickF" data-f="${f}">${f}<small>${n}</small></button>`; }).join('');
+  return (pick.mode === 'drop' ? ['Körpergewicht', ...PICK_FILTERS] : PICK_FILTERS).map(f => { const n = f === 'Körpergewicht' ? S.exercises.filter(e => e.bw).length : S.exercises.filter(e => filterOf(e) === f && !e.hidden).length; return `<button class="pchip ${pick.f === f && !pick.q ? 'on' : ''}" data-act="pickF" data-f="${f}">${f}<small>${n}</small></button>`; }).join('');
 }
-function openPicker() {
+function openPicker(mode) {
   const act = activeSession(); const t = act ? act.type : (trainType || todayType() || 'upper');
-  if (!pick.f) pick.f = t === 'lower' ? 'Bauch' : 'Brust';
+  pick.mode = mode || null;
+  if (pick.mode === 'drop') pick.f = 'Körpergewicht'; else if (!pick.f || pick.f === 'Körpergewicht') pick.f = t === 'lower' ? 'Bauch' : 'Brust';
   pick.q = '';
+  if (pick.mode === 'drop') return openSheet(`<h3>Drop mit anderer Übung</h3><div class="muted small" style="margin-bottom:10px">Übung wählen – Körpergewicht-Übungen (KG) brauchen kein Gewicht.</div>
+    <div class="pick-head"><input class="field" id="picker-q" type="search" placeholder="🔍 Suchen, z. B. Liegestütze, Dips…" autocomplete="off">
+    <div class="pchips" id="picker-chips">${pickerChips()}</div></div>
+    <div id="picker-list">${pickerList()}</div>
+    <div style="height:12px"></div><button class="btn btn-ghost btn-sm" data-act="closeSheet">Abbrechen</button>`);
   openSheet(`<h3>Übungen auswählen</h3><div class="muted small" style="margin-bottom:10px">＋ nimmt die Übung in deinen Plan, ✓ entfernt sie wieder. Deine Daten bleiben erhalten.</div>
     <div class="pick-head"><input class="field" id="picker-q" type="search" placeholder="🔍 Suchen, z. B. Latzug, Curls, Kabel…" autocomplete="off">
     <div class="pchips" id="picker-chips">${pickerChips()}</div>
@@ -779,7 +803,14 @@ const A = {
     go('#/session/' + act.id + '/neu');
   },
   tgl: d => { readEditorInputs(); ED[d.f] = !ED[d.f]; render(true); },
-  addDrop: () => { readEditorInputs(); const b = ED.drops.length ? ED.drops[ED.drops.length - 1] : { w: ED.weight, r: ED.reps }; ED.drops.push({ w: Math.max(0, Math.round(((b.w || 0) * .75) / 2.5) * 2.5), r: Math.max(1, Math.round((b.r || 8) * .8)) }); render(true); },
+  addDrop: () => { readEditorInputs(); openSheet(`<h3>Drop-Satz hinzufügen</h3><div class="muted small" style="margin-bottom:12px">Gleiche Übung mit weniger Gewicht – oder direkt eine andere Übung (z. B. Liegestütze).</div>
+    <button class="btn btn-red" data-act="addDropSame">⬇ Drop gleiche Übung</button><div style="height:10px"></div>
+    <button class="btn btn-outline-gold" data-act="addDropOther">⇄ Drop mit anderer Übung</button><div style="height:10px"></div>
+    <button class="btn btn-ghost btn-sm" data-act="closeSheet">Abbrechen</button>`); },
+  addDropOther: () => openPicker('drop'),
+  pickDrop: d => { const de = exById(d.id); if (!de || !ED) return; const prev = ED.drops.length ? ED.drops[ED.drops.length - 1] : { r: ED.reps };
+    ED.drops.push({ ex: de.id, w: 0, r: Math.max(1, Math.round((prev.r || 10))) }); pick.mode = null; closeSheet(); render(true); },
+  addDropSame: () => { closeSheet(); readEditorInputs(); const same = ED.drops.filter(x => !x.ex); const b = same.length ? same[same.length - 1] : { w: ED.weight, r: ED.reps }; ED.drops.push({ w: Math.max(0, Math.round(((b.w || 0) * .75) / 2.5) * 2.5), r: Math.max(1, Math.round((b.r || 8) * .8)) }); render(true); },
   rmDrop: d => { readEditorInputs(); ED.drops.splice(+d.i, 1); render(true); },
   saveSet,
   editSet: d => { const st = S.sets.find(x => x.id === d.id); if (!st) return; ED = { weight: st.weight, reps: st.reps, perSide: st.perSide, warmup: st.warmup, drops: (st.drops || []).map(x => ({ ...x })), note: st.note || '', editId: st.id }; render(true); setTimeout(() => { const e = $('#editor'); e && e.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 50); },
