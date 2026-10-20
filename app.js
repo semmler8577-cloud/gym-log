@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.3.0';
+const APP_VERSION = '1.4.0';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -100,7 +100,7 @@ const CATALOG = [
 ];
 /* Nachträgliche Infos für bestehende Standard-Übungen */
 const DEFAULT_PATCH = { x7: { elbow: 'e' }, x8: { elbow: 'e' }, x12: { sub: 'Bizeps', elbow: 'e' }, x13: { sub: 'Bizeps' }, x14: { sub: 'Bizeps' }, x15: { sub: 'Bizeps' }, x16: { sub: 'Trizeps', elbow: 'e' } };
-const CATALOG_VERSION = 3;
+const CATALOG_VERSION = 4;
 /* v1.2.1: neue Standard-Übungen, die direkt im Plan sichtbar sind (Migration fügt fehlende per ID ein) */
 const EXTRA_EX = [
   { id: 's-presse-kabel-liegend', name: 'Schulterpresse Kabelzug (liegend)', group: 'Schultern', unit: 'reps', perSide: false, elbow: 'w', order: 10.5,
@@ -189,6 +189,14 @@ async function loadAll() {
     for (const id of BW_PATCH) { const ex = exById(id); if (ex && ex.bw === undefined) { ex.bw = true; await save('exercises', ex); } }
     await setMeta('catalogVersion', 3);
   }
+  if ((S.meta.catalogVersion || 0) < 4) {
+    // Tennisarm-Halteübung: vorhandene (per ID/Name) ergänzen, sonst neu anlegen – Sätze bleiben unverändert
+    const ISO_DESC = 'Handgelenk-Streckung halten: Unterarm liegt auf (Oberschenkel/Bank), Handrücken oben, das Gewicht hängt über den Knöcheln. Handgelenk leicht gestreckt halten, ruhig atmen. Schmerz max. 3–4/10.';
+    let iso = exById('x27') && /halte/i.test(exById('x27').name) ? exById('x27') : S.exercises.find(e => e.name === 'Tennisarm Halteübung (isometrisch)');
+    if (!iso) await save('exercises', { id: 'reha-iso', name: 'Tennisarm Halteübung (isometrisch)', group: 'Reha', unit: 'sec', perSide: false, elbow: 'e', target: 45, desc: ISO_DESC, order: 900, photo: null });
+    else { iso.unit = 'sec'; if (iso.elbow === undefined) iso.elbow = 'e'; if (!iso.desc) iso.desc = ISO_DESC; if (!iso.target) iso.target = 45; if (iso.hidden) iso.hidden = false; await save('exercises', iso); }
+    await setMeta('catalogVersion', 4);
+  }
 }
 
 /* ---------- Berechnungen ---------- */
@@ -229,7 +237,8 @@ function lastSessionSets(eid, beforeTs) {
   return null;
 }
 const setLabel = (st, ex) => {
-  const u = isSec(ex) ? ' s' : '';
+  if (isSec(ex)) return (st.weight ? fmt(st.weight, 2) + (st.perSide ? 'kg p.S.' : 'kg') + '×' : '') + fmt(st.reps, 0) + 's';
+  const u = '';
   let t = (st.weight ? fmt(st.weight, 2) + (st.perSide ? ' kg p.S.' : ' kg') + ' × ' : '') + fmt(st.reps, 0) + u;
   if (!st.weight && !isSec(ex)) t = fmt(st.reps, 0) + ' Wdh.';
   return t;
@@ -433,9 +442,10 @@ function editorHTML(ex, act) {
    <div class="ed-title"><span class="gold">${editing ? (editing === 'A' ? 'Aufwärmsatz' : 'Satz ' + editing) + ' bearbeiten' : (ED.warmup ? 'Aufwärmsatz' : 'Satz ' + (n + 1))}</span><span class="ed-rest" id="ed-rest"></span></div>
    ${ED.from === 'last' && !editing ? '<div class="small muted" style="margin:-6px 0 10px">↺ Vorschlag vom letzten Training</div>' : ''}
    <div class="steppers">
-     <div class="stepper"><label>Gewicht (kg${ED.perSide ? ' / Seite' : ''})</label><div class="stp"><button data-step="weight" data-d="-2.5" aria-label="minus 2,5 kg">−</button><input id="in-weight" data-f="weight" inputmode="decimal" value="${fmtIn(ED.weight)}"><button data-step="weight" data-d="2.5" aria-label="plus 2,5 kg">+</button></div></div>
-     <div class="stepper"><label>${sec ? 'Sekunden' : 'Wiederholungen'}</label><div class="stp"><button data-step="reps" data-d="${sec ? -5 : -1}">−</button><input id="in-reps" data-f="reps" inputmode="numeric" value="${fmtIn(ED.reps)}"><button data-step="reps" data-d="${sec ? 5 : 1}">+</button></div></div>
+     <div class="stepper"><label>Gewicht (kg${ED.perSide ? ' / Seite' : ''})</label><div class="stp"><button data-step="weight" data-d="${sec ? -0.5 : -2.5}" aria-label="weniger Gewicht">−</button><input id="in-weight" data-f="weight" inputmode="decimal" value="${fmtIn(ED.weight)}"><button data-step="weight" data-d="${sec ? 0.5 : 2.5}" aria-label="mehr Gewicht">+</button></div></div>
+     <div class="stepper"><label>${sec ? 'Gehalten (Sek.)' : 'Wiederholungen'}</label><div class="stp"><button data-step="reps" data-d="${sec ? -5 : -1}">−</button><input id="in-reps" data-f="reps" inputmode="numeric" value="${fmtIn(ED.reps)}"><button data-step="reps" data-d="${sec ? 5 : 1}">+</button></div></div>
    </div>
+   ${sec ? holdHTML(ex) : ''}
    <div class="toggles">
      <button class="tgl ${ED.perSide ? 'on' : ''}" data-act="tgl" data-f="perSide">pro Seite</button>
      <button class="tgl ${ED.warmup ? 'on' : ''}" data-act="tgl" data-f="warmup">Aufwärmsatz</button>
@@ -465,7 +475,7 @@ function viewEx(id) {
   }).join('');
   const lastHtml = ls ? `<div class="card"><div class="small muted" style="letter-spacing:1px;text-transform:uppercase;font-weight:700;margin-bottom:6px">Letztes Mal · ${dateDE(dkey(ls.session.start))}</div><div class="last">${ls.sets.map(x => `<b>${x.warmup ? '<span style="color:#888">A</span> ' : ''}${setLabel(x, ex)}</b>${x.drops && x.drops.length ? ' <span style="color:#ff7070">→ ' + dropLabel(x, ex) + '</span>' : ''}`).join('<br>')}</div></div>` : '';
   return {
-    html: topbar(ex.name, ex.group + (isSec(ex) ? ' · isometrisch' : ''), '#/train', `<button class="icon-btn" data-act="go" data-to="#/progress/${ex.id}" aria-label="Fortschritt">📈</button>`) +
+    html: topbar(ex.name, ex.group + (isSec(ex) ? ' · isometrisch' : ''), '#/train', `<span style="display:flex;gap:8px"><button class="icon-btn" data-act="editEx" data-id="${ex.id}" aria-label="Übung bearbeiten">✎</button><button class="icon-btn" data-act="go" data-to="#/progress/${ex.id}" aria-label="Fortschritt">📈</button></span>`) +
       (ex.photo ? `<div class="photo-hero" style="background-image:url('${ex.photo}')" data-act="photo" data-id="${ex.id}"><span class="photo-edit">📷 Foto vom Gerät ändern</span></div>` : `<button class="btn btn-outline-gold btn-sm" data-act="photo" data-id="${ex.id}" style="margin-bottom:12px">📷 Foto vom Gerät aufnehmen</button>`) +
       (ex.desc || ex.elbowNote ? `<div class="card"><div class="small muted" style="letter-spacing:1px;text-transform:uppercase;font-weight:700;margin-bottom:6px">Ausführung</div>${ex.desc ? `<div style="font-size:14px;line-height:1.45;color:var(--tx2)">${esc(ex.desc)}</div>` : ''}${ex.elbowNote ? `<div style="margin-top:8px;font-size:14px">${elbowBadge(ex)} <span style="color:#ffd60a">${esc(ex.elbowNote)}</span></div>` : ''}</div>` : '') +
       lastHtml +
@@ -494,6 +504,39 @@ async function ensureSession(type) {
   return act;
 }
 let restStart = null;
+/* --- Halte-Timer (Zeit statt Wiederholungen). Basis: Zeitstempel, daher korrekt auch bei Sperrbildschirm --- */
+let TMR = null, tmrI = null, wakeLock = null, actx = null;
+const tgtOf = ex => ex.target || 45;
+function holdHTML(ex) {
+  const run = TMR && TMR.ex === ex.id;
+  return `<div class="hold ${run ? 'run' : ''}" id="hold">
+    <div class="hold-tgt"><span class="muted small">Zielzeit</span><button class="icon-btn sm" data-act="tgt" data-d="-5" aria-label="Ziel minus 5 s">−5</button><b id="hold-tgt">${tgtOf(ex)} s</b><button class="icon-btn sm" data-act="tgt" data-d="5" aria-label="Ziel plus 5 s">+5</button></div>
+    <div class="hold-clock" id="hold-clock">${run ? '' : '0:00'}</div><div class="hold-sub" id="hold-sub">${run ? '' : 'Ziel ' + tgtOf(ex) + ' s'}</div>
+    <div class="hold-bar"><i id="hold-bar"></i></div>
+    <button class="btn ${run ? 'btn-gold' : 'btn-red'} hold-btn" data-act="${run ? 'holdStop' : 'holdStart'}">${run ? '■ Stopp & speichern' : '▶ Start'}</button></div>`;
+}
+function holdTick() {
+  if (!TMR) return; const ex = exById(TMR.ex); const tg = tgtOf(ex);
+  const el = (Date.now() - TMR.start) / 1000, c = $('#hold-clock'); if (!c) return;
+  c.textContent = clock(el * 1000); const left = Math.ceil(tg - el);
+  $('#hold-sub').textContent = left > 0 ? `noch ${left} s · Ziel ${tg} s` : `Ziel erreicht ✓ +${Math.floor(el - tg)} s`;
+  $('#hold-bar').style.transform = `scaleX(${Math.min(1, el / tg)})`;
+  if (el >= tg && !TMR.hit) { TMR.hit = true; $('#hold').classList.add('hit'); try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch (e) {} beep(); }
+}
+function beep() { try { if (!actx) return; const o = actx.createOscillator(), g = actx.createGain(); o.frequency.value = 880; o.connect(g); g.connect(actx.destination); const t = actx.currentTime; g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.4, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + .45); o.start(t); o.stop(t + .5); } catch (e) {} }
+async function lockWake() { try { if ('wakeLock' in navigator && !wakeLock) { wakeLock = await navigator.wakeLock.request('screen'); wakeLock.addEventListener('release', () => { wakeLock = null; }); } } catch (e) {} }
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && TMR) { lockWake(); holdTick(); } });
+async function holdStart() {
+  readEditorInputs();
+  try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); actx.resume && actx.resume(); } catch (e) {}
+  TMR = { ex: EDex, start: Date.now(), hit: false }; restStart = null; lockWake();
+  clearInterval(tmrI); tmrI = setInterval(holdTick, 200); render(true); holdTick();
+}
+async function holdStop() {
+  if (!TMR) return; const secs = Math.max(1, Math.round((Date.now() - TMR.start) / 1000));
+  clearInterval(tmrI); TMR = null; try { wakeLock && wakeLock.release(); } catch (e) {} wakeLock = null;
+  const ri = $('#in-reps'); if (ri) ri.value = secs; ED.reps = secs; await saveSet();
+}
 async function saveSet() {
   readEditorInputs();
   const ex = exById(EDex);
@@ -708,7 +751,7 @@ function exSheet(id) {
   openSheet(`<h3>${id ? 'Übung bearbeiten' : 'Neue Übung'}</h3>
     <label class="lbl">Name</label><input class="field" id="ex-name" value="${esc(e.name)}" placeholder="z. B. Butterfly Maschine">
     <label class="lbl">Muskelgruppe</label><select class="field" id="ex-group">${GROUPS.map(g => `<option ${g === e.group ? 'selected' : ''}>${g}</option>`).join('')}</select>
-    <label class="lbl">Erfassung</label><div class="seg sm" id="ex-unit"><button class="${e.unit !== 'sec' ? 'on' : ''}" data-act="exUnit" data-u="reps">Wiederholungen</button><button class="${e.unit === 'sec' ? 'on' : ''}" data-act="exUnit" data-u="sec">Sekunden</button></div>
+    <label class="lbl">Erfassung</label><div class="seg sm" id="ex-unit"><button class="${e.unit !== 'sec' ? 'on' : ''}" data-act="exUnit" data-u="reps">Wiederholungen</button><button class="${e.unit === 'sec' ? 'on' : ''}" data-act="exUnit" data-u="sec">⏱ Zeit statt Wiederholungen</button></div>
     <label class="lbl">Bereich (nur Arme)</label><select class="field" id="ex-sub">${['', 'Bizeps', 'Trizeps', 'Unterarme'].map(x => `<option value="${x}" ${x === (e.sub || '') ? 'selected' : ''}>${x || '–'}</option>`).join('')}</select>
     <div class="toggles"><button class="tgl ${e.perSide ? 'on' : ''}" id="ex-ps" data-act="exPs">Gewicht pro Seite (Standard)</button><button class="tgl ${e.elbow === 'e' ? 'on' : ''}" id="ex-elbow" data-act="exPs">🟢 Tennisarm-freundlich</button></div>
     <label class="lbl">Foto</label><div id="ex-photo" class="photo-hero" style="${e.photo ? `background-image:url('${e.photo}')` : 'display:none'}"></div>
@@ -807,6 +850,9 @@ const A = {
     <button class="btn btn-red" data-act="addDropSame">⬇ Drop gleiche Übung</button><div style="height:10px"></div>
     <button class="btn btn-outline-gold" data-act="addDropOther">⇄ Drop mit anderer Übung</button><div style="height:10px"></div>
     <button class="btn btn-ghost btn-sm" data-act="closeSheet">Abbrechen</button>`); },
+  holdStart: () => holdStart(),
+  holdStop: () => holdStop(),
+  tgt: async d => { const ex = exById(EDex); ex.target = Math.max(5, Math.min(600, tgtOf(ex) + +d.d)); await save('exercises', ex); const t = $('#hold-tgt'); if (t) t.textContent = ex.target + ' s'; if (!TMR) { const s2 = $('#hold-sub'); if (s2) s2.textContent = 'Ziel ' + ex.target + ' s'; } else { if (TMR.hit && (Date.now() - TMR.start) / 1000 < ex.target) { TMR.hit = false; $('#hold').classList.remove('hit'); } holdTick(); } },
   addDropOther: () => openPicker('drop'),
   pickDrop: d => { const de = exById(d.id); if (!de || !ED) return; const prev = ED.drops.length ? ED.drops[ED.drops.length - 1] : { r: ED.reps };
     ED.drops.push({ ex: de.id, w: 0, r: Math.max(1, Math.round((prev.r || 10))) }); pick.mode = null; closeSheet(); render(true); },
