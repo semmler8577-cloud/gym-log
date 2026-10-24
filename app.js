@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.5.0';
+const APP_VERSION = '1.5.1';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -101,7 +101,13 @@ const CATALOG = [
 ];
 /* Nachträgliche Infos für bestehende Standard-Übungen */
 const DEFAULT_PATCH = { x7: { elbow: 'e' }, x8: { elbow: 'e' }, x12: { sub: 'Bizeps', elbow: 'e' }, x13: { sub: 'Bizeps' }, x14: { sub: 'Bizeps' }, x15: { sub: 'Bizeps' }, x16: { sub: 'Trizeps', elbow: 'e' } };
-const CATALOG_VERSION = 5;
+const CATALOG_VERSION = 6;
+/* v1.5.1: weitere Katalog-Übungen (ausgeblendet, Mo–Fr unverändert). Kabel/Maschine = Gesamtgewicht */
+const EX_V6 = [
+  { id: 's-hs-kabel-bauchlings', name: 'Hintere Schulter Kabelzug bäuchlings (Schrägbank)', group: 'Schultern', perSide: false, elbow: 'e', desc: 'Bauchlage auf der Schrägbank, Kabel ganz unten. Kabel unter dir vorbei nach außen/hinten ziehen – hintere Schulter.' },
+  { id: 's-aufrecht-rudern-sz-kabel', name: 'Aufrechtes Rudern SZ-Stange am Seilzug', group: 'Schultern', perSide: false, desc: 'SZ-Stange am unteren Seilzug, eng am Körper bis etwa Kinnhöhe ziehen, Ellenbogen führen.' },
+  { id: 'a-bizeps-kabel-sitzend', name: 'Bizeps-Curl sitzend am Seilzug', group: 'Arme', sub: 'Bizeps', perSide: false, elbow: 'e' }
+];
 /* v1.5.0: Samstag = Ausgleichstag mit freier Übungswahl. Neue Katalog-Übungen (ausgeblendet, Mo–Fr unverändert) */
 const FREE_EX = [
   { id: 's-seitheben-vorgebeugt', name: 'Vorgebeugtes Seitheben (hintere Schulter)', group: 'Schultern', perSide: true, elbow: 'e' },
@@ -214,6 +220,11 @@ async function loadAll() {
     for (const e of FREE_EX) if (!exById(e.id) && !S.exercises.some(x => x.name === e.name)) await save('exercises', { ...e, unit: 'reps', order: 400 + i++, photo: null, hidden: true, catalog: true });
     if (!Array.isArray(S.meta.freeList)) await setMeta('freeList', FREE_PRESET.map(([id, n]) => { const ex = exById(id) && exById(id).name === n ? exById(id) : (S.exercises.find(x => x.name === n) || exById(id)); return ex && ex.id; }).filter(Boolean));
     await setMeta('catalogVersion', 5);
+  }
+  if ((S.meta.catalogVersion || 0) < 6) {
+    let i = 0;
+    for (const e of EX_V6) if (!exById(e.id) && !S.exercises.some(x => x.name === e.name)) await save('exercises', { ...e, unit: 'reps', order: 500 + i++, photo: null, hidden: true, catalog: true });
+    await setMeta('catalogVersion', 6);
   }
 }
 
