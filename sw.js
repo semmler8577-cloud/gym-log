@@ -1,5 +1,5 @@
-/* Voccola Gym Log – Service Worker (v1.4.1: Updates zuverlässig) */
-const CACHE = 'vgl-v1.4.1';
+/* Voccola Gym Log – Service Worker (v1.5.0: Samstag freie Wahl) */
+const CACHE = 'vgl-v1.5.0';
 const ASSETS = ['./', './index.html', './styles.css', './app.js', './manifest.webmanifest',
   './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png', './icons/icon-maskable-512.png', './assets/dumbbell.webp'];
 self.addEventListener('install', e => {

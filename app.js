@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.4.1';
+const APP_VERSION = '1.5.0';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -25,11 +25,12 @@ const weekStart = (d = new Date()) => { d = new Date(d); d.setHours(0, 0, 0, 0);
 /* ---------- Stammdaten ---------- */
 const DAYS = {
   upper: { name: 'Oberkörper', groups: ['Brust', 'Rücken', 'Schultern', 'Arme'], sub: 'Brust · Rücken · Schultern · Arme' },
-  lower: { name: 'Bauch + Beine', groups: ['Bauch', 'Beine'], sub: 'Bauch · Beine' }
+  lower: { name: 'Bauch + Beine', groups: ['Bauch', 'Beine'], sub: 'Bauch · Beine' },
+  free: { name: 'Samstag – Freie Wahl', groups: ['Brust', 'Rücken', 'Schultern', 'Arme', 'Bauch', 'Beine', 'Reha'], sub: 'Ausgleichstag · Übungen frei wählen', free: true }
 };
 const GROUPS = ['Brust', 'Rücken', 'Schultern', 'Arme', 'Bauch', 'Beine', 'Reha'];
 const GROUP_ICON = { Brust: '◆', Rücken: '▲', Schultern: '●', Arme: '✦', Bauch: '▦', Beine: '▮', Reha: '✚' };
-const SPLIT = { 1: 'upper', 2: 'lower', 3: 'upper', 4: 'lower', 5: 'upper', 6: 'lower', 0: null };
+const SPLIT = { 1: 'upper', 2: 'lower', 3: 'upper', 4: 'lower', 5: 'upper', 6: 'free', 0: null };
 const DEFAULT_EX = [
   ['Brust', 'Schrägbank Kurzhantel', 1], ['Brust', 'Flachbank Kurzhantel', 1], ['Brust', 'Obere Brust Frontheben sitzend'],
   ['Brust', 'Kurzhantel eng nach vorn (obere Brust)'], ['Brust', 'Fliegende liegend (Blackroll)', 1], ['Brust', 'Liegestütze'],
@@ -100,7 +101,17 @@ const CATALOG = [
 ];
 /* Nachträgliche Infos für bestehende Standard-Übungen */
 const DEFAULT_PATCH = { x7: { elbow: 'e' }, x8: { elbow: 'e' }, x12: { sub: 'Bizeps', elbow: 'e' }, x13: { sub: 'Bizeps' }, x14: { sub: 'Bizeps' }, x15: { sub: 'Bizeps' }, x16: { sub: 'Trizeps', elbow: 'e' } };
-const CATALOG_VERSION = 4;
+const CATALOG_VERSION = 5;
+/* v1.5.0: Samstag = Ausgleichstag mit freier Übungswahl. Neue Katalog-Übungen (ausgeblendet, Mo–Fr unverändert) */
+const FREE_EX = [
+  { id: 's-seitheben-vorgebeugt', name: 'Vorgebeugtes Seitheben (hintere Schulter)', group: 'Schultern', perSide: true, elbow: 'e' },
+  { id: 's-seitheben-kabel-einarm', name: 'Seitheben Kabel einarmig', group: 'Schultern', perSide: true },
+  { id: 'bauch-crunch-maschine', name: 'Crunchmaschine', group: 'Bauch', perSide: false }
+];
+/* Samstag-Vorschlag: [ID, Name-Fallback] – vorhandene Übungen werden per ID, sonst per Name gefunden */
+const FREE_PRESET = [['r-revfly', 'Reverse Butterfly (hintere Schulter)'], ['r-facepull', 'Face Pulls (Seil)'], ['s-seitheben-vorgebeugt', 'Vorgebeugtes Seitheben (hintere Schulter)'],
+  ['s-seitheben-kabel-einarm', 'Seitheben Kabel einarmig'], ['x11', 'Schulterpresse Maschine'], ['bauch-crunch-maschine', 'Crunchmaschine'],
+  ['x19', 'Knieheben am Beinstrecker'], ['x21', 'Seitbeugen'], ['x20', 'Crunch am Seilzug']];
 /* v1.2.1: neue Standard-Übungen, die direkt im Plan sichtbar sind (Migration fügt fehlende per ID ein) */
 const EXTRA_EX = [
   { id: 's-presse-kabel-liegend', name: 'Schulterpresse Kabelzug (liegend)', group: 'Schultern', unit: 'reps', perSide: false, elbow: 'w', order: 10.5,
@@ -196,6 +207,13 @@ async function loadAll() {
     if (!iso) await save('exercises', { id: 'reha-iso', name: 'Tennisarm Halteübung (isometrisch)', group: 'Reha', unit: 'sec', perSide: false, elbow: 'e', target: 45, desc: ISO_DESC, order: 900, photo: null });
     else { iso.unit = 'sec'; if (iso.elbow === undefined) iso.elbow = 'e'; if (!iso.desc) iso.desc = ISO_DESC; if (!iso.target) iso.target = 45; if (iso.hidden) iso.hidden = false; await save('exercises', iso); }
     await setMeta('catalogVersion', 4);
+  }
+  if ((S.meta.catalogVersion || 0) < 5) {
+    // Nur ergänzen: neue Übungen ausgeblendet (erscheinen nicht Mo–Fr), Samstag-Vorlage anlegen
+    let i = 0;
+    for (const e of FREE_EX) if (!exById(e.id) && !S.exercises.some(x => x.name === e.name)) await save('exercises', { ...e, unit: 'reps', order: 400 + i++, photo: null, hidden: true, catalog: true });
+    if (!Array.isArray(S.meta.freeList)) await setMeta('freeList', FREE_PRESET.map(([id, n]) => { const ex = exById(id) && exById(id).name === n ? exById(id) : (S.exercises.find(x => x.name === n) || exById(id)); return ex && ex.id; }).filter(Boolean));
+    await setMeta('catalogVersion', 5);
   }
 }
 
@@ -326,6 +344,9 @@ function topbar(title, sub, back, right = '') {
   return `<div class="topbar">${back ? `<button class="icon-btn" data-act="go" data-to="${back}" aria-label="Zurück">‹</button>` : ''}<div class="tb-title">${sub ? `<div>${esc(sub)}</div>` : ''}<h2>${esc(title)}</h2></div>${right}</div>`;
 }
 const todayType = () => SPLIT[new Date().getDay()];
+/* Freie Wahl (Samstag): Liste pro laufendem Training, sonst Vorlage */
+const freeIds = act => ((act && Array.isArray(act.freeEx)) ? act.freeEx : (S.meta.freeList || [])).filter(id => exById(id));
+async function setFreeIds(ids) { const act = activeSession(); if (act && act.type === 'free') { act.freeEx = ids; await save('sessions', act); } else await setMeta('freeList', ids); }
 
 function dashboardCard() {
   const w = weekData(0), pw = weekData(-1), goal = S.meta.weekGoal || 6;
@@ -382,7 +403,7 @@ function viewHome() {
 
 function sessionCard(s) {
   const st = sessionStats(s); const d = new Date(s.start);
-  return `<a class="card sess ${s.type === 'upper' ? 'up' : 'lo'}" href="#/session/${s.id}">
+  return `<a class="card sess ${s.type === 'upper' ? 'up' : s.type === 'free' ? 'fr' : 'lo'}" href="#/session/${s.id}">
     <div class="date"><b>${d.getDate()}</b><span>${MON[d.getMonth()].slice(0, 3)}</span></div>
     <div class="info"><b>${DAYS[s.type].name}</b>${!s.end ? ' <span class="badge badge-drop">läuft</span>' : ''}${st.prs ? ` <span class="badge badge-pr">🏆 ${st.prs}</span>` : ''}
       <div>${WDL[d.getDay()]} · ${dur(st.dur)} · ${pl(st.sets, 'Satz', 'Sätze')} · ${fmt(st.vol, 0)} kg${s.kcal ? ' · ' + fmt(s.kcal, 0) + ' kcal' : ''}</div></div><span class="chev">›</span></a>`;
@@ -400,7 +421,7 @@ function viewTrain() {
   const act = activeSession();
   const type = act ? act.type : (trainType || todayType() || 'upper');
   const day = DAYS[type];
-  const list = [...day.groups, 'Reha'].map(g => {
+  const list = day.free ? freeListHTML(act) : [...day.groups, 'Reha'].map(g => {
     const exs = S.exercises.filter(e => e.group === g && !e.hidden).sort((a, b) => (SUB_ORDER[a.sub] ?? 0) - (SUB_ORDER[b.sub] ?? 0) || a.order - b.order);
     if (!exs.length) return '';
     return `<div class="sec-h"><span>${g}${g === 'Reha' ? ' · Tennisarm' : ''}</span><span class="line"></span></div>${exs.map(e => exRow(e, act)).join('')}`;
@@ -412,11 +433,21 @@ function viewTrain() {
       <div style="text-align:right"><div class="small muted">${pl(st.sets, 'Satz', 'Sätze')}</div><div style="font-weight:800;font-size:18px">${fmt(st.vol, 0)} kg</div></div></div>
       <div style="height:12px"></div><button class="btn btn-gold btn-sm" data-act="finish">Training beenden ✓</button></div>`;
   } else {
-    head = `<div class="seg"><button class="${type === 'upper' ? 'on' : ''}" data-act="ttype" data-type="upper">Oberkörper</button><button class="${type === 'lower' ? 'on' : ''}" data-act="ttype" data-type="lower">Bauch + Beine</button></div>
+    head = `<div class="seg"><button class="${type === 'upper' ? 'on' : ''}" data-act="ttype" data-type="upper">Oberkörper</button><button class="${type === 'lower' ? 'on' : ''}" data-act="ttype" data-type="lower">Bauch + Beine</button>${todayType() === 'free' || type === 'free' ? `<button class="${type === 'free' ? 'on' : ''}" data-act="ttype" data-type="free">Freie Wahl</button>` : ''}</div>
       <button class="btn btn-red" data-act="start" data-type="${type}">Training starten</button><div class="hint" style="text-align:center">Oder direkt eine Übung antippen – das Training startet automatisch.</div>`;
   }
-  head += `<button class="btn btn-ghost btn-sm" data-act="picker" style="margin-top:10px">🔍 Übungen suchen & auswählen</button>`;
+  if (!day.free) head += `<button class="btn btn-ghost btn-sm" data-act="picker" style="margin-top:10px">🔍 Übungen suchen & auswählen</button>`;
   return { html: topbar(day.name, act ? 'Training aktiv' : (todayType() === type ? 'Heute laut Plan' : 'Trainingstag'), null, `<button class="icon-btn" data-act="go" data-to="#/exercises" aria-label="Übungen verwalten">✎</button>`) + head + list };
+}
+
+function freeListHTML(act) {
+  const ids = freeIds(act); const exs = ids.map(exById);
+  const rows = GROUPS.map(g => { const xs = exs.filter(e => e.group === g); if (!xs.length) return '';
+    return `<div class="sec-h"><span>${g}</span><span class="line"></span></div>` + xs.map(e => `<div class="free-row">${exRow(e, act)}<button class="free-x" data-act="freeRm" data-id="${e.id}" aria-label="Entfernen">×</button></div>`).join(''); }).join('');
+  return `<div class="hint" style="margin:12px 2px 4px">Ausgleichstag: Übungen frei wählen. <b>×</b> entfernt eine Übung (nur aus dem Samstag, Daten bleiben), <b>＋</b> fügt aus dem Katalog hinzu.</div>` +
+    (rows || '<div class="empty">Noch keine Übungen – unten hinzufügen.</div>') +
+    `<button class="btn btn-red btn-sm" data-act="freePicker" style="margin-top:14px">＋ Übung hinzufügen (Katalog)</button>` +
+    `<button class="btn btn-ghost btn-sm" data-act="freeReset" style="margin-top:8px">↺ ${act ? 'Samstag-Vorlage laden' : 'Standard-Vorschlag wiederherstellen'}</button>`;
 }
 
 /* --- Logging --- */
@@ -503,6 +534,7 @@ function doStep(btn) {
 async function ensureSession(type) {
   let act = activeSession(); if (act) return act;
   act = { id: uid(), type: type || trainType || todayType() || 'upper', start: Date.now(), end: null };
+  if (act.type === 'free') act.freeEx = freeIds(null).slice();
   await save('sessions', act); await setMeta('activeSession', act.id);
   return act;
 }
@@ -769,25 +801,32 @@ function exSheet(id) {
 let pick = { f: null, q: '', elbow: false, mode: null };
 function pickerList() {
   const q = pick.q.trim().toLowerCase();
+  const fs = pick.mode === 'free' ? new Set(freeIds(activeSession())) : null;
   let exs = S.exercises.filter(e => (q ? true : pick.f === 'Körpergewicht' ? e.bw : filterOf(e) === pick.f) && (!pick.elbow || e.elbow === 'e') && (!q || e.name.toLowerCase().includes(q) || filterOf(e).toLowerCase().includes(q)));
   exs.sort((a, b) => PICK_FILTERS.indexOf(filterOf(a)) - PICK_FILTERS.indexOf(filterOf(b)) || (!!a.hidden - !!b.hidden) || a.name.localeCompare(b.name, 'de'));
   if (!exs.length) return '<div class="empty">Nichts gefunden. Eigene Übung über „Übungen verwalten“ anlegen.</div>';
   let out = '', last = '';
   exs.forEach(e => {
     const f = filterOf(e); if (q && f !== last) { out += `<div class="sec-h" style="margin:14px 2px 8px"><span>${f}</span><span class="line"></span></div>`; last = f; }
-    out += `<div class="pick-row ${e.hidden ? '' : 'in'}"><div class="nm"><b>${esc(e.name)}</b><div>${e.bw ? '<span class="badge badge-warm">KG</span>' : ''}${elbowBadge(e)}${e.perSide ? '<span class="badge badge-warm">pro Seite</span>' : ''}${isSec(e) ? '<span class="badge badge-warm">Sekunden</span>' : ''}</div></div>
-      ${pick.mode === 'drop' ? `<button class="btn btn-red btn-sm" style="width:auto;flex:none;padding:0 14px" data-act="pickDrop" data-id="${e.id}">Wählen</button>` : `<button class="pick-btn" data-act="pickToggle" data-id="${e.id}" aria-label="${e.hidden ? 'Hinzufügen' : 'Entfernen'}">${e.hidden ? '＋' : '✓'}</button>`}</div>`;
+    const inP = fs ? fs.has(e.id) : !e.hidden;
+    out += `<div class="pick-row ${inP ? 'in' : ''}"><div class="nm"><b>${esc(e.name)}</b><div>${e.bw ? '<span class="badge badge-warm">KG</span>' : ''}${elbowBadge(e)}${e.perSide ? '<span class="badge badge-warm">pro Seite</span>' : ''}${isSec(e) ? '<span class="badge badge-warm">Sekunden</span>' : ''}</div></div>
+      ${pick.mode === 'drop' ? `<button class="btn btn-red btn-sm" style="width:auto;flex:none;padding:0 14px" data-act="pickDrop" data-id="${e.id}">Wählen</button>` : `<button class="pick-btn" data-act="${fs ? 'freeToggle' : 'pickToggle'}" data-id="${e.id}" aria-label="${inP ? 'Entfernen' : 'Hinzufügen'}">${inP ? '✓' : '＋'}</button>`}</div>`;
   });
   return out;
 }
 function pickerChips() {
-  return (pick.mode === 'drop' ? ['Körpergewicht', ...PICK_FILTERS] : PICK_FILTERS).map(f => { const n = f === 'Körpergewicht' ? S.exercises.filter(e => e.bw).length : S.exercises.filter(e => filterOf(e) === f && !e.hidden).length; return `<button class="pchip ${pick.f === f && !pick.q ? 'on' : ''}" data-act="pickF" data-f="${f}">${f}<small>${n}</small></button>`; }).join('');
+  return (pick.mode === 'drop' ? ['Körpergewicht', ...PICK_FILTERS] : PICK_FILTERS).map(f => { const n = f === 'Körpergewicht' ? S.exercises.filter(e => e.bw).length : S.exercises.filter(e => filterOf(e) === f && (pick.mode === 'free' ? true : !e.hidden)).length; return `<button class="pchip ${pick.f === f && !pick.q ? 'on' : ''}" data-act="pickF" data-f="${f}">${f}<small>${n}</small></button>`; }).join('');
 }
 function openPicker(mode) {
   const act = activeSession(); const t = act ? act.type : (trainType || todayType() || 'upper');
   pick.mode = mode || null;
   if (pick.mode === 'drop') pick.f = 'Körpergewicht'; else if (!pick.f || pick.f === 'Körpergewicht') pick.f = t === 'lower' ? 'Bauch' : 'Brust';
   pick.q = '';
+  if (pick.mode === 'free') { pick.f = 'Schultern'; return openSheet(`<h3>Samstag – Übung hinzufügen</h3><div class="muted small" style="margin-bottom:10px">Ganzer Katalog. ＋ fügt die Übung zum Samstag hinzu, ✓ entfernt sie wieder. Mo–Fr bleibt unverändert.</div>
+    <div class="pick-head"><input class="field" id="picker-q" type="search" placeholder="🔍 Suchen, z. B. Seitheben, Crunch, Face Pulls…" autocomplete="off">
+    <div class="pchips" id="picker-chips">${pickerChips()}</div></div>
+    <div id="picker-list">${pickerList()}</div>
+    <div style="height:12px"></div><button class="btn btn-red" data-act="pickDone">Fertig</button>`); }
   if (pick.mode === 'drop') return openSheet(`<h3>Drop mit anderer Übung</h3><div class="muted small" style="margin-bottom:10px">Übung wählen – Körpergewicht-Übungen (KG) brauchen kein Gewicht.</div>
     <div class="pick-head"><input class="field" id="picker-q" type="search" placeholder="🔍 Suchen, z. B. Liegestütze, Dips…" autocomplete="off">
     <div class="pchips" id="picker-chips">${pickerChips()}</div></div>
@@ -923,6 +962,10 @@ const A = {
     await save('exercises', ex); closeSheet(); toast('Übung gespeichert ✓'); render(true);
   },
   picker: () => openPicker(),
+  freePicker: () => openPicker('free'),
+  freeToggle: async d => { const ids = freeIds(activeSession()); const i = ids.indexOf(d.id); if (i >= 0) ids.splice(i, 1); else ids.push(d.id); await setFreeIds(ids); toast(i >= 0 ? 'Entfernt' : '„' + exById(d.id).name + '“ hinzugefügt ✓', 1400); refreshPicker(); },
+  freeRm: async d => { await setFreeIds(freeIds(activeSession()).filter(x => x !== d.id)); toast('Für heute entfernt – Daten bleiben', 1400); render(true); },
+  freeReset: async () => { const act = activeSession(); if (act && act.type === 'free') { act.freeEx = freeIds(null).slice(); await save('sessions', act); } else { await setMeta('freeList', FREE_PRESET.map(([id, n]) => { const ex = S.exercises.find(x => x.name === n) || exById(id); return ex && ex.id; }).filter(Boolean)); } render(true); },
   pickF: d => { pick.f = d.f; pick.q = ''; const i = $('#picker-q'); if (i) i.value = ''; refreshPicker(); },
   pickElbow: (d, el) => { pick.elbow = !pick.elbow; el.classList.toggle('on', pick.elbow); refreshPicker(); },
   pickToggle: async d => { const ex = exById(d.id); ex.hidden = !ex.hidden; await save('exercises', ex); toast(ex.hidden ? 'Aus dem Plan entfernt' : '„' + ex.name + '“ hinzugefügt ✓', 1400); refreshPicker(); },

@@ -358,3 +358,7 @@ details.manual[open] summary{margin-bottom:8px}
 #upd{position:fixed;left:50%;transform:translateX(-50%);top:calc(var(--sat) + 10px);z-index:60;padding:10px 16px;border-radius:999px;background:var(--goldG);color:#1a1405;font-weight:800;font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,.6)}
 @keyframes holdFlash{50%{background:rgba(212,175,55,.25)}}
 @media (prefers-reduced-motion:reduce){.hold.hit{animation:none}}
+/* v1.5.0 Samstag freie Wahl */
+.free-row{position:relative}.free-row .ex{padding-right:54px}
+.free-row .free-x{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:17px;background:#2a1010;color:#ff6b6b;font-size:20px;font-weight:800;border:1px solid rgba(255,59,48,.4);z-index:2}
+.sess.fr .date{border-color:rgba(160,160,170,.5)}
