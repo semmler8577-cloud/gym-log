@@ -387,12 +387,12 @@ details.manual[open] summary{margin-bottom:8px}
 .mob-ol li,.mob-ul li{margin-bottom:6px}
 .mob-cue{border-color:rgba(80,200,120,.35)}.mob-err{border-color:rgba(230,0,0,.35)}
 .mob-timer{text-align:center;position:relative}
-.mob-timer svg{width:200px;height:200px;display:block;margin:0 auto}
+.mob-timer svg{width:260px;height:260px;display:block;margin:0 auto}
 .mt-bg{fill:none;stroke:#1f1f24;stroke-width:12}
 .mt-fg{fill:none;stroke:var(--red);stroke-width:12;stroke-linecap:round;transition:stroke-dashoffset .2s linear}
 .mob-timer.run .mt-fg{stroke:var(--gold)}
-.mt-in{position:absolute;top:16px;left:0;right:0;height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
-.mt-num{font-size:46px;font-weight:800;font-variant-numeric:tabular-nums}
+.mt-in{position:absolute;top:16px;left:0;right:0;height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+.mt-num{font-size:76px;line-height:1;font-weight:800;font-variant-numeric:tabular-nums}
 .mt-sub{font-size:13px;color:var(--gold);letter-spacing:1px}
 .mt-segs{display:flex;gap:6px;justify-content:center;margin-top:8px}
 .mt-seg{font-size:11px;padding:3px 8px;border-radius:8px;border:1px solid var(--line);color:var(--tx3)}
@@ -407,3 +407,5 @@ details.manual[open] summary{margin-bottom:8px}
 .mob-today{font-size:14px}.mob-tl{display:flex;justify-content:space-between;margin-top:6px}
 .mob-st{font-size:12px;padding:2px 8px;border-radius:8px;border:1px solid var(--line);color:var(--tx3)}
 .mob-st.ok{background:var(--goldG);color:#1a1405;border:0}.mob-st.part{color:var(--goldL);border-color:rgba(212,175,55,.5)}
+
+.mob-timer.run .mt-num{color:#fff}

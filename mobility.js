@@ -1,4 +1,4 @@
-/* Voccola Gym Log – Hüft-Beweglichkeit (v1.6.0). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
+/* Voccola Gym Log – Hüft-Beweglichkeit (v1.6.1). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
 'use strict';
 (function () {
 const KEY = 'vgl-mob';
@@ -149,15 +149,30 @@ function beep(n = 1, f = 880) {
 }
 function tInit(ex) { if (!T || T.id !== ex.id) T = { id: ex.id, segs: segsOf(ex), i: 0, left: ex.secs, run: false, done: false }; }
 function tTick() {
-  if (!T || !T.run) return; const now = Date.now(); T.left -= (now - T.last) / 1000; T.last = now;
+  if (!T || !T.run) return; const now = Date.now(); const pl = Math.ceil(T.left); T.left -= (now - T.last) / 1000; T.last = now;
+  const cl = Math.ceil(T.left); if (cl < pl && cl >= 1 && cl <= 3) beep(1, 660);
   if (T.left <= 0) {
     const ex = byId(T.id);
     if (T.i < T.segs.length - 1) { T.i++; T.left = ex.secs; beep(1); toast(T.segs[T.i].side ? 'Seite wechseln → ' + T.segs[T.i].side : 'Nächster Satz', 1600); }
-    else { T.run = false; T.left = 0; T.done = true; beep(3, 990); markDone(T.id, true); toast('Übung geschafft ✓', 1600); }
+    else { T.run = false; T.left = 0; T.done = true; beep(3, 990); markDone(T.id, true); toast('Übung geschafft ✓', 1600); wakeSync(); }
   }
   tPaint();
 }
 setInterval(tTick, 200);
+/* Wake Lock: Bildschirm bleibt an, solange ein Timer läuft (Fallback: stummes Loop-Video) */
+let WL = null, WLp = false, WV = null;
+function wvStart() { try { if (!WV) { WV = document.createElement('video'); WV.src = 'assets/keepawake.mp4'; WV.muted = true; WV.loop = true; WV.setAttribute('muted', ''); WV.setAttribute('playsinline', ''); WV.setAttribute('aria-hidden', 'true');
+  WV.style.cssText = 'position:fixed;width:1px;height:1px;opacity:0.01;left:0;bottom:0;pointer-events:none'; document.body.appendChild(WV); } const p = WV.play(); p && p.catch(() => { }); } catch (_) { } }
+function wakeOn() {
+  if ('wakeLock' in navigator) { if (WL || WLp) return; WLp = true;
+    navigator.wakeLock.request('screen').then(l => { WLp = false; if (!(T && T.run)) { l.release().catch(() => { }); return; } WL = l; l.addEventListener('release', () => { if (WL === l) WL = null; }); })
+      .catch(() => { WLp = false; if (document.visibilityState === 'visible') wvStart(); });
+  } else wvStart();
+}
+function wakeOff() { if (WL) { const l = WL; WL = null; l.release().catch(() => { }); } if (WV) try { WV.pause(); } catch (_) { } }
+function wakeSync() { (T && T.run && document.visibilityState === 'visible') ? wakeOn() : wakeOff(); }
+document.addEventListener('visibilitychange', wakeSync);
+window.addEventListener('pagehide', wakeOff);
 function tPaint() {
   const el = document.getElementById('mt'); if (!el || !T) return; const ex = byId(T.id); const sg = T.segs[T.i];
   const left = Math.max(0, Math.ceil(T.left)); const frac = T.left / ex.secs; const C = 2 * Math.PI * 88;
@@ -217,7 +232,7 @@ function viewDetail(id) {
       <div class="mt-in"><div class="mt-num">0:00</div><div class="mt-sub"></div></div>
       <div class="mt-segs">${T.segs.map(s => `<span class="mt-seg">${s.side ? s.side[0] : 'S'}${s.set}</span>`).join('')}</div>
       <div class="row" style="margin-top:12px"><button class="btn btn-red btn-sm" data-act="mobT">▶ Start</button><button class="btn btn-ghost btn-sm" data-act="mobTR" style="max-width:120px">↺ Reset</button></div>
-      <div class="muted small" style="margin-top:8px;text-align:center">${ex.ps ? 'Seitenwechsel automatisch mit Signalton/Vibration' : 'Signalton/Vibration am Ende'}</div></div>`;
+      <div class="muted small" style="margin-top:8px;text-align:center">${ex.ps ? 'Seitenwechsel automatisch mit Signalton/Vibration' : 'Signalton/Vibration am Ende'} · 3-2-1-Countdown · Display bleibt an</div></div>`;
   } else {
     const n = d.today.sets[id] || 0; const tot = ex.sets * (ex.ps ? 2 : 1);
     const segs = []; for (let s = 1; s <= ex.sets; s++) (ex.ps ? ['Links', 'Rechts'] : ['']).forEach(side => segs.push({ s, side }));
@@ -248,8 +263,8 @@ Object.assign(A, {
   mobSet: dd => { const ex = byId(dd.id); const d = day(); const i = +dd.i; const cur = d.today.sets[dd.id] || 0; d.today.sets[dd.id] = i < cur ? i : i + 1; const tot = ex.sets * (ex.ps ? 2 : 1);
     if (d.today.sets[dd.id] >= tot) { d.today.done[dd.id] = true; beep(2, 990); toast('Übung geschafft ✓', 1400); } else try { navigator.vibrate && navigator.vibrate(40); } catch (_) { }
     sv(d); render(true); },
-  mobT: () => { if (!T) return; beep.c || beep(0); if (T.done) { const ex = byId(T.id); T = null; tInit(ex); } T.run = !T.run; T.last = Date.now(); tPaint(); },
-  mobTR: () => { if (!T) return; const ex = byId(T.id); T = null; tInit(ex); tPaint(); },
+  mobT: () => { if (!T) return; beep.c || beep(0); if (T.done) { const ex = byId(T.id); T = null; tInit(ex); } T.run = !T.run; T.last = Date.now(); if (T.run && !('wakeLock' in navigator)) wvStart(); wakeSync(); tPaint(); },
+  mobTR: () => { if (!T) return; const ex = byId(T.id); T = null; tInit(ex); wakeSync(); tPaint(); },
   mobFinish: () => { const d = day(); const done = Object.keys(d.today.done);
     if (!done.length && !confirm('Noch keine Übung abgehakt. Trotzdem als Einheit speichern?')) return;
     d.history = d.history.filter(h => h.date !== tk()); d.history.push({ date: tk(), ts: Date.now(), done }); d.history.sort((a, b) => a.date < b.date ? -1 : 1); sv(d);
