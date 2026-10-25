@@ -1,11 +1,11 @@
-/* Voccola Gym Log – Hüft-Beweglichkeit (v1.6.2). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
+/* Voccola Gym Log – Hüft-Beweglichkeit (v1.6.3). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
 'use strict';
 (function () {
 const KEY = 'vgl-mob';
 const ld = () => { try { return Object.assign({ today: null, history: [] }, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (_) { return { today: null, history: [] }; } };
 const sv = d => { try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (_) { } };
 const tk = () => dkey();
-function day() { const d = ld(); if (!d.today || d.today.date !== tk()) { d.today = { date: tk(), done: {}, sets: {} }; sv(d); } return d; }
+function day() { const d = ld(); if (!d.today || d.today.date !== tk()) { d.today = { date: tk(), done: {}, sets: {}, log: {} }; sv(d); } return d; }
 
 /* ---------- Strichfiguren ---------- */
 const FG = '#ececee', FAR = '#8d8d94', ARW = '#D4AF37', GR = '#3a3a40';
@@ -101,22 +101,22 @@ const EVE = [
   { id: 'kneel', eve: 1, n: 'Kniestand-Hüftbeuger-Dehnung', sub: 'Abend · Arm über Kopf', dose: '2×60 s pro Seite', t: 'time', sets: 2, secs: 60, ps: true,
     steps: ['Halbkniestand wie morgens, hinteres Knie gepolstert.', 'Gesäß anspannen, Becken leicht nach hinten kippen.', 'Arm der hinteren Seite über den Kopf strecken, leicht zur Gegenseite neigen.', 'Hüfte minimal nach vorn, 60 s ruhig atmen, dann Seite wechseln.'],
     cues: ['Dehnung vorn an der Hüfte bis in die Flanke', 'Oberkörper aufrecht'], err: ['Hohlkreuz', 'Zu tief nach vorn schieben'] },
-  { id: 'pigeon', eve: 1, n: 'Taube (Pigeon)', sub: 'Abend · Gesäß/Hüfte außen', dose: '2×60 s pro Seite', t: 'time', sets: 2, secs: 60, ps: true,
+  { id: 'pigeon', eve: 1, n: 'Taube (Pigeon)', sub: 'Abend · Gesäß/Hüfte außen', dose: '3×60 s links, 2×60 s rechts', t: 'time', sets: 3, setsL: 3, setsR: 2, secs: 60, ps: true,
     steps: ['Aus dem Vierfüßlerstand ein Knie nach vorn zur Hand bringen, Unterschenkel schräg ablegen.', 'Hinteres Bein lang nach hinten ausstrecken.', 'Hüfte gerade ausrichten, aufrecht abstützen – oder, wenn angenehm, auf die Unterarme sinken.', '60 s halten, ruhig atmen, Seite wechseln.'],
-    cues: ['Bei Knieschmerz: Ferse näher zur Hüfte oder Kissen unter das Gesäß', 'Dehnung im Gesäß, nicht im Knie'], err: ['Hüfte kippt zur Seite', 'Knie erzwingen / Schmerz im Knie ignorieren'] },
+    cues: ['Kissen unter die linke Pobacke, wenn du nicht runterkommst', 'Bei Knieschmerz: Ferse näher zur Hüfte oder Kissen unter das Gesäß', 'Dehnung im Gesäß, nicht im Knie'], err: ['Hüfte kippt zur Seite', 'Knie erzwingen / Schmerz im Knie ignorieren'] },
   { id: 'turtle', eve: 1, n: 'Schildkröte (Yoga)', sub: 'Abend · Kurmasana, sanfte Variante', dose: '2×60 s', t: 'time', sets: 2, secs: 60,
     steps: ['Sitzen, Beine weit gegrätscht, Knie gebeugt, Füße am Boden.', 'Oberkörper langsam nach vorn sinken lassen.', 'Arme unter den Knien nach außen schieben, Handflächen am Boden.', 'Locker lassen, 60 s ruhig atmen. Langsam wieder aufrollen.'],
     cues: ['Nur bis kurz vor Kribbeln – dann etwas zurück', 'Nur abends – nichts erzwingen', 'Knie so weit gebeugt wie nötig'], err: ['Mit Kraft nach unten drücken', 'Bei Rücken-/Ausstrahlungsschmerz weitermachen → sofort abbrechen'] }
 ];
 
 const FAS = [
-  { id: 'froll_g', fas: 1, n: 'Blackroll Gesäß', sub: 'Faszien · Gesäßmuskulatur', dose: '60 s pro Seite', t: 'time', sets: 1, secs: 60, ps: true,
+  { id: 'froll_g', fas: 1, n: 'Blackroll Gesäß', sub: 'Faszien · Gesäßmuskulatur', dose: '90 s links, 60 s rechts', t: 'time', sets: 1, secs: 90, secsL: 90, secsR: 60, ps: true,
     steps: ['Auf die Blackroll setzen, Hände hinten abstützen.', 'Gewicht auf eine Gesäßhälfte verlagern (Knöchel auf das andere Knie legen = intensiver).', 'Langsam vor und zurück rollen, ca. 2–3 cm pro Sekunde.', 'Auf festen Punkten 10–20 s verweilen und ausatmen. Dann Seite wechseln.'],
     cues: ['Druck nur „angenehm-intensiv“ (max. 6–7 von 10)', 'Ruhig atmen, nicht verkrampfen'], err: ['Zu schnell rollen', 'Auf das Steißbein/Kreuzbein rollen'] },
   { id: 'froll_t', fas: 1, n: 'Blackroll Oberschenkel außen/vorne', sub: 'Faszien · Quadrizeps & Außenseite', dose: '60 s pro Seite', t: 'time', sets: 1, secs: 60, ps: true,
     steps: ['Unterarmstütz, Blackroll unter dem vorderen Oberschenkel.', 'Langsam von knapp über dem Knie bis zur Hüfte rollen.', 'Für die Außenseite leicht auf die Seite drehen (nicht direkt auf den Knochen/Tractus pressen).', '60 s, dann anderes Bein.'],
     cues: ['Bauch fest, kein Durchhängen im Rücken', 'Gewicht mit dem anderen Bein/Armen dosieren'], err: ['Über das Knie rollen', 'Hohlkreuz im Unterarmstütz', 'Zähne zusammenbeißen – zu viel Druck'] },
-  { id: 'ballpir', fas: 1, n: 'Ball Piriformis', sub: 'Faszien · tiefe Hüftmuskulatur', dose: '60 s pro Seite', t: 'time', sets: 1, secs: 60, ps: true,
+  { id: 'ballpir', fas: 1, n: 'Faszien Ball Piriformis', sub: 'Faszien · tiefe Hüftmuskulatur', dose: '90 s links, 60 s rechts', t: 'time', sets: 1, secs: 90, secsL: 90, secsR: 60, ps: true,
     steps: ['Sitzen, kleinen (oder großen) Ball mittig unter eine Gesäßhälfte legen.', 'Bein der Seite überschlagen (Knöchel auf das andere Knie).', 'Kleine Kreise und Vor-zurück-Bewegungen, druckempfindliche Stelle suchen.', 'Dort ruhig atmen und lösen lassen, dann Seite wechseln.'],
     cues: ['Großer Ball = sanfter, kleiner Ball = intensiver', 'Kribbeln/Ausstrahlen ins Bein → Ball verschieben'], err: ['Auf den Ischiasnerv drücken (Kribbeln ignorieren)', 'Zu lange auf einem Punkt (> 30 s)'] },
   { id: 'duoball', fas: 1, n: 'Duoball neben der Lendenwirbelsäule', sub: 'Faszien · Rückenstrecker', dose: '60 s', t: 'time', sets: 1, secs: 60,
@@ -140,20 +140,24 @@ function stats() {
 
 /* ---------- Timer ---------- */
 let T = null; // {id, segs:[{set,side}], i, left, run, last}
-function segsOf(ex) { const a = []; for (let s = 1; s <= ex.sets; s++) (ex.ps ? ['Links', 'Rechts'] : ['']).forEach(side => a.push({ set: s, side })); return a; }
+function segsOf(ex) { const a = []; const nL = ex.setsL || ex.sets, nR = ex.setsR || ex.sets, mx = ex.ps ? Math.max(nL, nR) : ex.sets;
+  for (let s = 1; s <= mx; s++) { if (!ex.ps) a.push({ set: s, side: '', secs: ex.secs, n: ex.sets }); else { if (s <= nL) a.push({ set: s, side: 'Links', secs: ex.secsL || ex.secs, n: nL }); if (s <= nR) a.push({ set: s, side: 'Rechts', secs: ex.secsR || ex.secs, n: nR }); } }
+  return a; }
+function logSeg(id, sg, secs) { const d = day(); const L = d.today.log || (d.today.log = {}); (L[id] || (L[id] = [])).push({ side: sg.side, set: sg.set, secs: Math.round(secs) }); sv(d); }
 function beep(n = 1, f = 880) {
   try { const C = beep.c || (beep.c = new (window.AudioContext || window.webkitAudioContext)()); C.resume && C.resume();
     for (let i = 0; i < n; i++) { const o = C.createOscillator(), g = C.createGain(); o.frequency.value = f; o.connect(g); g.connect(C.destination); const t0 = C.currentTime + i * .28;
       g.gain.setValueAtTime(.0001, t0); g.gain.exponentialRampToValueAtTime(.4, t0 + .02); g.gain.exponentialRampToValueAtTime(.0001, t0 + .22); o.start(t0); o.stop(t0 + .25); } } catch (_) { }
   try { navigator.vibrate && navigator.vibrate(n > 1 ? [200, 100, 200, 100, 300] : 250); } catch (_) { }
 }
-function tInit(ex) { if (!T || T.id !== ex.id) T = { id: ex.id, segs: segsOf(ex), i: 0, left: ex.secs, run: false, done: false }; }
+function tInit(ex) { if (!T || T.id !== ex.id) T = { id: ex.id, segs: segsOf(ex), i: 0, left: 0, run: false, done: false }, T.left = T.segs[0].secs; }
 function tTick() {
   if (!T || !T.run) return; const now = Date.now(); const pl = Math.ceil(T.left); T.left -= (now - T.last) / 1000; T.last = now;
   const cl = Math.ceil(T.left); if (cl < pl && cl >= 1 && cl <= 3) beep(1, 660);
   if (T.left <= 0) {
     const ex = byId(T.id);
-    if (T.i < T.segs.length - 1) { T.i++; T.left = ex.secs; beep(1); toast(T.segs[T.i].side ? 'Seite wechseln → ' + T.segs[T.i].side : 'Nächster Satz', 1600); }
+    logSeg(T.id, T.segs[T.i], T.segs[T.i].secs);
+    if (T.i < T.segs.length - 1) { T.i++; T.left = T.segs[T.i].secs; beep(1); toast(T.segs[T.i].side ? 'Seite wechseln → ' + T.segs[T.i].side : 'Nächster Satz', 1600); }
     else { T.run = false; T.left = 0; T.done = true; beep(3, 990); markDone(T.id, true); toast('Übung geschafft ✓', 1600); wakeSync(); }
   }
   tPaint();
@@ -175,11 +179,11 @@ document.addEventListener('visibilitychange', wakeSync);
 window.addEventListener('pagehide', wakeOff);
 function tPaint() {
   const el = document.getElementById('mt'); if (!el || !T) return; const ex = byId(T.id); const sg = T.segs[T.i];
-  const left = Math.max(0, Math.ceil(T.left)); const frac = T.left / ex.secs; const C = 2 * Math.PI * 88;
+  const left = Math.max(0, Math.ceil(T.left)); const frac = T.left / sg.secs; const C = 2 * Math.PI * 88;
   el.querySelector('.mt-num').textContent = Math.floor(left / 60) + ':' + pad(left % 60);
-  el.querySelector('.mt-sub').textContent = T.done ? 'Fertig 💪' : `Satz ${sg.set}/${ex.sets}${sg.side ? ' · ' + sg.side : ''}`;
+  el.querySelector('.mt-sub').textContent = T.done ? 'Fertig 💪' : `Satz ${sg.set}/${sg.n}${sg.side ? ' · ' + sg.side + (ex.secsL ? ' · ' + sg.secs + ' s' : '') : ''}${'' ? ' · ' + sg.side : ''}`;
   el.querySelector('.mt-fg').style.strokeDashoffset = C * (1 - frac);
-  el.querySelector('[data-act=mobT]').textContent = T.run ? '❚❚ Pause' : (T.done ? '↻ Nochmal' : (T.left < ex.secs || T.i ? '▶ Weiter' : '▶ Start'));
+  el.querySelector('[data-act=mobT]').textContent = T.run ? '❚❚ Pause' : (T.done ? '↻ Nochmal' : (T.left < sg.secs || T.i ? '▶ Weiter' : '▶ Start'));
   el.classList.toggle('run', T.run);
   $$('.mt-seg').forEach((s, i) => s.classList.toggle('on', i < T.i || T.done));
 }
@@ -199,7 +203,7 @@ function viewList() {
   const d = day(); const s = stats(); const nDone = EX.filter(e => d.today.done[e.id]).length;
   const eDone = EVE.filter(e => d.today.done[e.id]).length, fDone = FAS.filter(e => d.today.done[e.id]).length;
   const st = (n, t) => n >= t ? '<span class="mob-st ok">✓ heute erledigt</span>' : n ? `<span class="mob-st part">${n}/${t} · läuft</span>` : '<span class="mob-st">noch offen</span>';
-  const hist = [...d.history].reverse().slice(0, 8).map(h => `<div class="mob-h"><span>${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)}</span><span class="muted small">${h.done.filter(x => EX.some(e => e.id === x)).length}/${EX.length} Übungen${h.done.some(x => EVE.some(e => e.id === x)) ? ' · ☾ Abend' : ''}${h.done.some(x => FAS.some(e => e.id === x)) ? ' · ◎ Faszien' : ''}</span></div>`).join('') || '<div class="muted small">Noch keine Einheit – heute ist ein guter Tag zum Starten 🙂</div>';
+  const hist = [...d.history].reverse().slice(0, 8).map(h => `<div class="mob-h"><span>${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)}</span><span class="muted small">${h.note ? '📝 ' : ''}${h.done.filter(x => EX.some(e => e.id === x)).length}/${EX.length} Übungen${h.done.some(x => EVE.some(e => e.id === x)) ? ' · ☾ Abend' : ''}${h.done.some(x => FAS.some(e => e.id === x)) ? ' · ◎ Faszien' : ''}</span><button class="btn btn-ghost btn-sm" style="width:auto;padding:4px 10px;margin-left:6px" data-act="mobExp" data-date="${h.date}">Exportieren</button></div>`).join('') || '<div class="muted small">Noch keine Einheit – heute ist ein guter Tag zum Starten 🙂</div>';
   return {
     html: topbar('Hüft-Beweglichkeit', 'Dehnung & Gesundheit', null) + `
     <div class="mob-stats">
@@ -219,6 +223,7 @@ function viewList() {
     ${FAS.map(e => row(e, d)).join('')}
     <div style="height:6px"></div>
     ${s.todayDone ? `<button class="btn btn-outline-gold" data-act="mobFinish">✓ Heute erledigt – Eintrag aktualisieren</button>` : `<button class="btn btn-red" data-act="mobFinish">Einheit abschließen ✓</button>`}
+    ${s.todayDone ? `<div style="height:8px"></div><button class="btn btn-gold" data-act="mobExp" data-date="${tk()}">📋 Exportieren</button>` : ''}
     <div class="sec-h muted small" style="margin:18px 2px 8px">VERLAUF</div><div class="card">${hist}</div>`
   };
 }
@@ -267,7 +272,35 @@ Object.assign(A, {
   mobTR: () => { if (!T) return; const ex = byId(T.id); T = null; tInit(ex); wakeSync(); tPaint(); },
   mobFinish: () => { const d = day(); const done = Object.keys(d.today.done);
     if (!done.length && !confirm('Noch keine Übung abgehakt. Trotzdem als Einheit speichern?')) return;
-    d.history = d.history.filter(h => h.date !== tk()); d.history.push({ date: tk(), ts: Date.now(), done }); d.history.sort((a, b) => a.date < b.date ? -1 : 1); sv(d);
-    beep(2, 990); const s = stats(); toast(`Stark, Markus! ${s.streak} ${s.streak === 1 ? 'Tag' : 'Tage'} in Folge 🔥`, 2200); render(true); }
+    d.history = d.history.filter(h => h.date !== tk()); const old = d.history.find(h => h.date === tk()) || {};
+    d.history.push({ date: tk(), ts: Date.now(), done, sets: Object.assign({}, d.today.sets), log: JSON.parse(JSON.stringify(d.today.log || {})), note: old.note || '' }); d.history.sort((a, b) => a.date < b.date ? -1 : 1); sv(d);
+    beep(2, 990); const s = stats(); toast(`Stark, Markus! ${s.streak} ${s.streak === 1 ? 'Tag' : 'Tage'} in Folge 🔥`, 2200); render(true); setTimeout(() => A.mobExp({ date: tk() }), 400); },
+  mobExp: dd => { const d = ld(); const h = d.history.find(x => x.date === dd.date); if (!h) return toast('Eintrag nicht gefunden');
+    openSheet(`<h3>Einheit exportieren</h3><div class="muted small">${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)} · ${h.done.length} Übungen</div>
+      <label class="muted small" style="display:block;margin:12px 0 6px">Wie war's? Seitenunterschiede, Gefühl, Steifigkeit 0-10</label>
+      <textarea class="field" id="mob-note" style="min-height:120px" placeholder="z. B. links deutlich steifer, Steifigkeit 6/10">${esc(h.note || '')}</textarea>
+      <div style="height:10px"></div><button class="btn btn-gold" data-act="mobExpGo" data-date="${h.date}">📤 Exportieren</button>
+      <div style="height:6px"></div><button class="btn btn-ghost btn-sm" data-act="mobNoteSave" data-date="${h.date}">Nur Notiz speichern</button>`); },
+  mobNoteSave: dd => { saveNote(dd.date); toast('Notiz gespeichert ✓'); closeSheet(); render(true); },
+  mobExpGo: async dd => { const h = saveNote(dd.date); const txt = mobText(h);
+    try { if (navigator.share) { await navigator.share({ title: 'Hüft-Beweglichkeit', text: txt }); closeSheet(); render(true); return; } } catch (e) { if (e.name === 'AbortError') return; }
+    const ok = await copyText(txt); if (ok) { toast('Kopiert ✓ – jetzt einfügen', 2600); closeSheet(); render(true); }
+    else openSheet(`<h3>Export</h3><div class="muted small">Text markieren und kopieren:</div><textarea class="field" style="min-height:300px">${esc(txt)}</textarea>`); }
 });
+function saveNote(date) { const d = ld(); const h = d.history.find(x => x.date === date); const ta = document.getElementById('mob-note'); if (h && ta) { h.note = ta.value.trim(); sv(d); } return h; }
+function mobText(h) {
+  const L = h.log || {}, S2 = h.sets || {}; const blk = [['☀️ Morgen-Routine', EX], ['☾ Abend', EVE], ['◎ Faszien', FAS]];
+  const out = [`Hüft-Beweglichkeit – ${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)}`];
+  const bd = blk.filter(([, l]) => l.some(e => h.done.includes(e.id))).map(([n, l]) => `${n} (${l.filter(e => h.done.includes(e.id)).length}/${l.length})`);
+  out.push('Blöcke: ' + (bd.join(', ') || '–'));
+  for (const [n, l] of blk) { const ex = l.filter(e => h.done.includes(e.id) || (L[e.id] || []).length || S2[e.id]); if (!ex.length) continue; out.push('', n);
+    for (const e of ex) { let det;
+      if (e.t === 'time') { const lg = L[e.id] || []; if (lg.length) { const by = {}; lg.forEach(x => (by[x.side || ''] = by[x.side || ''] || []).push(x.secs));
+          det = Object.entries(by).map(([sd, a]) => `${sd ? sd + ': ' : ''}${a.length}× ${a.map(fmtS).join('/')}`).join(' · '); }
+        else det = 'abgehakt (' + e.dose + ')'; }
+      else { const n2 = S2[e.id] || 0; const segs = e.sets * (e.ps ? 2 : 1); det = n2 ? (e.ps ? `${Math.ceil(n2 / 2)}×${e.reps} pro Seite` : `${n2}×${e.reps}`) + (n2 < segs ? ` (${n2}/${segs})` : '') : 'abgehakt (' + e.dose + ')'; }
+      out.push(`${h.done.includes(e.id) ? '✓' : '◐'} ${e.n}: ${det}`); } }
+  out.push('', 'Notiz: ' + (h.note || '–')); return out.join('\n'); }
+function fmtS(x) { return x >= 60 && x % 60 === 0 ? (x / 60) + ' min' : x >= 60 ? Math.floor(x / 60) + ':' + pad(x % 60) + ' min' : x + ' s'; }
+window.mobText = mobText;
 })();
