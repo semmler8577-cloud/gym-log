@@ -1,6 +1,6 @@
-/* Voccola Gym Log – Service Worker (v1.5.1: neue Übungen) */
-const CACHE = 'vgl-v1.5.1';
-const ASSETS = ['./', './index.html', './styles.css', './app.js', './manifest.webmanifest',
+/* Voccola Gym Log – Service Worker (v1.6.0: Hüft-Beweglichkeit) */
+const CACHE = 'vgl-v1.6.0';
+const ASSETS = ['./', './index.html', './styles.css', './app.js', './mobility.js', './manifest.webmanifest',
   './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png', './icons/icon-maskable-512.png', './assets/dumbbell.webp'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS.map(u => new Request(u, { cache: 'reload' })))).then(() => self.skipWaiting()));
@@ -9,7 +9,7 @@ self.addEventListener('activate', e => {
   e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
 });
 self.addEventListener('message', e => { if (e.data === 'skipWaiting') self.skipWaiting(); });
-const CORE = /\/(index\.html|app\.js|styles\.css|sw\.js)?$/;
+const CORE = /\/(index\.html|app\.js|mobility\.js|styles\.css|sw\.js)?$/;
 self.addEventListener('fetch', e => {
   const req = e.request; const url = new URL(req.url);
   if (req.method !== 'GET' || url.origin !== location.origin) return;
