@@ -1,4 +1,4 @@
-/* Voccola Gym Log – Hüft-Beweglichkeit (v1.6.1). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
+/* Voccola Gym Log – Hüft-Beweglichkeit (v1.6.2). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
 'use strict';
 (function () {
 const KEY = 'vgl-mob';
@@ -98,15 +98,15 @@ const EX = [
     err: ['Hohlkreuz beim Strecken', 'Luft anhalten', 'Zu schnell, Schwung'] }
 ];
 const EVE = [
-  { id: 'kneel', eve: 1, n: 'Kniestand-Hüftbeuger-Dehnung', sub: 'Abend · Arm über Kopf', dose: '60 s pro Seite', t: 'time', sets: 1, secs: 60, ps: true,
+  { id: 'kneel', eve: 1, n: 'Kniestand-Hüftbeuger-Dehnung', sub: 'Abend · Arm über Kopf', dose: '2×60 s pro Seite', t: 'time', sets: 2, secs: 60, ps: true,
     steps: ['Halbkniestand wie morgens, hinteres Knie gepolstert.', 'Gesäß anspannen, Becken leicht nach hinten kippen.', 'Arm der hinteren Seite über den Kopf strecken, leicht zur Gegenseite neigen.', 'Hüfte minimal nach vorn, 60 s ruhig atmen, dann Seite wechseln.'],
     cues: ['Dehnung vorn an der Hüfte bis in die Flanke', 'Oberkörper aufrecht'], err: ['Hohlkreuz', 'Zu tief nach vorn schieben'] },
-  { id: 'pigeon', eve: 1, n: 'Taube (Pigeon)', sub: 'Abend · Gesäß/Hüfte außen', dose: '60 s pro Seite', t: 'time', sets: 1, secs: 60, ps: true,
+  { id: 'pigeon', eve: 1, n: 'Taube (Pigeon)', sub: 'Abend · Gesäß/Hüfte außen', dose: '2×60 s pro Seite', t: 'time', sets: 2, secs: 60, ps: true,
     steps: ['Aus dem Vierfüßlerstand ein Knie nach vorn zur Hand bringen, Unterschenkel schräg ablegen.', 'Hinteres Bein lang nach hinten ausstrecken.', 'Hüfte gerade ausrichten, aufrecht abstützen – oder, wenn angenehm, auf die Unterarme sinken.', '60 s halten, ruhig atmen, Seite wechseln.'],
     cues: ['Bei Knieschmerz: Ferse näher zur Hüfte oder Kissen unter das Gesäß', 'Dehnung im Gesäß, nicht im Knie'], err: ['Hüfte kippt zur Seite', 'Knie erzwingen / Schmerz im Knie ignorieren'] },
-  { id: 'turtle', eve: 1, n: 'Schildkröte (Yoga)', sub: 'Abend · Kurmasana, sanfte Variante', dose: '60 s', t: 'time', sets: 1, secs: 60,
+  { id: 'turtle', eve: 1, n: 'Schildkröte (Yoga)', sub: 'Abend · Kurmasana, sanfte Variante', dose: '2×60 s', t: 'time', sets: 2, secs: 60,
     steps: ['Sitzen, Beine weit gegrätscht, Knie gebeugt, Füße am Boden.', 'Oberkörper langsam nach vorn sinken lassen.', 'Arme unter den Knien nach außen schieben, Handflächen am Boden.', 'Locker lassen, 60 s ruhig atmen. Langsam wieder aufrollen.'],
-    cues: ['Nur abends – nichts erzwingen', 'Knie so weit gebeugt wie nötig'], err: ['Mit Kraft nach unten drücken', 'Bei Rücken-/Ausstrahlungsschmerz weitermachen → sofort abbrechen'] }
+    cues: ['Nur bis kurz vor Kribbeln – dann etwas zurück', 'Nur abends – nichts erzwingen', 'Knie so weit gebeugt wie nötig'], err: ['Mit Kraft nach unten drücken', 'Bei Rücken-/Ausstrahlungsschmerz weitermachen → sofort abbrechen'] }
 ];
 
 const FAS = [
