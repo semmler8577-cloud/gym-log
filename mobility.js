@@ -1,4 +1,4 @@
-/* Voccola Gym Log – Hüft-Beweglichkeit (v1.6.9). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
+/* Voccola Gym Log – Hüft-Beweglichkeit (v1.7.0). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
 'use strict';
 (function () {
 const KEY = 'vgl-mob';
@@ -64,7 +64,7 @@ const ILL = {
     return svg([panel('BALL UNTERM GESÄSS', b), panel('KREISEN', Object.assign({}, b), '<ellipse cx="94" cy="88" rx="16" ry="6" fill="none" stroke="#D4AF37" stroke-width="2.5" stroke-dasharray="4 3"/>')]); }
   ,duoball: () => { const x = '<circle cx="84" cy="86" r="5.5" fill="#D4AF37" opacity=".85"/><circle cx="95" cy="86" r="5.5" fill="#D4AF37" opacity=".85"/>';
     const b = { x, h: [22, 82], n: [38, 84], c: [84, 76], p: [110, 84], k1: [132, 60], f1: [152, 90], k2: [128, 60], f2: [148, 90], e1: [56, 88], w1: [74, 89] };
-    return svg([panel('DUOBALL LWS', b), panel('SANFT ATMEN', b, '<text x="90" y="64" text-anchor="middle" font-size="10" fill="#ff6b6b">NICHT auf Wirbel</text>' + arrow('M90 68 V76', 0))]); }
+    return svg([panel('DUOBALL LWS', b), panel('ATMEN · ROLLEN', b, '<text x="90" y="64" text-anchor="middle" font-size="10" fill="#ff6b6b">NICHT auf Wirbel</text>' + arrow('M90 68 V76', 0))]); }
   ,shakti: () => { const x = '<rect x="20" y="88" width="150" height="5" rx="2" fill="none" stroke="#D4AF37" stroke-dasharray="2 2"/>';
     return svg([panel('SHAKTI-MATTE', { x, h: [30, 80], n: [46, 84], p: [104, 84], k1: [136, 84], f1: [168, 84], e1: [72, 86], w1: [96, 86] }), panel('10 MIN ATMEN', { x, h: [30, 80], n: [46, 84], p: [104, 84], k1: [126, 62], f1: [146, 86], k2: [124, 62], f2: [144, 86], e1: [72, 86], w1: [96, 86] }, '<text x="70" y="50" font-size="14" fill="#D4AF37">z z z</text>')]); }
 };
@@ -128,9 +128,9 @@ const FAS = [
   { id: 'ballpir', fas: 1, n: 'Faszien Ball Piriformis', sub: 'Faszien · tiefe Hüftmuskulatur', dose: '90 s links, 60 s rechts', t: 'time', sets: 1, secs: 90, secsL: 90, secsR: 60, ps: true,
     steps: ['Sitzen, kleinen (oder großen) Ball mittig unter eine Gesäßhälfte legen.', 'Bein der Seite überschlagen (Knöchel auf das andere Knie).', 'Kleine Kreise und Vor-zurück-Bewegungen, druckempfindliche Stelle suchen.', 'Dort ruhig atmen und lösen lassen, dann Seite wechseln.'],
     cues: ['Großer Ball = sanfter, kleiner Ball = intensiver', 'Kribbeln/Ausstrahlen ins Bein → Ball verschieben'], err: ['Auf den Ischiasnerv drücken (Kribbeln ignorieren)', 'Zu lange auf einem Punkt (> 30 s)'] },
-  { id: 'duoball', fas: 1, n: 'Duoball neben der Lendenwirbelsäule', sub: 'Faszien · Rückenstrecker', dose: '60 s', t: 'time', sets: 1, secs: 60,
-    steps: ['Rückenlage, Knie gebeugt, Füße am Boden.', 'Duoball quer unter den unteren Rücken legen – die Wirbelsäule liegt IN der Lücke, die Bälle links und rechts daneben.', 'Becken etwas anheben, Duoball positionieren, dann sanft ablegen.', 'Ruhig in den Bauch atmen, evtl. minimal hoch und runter rollen.'],
-    cues: ['NIE direkt auf der Wirbelsäule', 'Sanfter Druck – Bandscheibe schonen', 'Bei Schmerz sofort herausnehmen'], err: ['Ball auf den Dornfortsätzen', 'Ins Hohlkreuz drücken', 'Mit viel Gewicht rollen'] },
+  { id: 'duoball', fas: 1, n: 'Duoball LWS – Atmen & Sinken + Triggerpunkt rollen', sub: 'Faszien · Rückenstrecker · 2 Phasen', dose: '2 Phasen à 60–90 s', t: 'time', sets: 1, secs: 180,
+    steps: ['Vorbereitung: Rückenlage, Knie gebeugt, Füße am Boden. Becken kurz anheben und den Duoball quer unter die Lendenwirbelsäule legen – die Ballhälften liegen links und rechts neben der Wirbelsäule, NIE auf der Wirbelsäule selbst. Dann sanft ablegen.', 'Phase 1 – Duoball LWS – Atmen & Sinken (60–90 s): Tief einatmen, lang ausatmen und dich mit jedem Atemzug ein Stück tiefer auf den Ball sinken lassen.', 'Phase 2 – Duoball LWS – Triggerpunkt rollen (60–90 s gesamt): Langsam über den Ball hoch und runter rollen, druckempfindliche Stellen suchen.', 'Auf jeder empfindlichen Stelle 20–30 s verweilen und ruhig weiteratmen. Linke Seite etwas länger bearbeiten.'],
+    cues: ['Abbrechen, wenn Schmerz ausstrahlt oder Kribbeln beginnt', 'NIE direkt auf der Wirbelsäule', 'Lange Ausatmung – loslassen statt drücken', 'Sanfter Druck – Bandscheibe schonen'], err: ['Ball auf den Dornfortsätzen', 'Ins Hohlkreuz drücken', 'Zu schnell oder mit viel Gewicht rollen', 'Ausstrahlung/Kribbeln ignorieren'] },
   { id: 'shakti', fas: 1, n: 'Shakti-Matte Entspannung', sub: 'Faszien · Entspannung', dose: '10 Min', t: 'time', sets: 1, secs: 600,
     steps: ['Matte auf eine ebene Unterlage legen, langsam darauf hinlegen (Rücken, ggf. dünnes Shirt am Anfang).', 'Beine lang oder angewinkelt, Arme locker neben den Körper.', 'Die ersten 1–2 Minuten sind intensiv – ruhig weiteratmen.', '10 Min liegen bleiben, langsam über die Seite aufstehen.'],
     cues: ['Lange, ruhige Ausatmung', 'Ideal abends vor dem Schlafen'], err: ['Schnell aufspringen (Kreislauf)', 'Sich auf die Matte „fallen lassen“'] }
