@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.6.7';
+const APP_VERSION = '1.6.8';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -425,7 +425,7 @@ function exRow(ex, act) {
   const n = act ? setsOfEx(act.id, ex.id).filter(x => !x.warmup).length : 0;
   const ls = lastSessionSets(ex.id, act ? act.start : Date.now() + 1);
   const sub = ls ? 'Zuletzt: ' + ls.sets.filter(x => !x.warmup).slice(0, 3).map(x => setLabel(x, ex)).join(', ') : 'Noch nicht trainiert';
-  return `<a class="ex ${n ? 'done' : ''}" href="#/ex/${ex.id}"><div class="th" ${ex.photo ? `style="background-image:url('${ex.photo}')"` : ''}>${ex.photo ? '' : GROUP_ICON[ex.group] || '•'}</div>
+  return `<a class="ex ${n ? 'done' : ''}" href="#/ex/${ex.id}"><div class="th" ${(ex.photo || exImg(ex)) ? `style="background-image:url('${ex.photo || exImg(ex)}');background-size:cover;background-color:#f4efe6"` : ''}>${(ex.photo || exImg(ex)) ? '' : GROUP_ICON[ex.group] || '•'}</div>
     <div class="nm"><b>${esc(ex.name)}</b>${ex.elbow === 'e' ? '<i class="elbow-dot" title="ellenbogenfreundlich"></i>' : ''}<span>${ex.sub ? esc(ex.sub) + ' · ' : ''}${esc(sub)}</span></div><div class="cnt ${n ? 'has' : ''}">${n}</div></a>`;
 }
 function viewTrain() {
@@ -521,6 +521,7 @@ function viewEx(id) {
   const lastHtml = ls ? `<div class="card"><div class="small muted" style="letter-spacing:1px;text-transform:uppercase;font-weight:700;margin-bottom:6px">Letztes Mal · ${dateDE(dkey(ls.session.start))}</div><div class="last">${ls.sets.map(x => `<b>${x.warmup ? '<span style="color:#888">A</span> ' : ''}${setLabel(x, ex)}</b>${x.drops && x.drops.length ? ' <span style="color:#ff7070">→ ' + dropLabel(x, ex) + '</span>' : ''}`).join('<br>')}</div></div>` : '';
   return {
     html: topbar(ex.name, ex.group + (isSec(ex) ? ' · isometrisch' : ''), '#/train', `<span style="display:flex;gap:8px"><button class="icon-btn" data-act="editEx" data-id="${ex.id}" aria-label="Übung bearbeiten">✎</button><button class="icon-btn" data-act="go" data-to="#/progress/${ex.id}" aria-label="Fortschritt">📈</button></span>`) +
+      (exImg(ex) ? `<div class="card"><img class="mob-anat" src="${exImg(ex)}" alt=""><div class="muted small mob-anat-cap">● rot = trainierte Muskulatur</div></div>` : '') +
       (ex.photo ? `<div class="photo-hero" style="background-image:url('${ex.photo}')" data-act="photo" data-id="${ex.id}"><span class="photo-edit">📷 Foto vom Gerät ändern</span></div>` : `<button class="btn btn-outline-gold btn-sm" data-act="photo" data-id="${ex.id}" style="margin-bottom:12px">📷 Foto vom Gerät aufnehmen</button>`) +
       (ex.desc || ex.elbowNote ? `<div class="card"><div class="small muted" style="letter-spacing:1px;text-transform:uppercase;font-weight:700;margin-bottom:6px">Ausführung</div>${ex.desc ? `<div style="font-size:14px;line-height:1.45;color:var(--tx2)">${esc(ex.desc)}</div>` : ''}${ex.elbowNote ? `<div style="margin-top:8px;font-size:14px">${elbowBadge(ex)} <span style="color:#ffd60a">${esc(ex.elbowNote)}</span></div>` : ''}</div>` : '') +
       lastHtml +
@@ -528,6 +529,8 @@ function viewEx(id) {
       `<div style="height:6px"></div>` + editorHTML(ex, act)
   };
 }
+const EX_IMG = new Set(["bauch-crunch-maschine", "r-facepull", "r-revfly", "s-presse-kabel-liegend", "s-seitheben-kabel-einarm", "s-seitheben-vorgebeugt", "x1", "x10", "x11", "x12", "x13", "x14", "x15", "x16", "x17", "x18", "x19", "x2", "x20", "x21", "x22", "x23", "x24", "x25", "x26", "x27", "x28", "x3", "x4", "x5", "x6", "x7", "x8", "x9"]);
+const exImg = ex => EX_IMG.has(ex.id) ? `./assets/ex/${ex.id}.webp` : '';
 function setEdField(f, v, raw) {
   if (f === 'note') { ED.note = v; return; }
   const val = raw ? num(v) : v;
