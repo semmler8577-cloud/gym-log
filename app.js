@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.7.1';
+const APP_VERSION = '1.7.2';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -225,6 +225,13 @@ async function loadAll() {
     let i = 0;
     for (const e of EX_V6) if (!exById(e.id) && !S.exercises.some(x => x.name === e.name)) await save('exercises', { ...e, unit: 'reps', order: 500 + i++, photo: null, hidden: true, catalog: true });
     await setMeta('catalogVersion', 6);
+  }
+  if ((S.meta.catalogVersion || 0) < 7) {
+    // Tennisarm exzentrisch: Anleitung ergänzen (nur wenn noch keine Beschreibung)
+    const ECC_DESC = 'Setup: Sitzen, Unterarm auf Oberschenkel oder Bank, Handgelenk ragt über die Kante, Handfläche nach unten. Leichte Kurzhantel (Start ca. 2–5 kg).\n\nAblauf:\n1) Mit der anderen Hand das Handgelenk nach oben bringen – der betroffene Arm arbeitet hier nicht.\n2) Andere Hand loslassen.\n3) Hantel langsam in 3–5 Sek. absenken bis in die volle Beugung.\n4) Unten wieder mit der anderen Hand hochhelfen. Wiederholen.\n\nDosis: 3×15 Wdh., 1× täglich. Gewicht steigern, wenn 3×15 schmerzarm gehen.\n\nSchmerz: Leichter Dehn-/Belastungsschmerz bis ca. 3–4/10 ist ok und sollte bis zum nächsten Tag abklingen. Stärker oder stechend → Gewicht reduzieren.\n\nFehler: Hantel aktiv hochheben · zu schnell absenken · Unterarm hebt ab · Ellenbogen nicht abgestützt.';
+    const ecc = S.exercises.find(e => /tennisarm exzentrisch/i.test(e.name));
+    if (ecc && !ecc.desc) { ecc.desc = ECC_DESC; await save('exercises', ecc); }
+    await setMeta('catalogVersion', 7);
   }
 }
 
@@ -523,7 +530,7 @@ function viewEx(id) {
     html: topbar(ex.name, ex.group + (isSec(ex) ? ' · isometrisch' : ''), '#/train', `<span style="display:flex;gap:8px"><button class="icon-btn" data-act="editEx" data-id="${ex.id}" aria-label="Übung bearbeiten">✎</button><button class="icon-btn" data-act="go" data-to="#/progress/${ex.id}" aria-label="Fortschritt">📈</button></span>`) +
       (exImg(ex) ? `<div class="card"><img class="mob-anat" src="${exImg(ex)}" alt=""><div class="muted small mob-anat-cap">● rot = trainierte Muskulatur</div></div>` : '') +
       (ex.photo ? `<div class="photo-hero" style="background-image:url('${ex.photo}')" data-act="photo" data-id="${ex.id}"><span class="photo-edit">📷 Foto vom Gerät ändern</span></div>` : `<button class="btn btn-outline-gold btn-sm" data-act="photo" data-id="${ex.id}" style="margin-bottom:12px">📷 Foto vom Gerät aufnehmen</button>`) +
-      (ex.desc || ex.elbowNote ? `<div class="card"><div class="small muted" style="letter-spacing:1px;text-transform:uppercase;font-weight:700;margin-bottom:6px">Ausführung</div>${ex.desc ? `<div style="font-size:14px;line-height:1.45;color:var(--tx2)">${esc(ex.desc)}</div>` : ''}${ex.elbowNote ? `<div style="margin-top:8px;font-size:14px">${elbowBadge(ex)} <span style="color:#ffd60a">${esc(ex.elbowNote)}</span></div>` : ''}</div>` : '') +
+      (ex.desc || ex.elbowNote ? `<div class="card"><div class="small muted" style="letter-spacing:1px;text-transform:uppercase;font-weight:700;margin-bottom:6px">Ausführung</div>${ex.desc ? `<div style="font-size:14px;line-height:1.45;color:var(--tx2);white-space:pre-line">${esc(ex.desc)}</div>` : ''}${ex.elbowNote ? `<div style="margin-top:8px;font-size:14px">${elbowBadge(ex)} <span style="color:#ffd60a">${esc(ex.elbowNote)}</span></div>` : ''}</div>` : '') +
       lastHtml +
       (cur.length ? `<div class="sec-h"><span>Heute · ${pl(cur.filter(x => !x.warmup).length, 'Satz', 'Sätze')}</span><span class="line"></span></div>${setsHtml}` : '') +
       `<div style="height:6px"></div>` + editorHTML(ex, act)
