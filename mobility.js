@@ -1,4 +1,4 @@
-/* Voccola Gym Log – Hüft-Beweglichkeit (v1.6.3). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
+/* Voccola Gym Log – Hüft-Beweglichkeit (v1.6.4). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
 'use strict';
 (function () {
 const KEY = 'vgl-mob';
@@ -52,6 +52,9 @@ const ILL = {
   pigeon: () => { const b = { k1: [60, 90], f1: [100, 88], k2: [130, 92], f2: [172, 92] };
     return svg([panel('AUFRECHT', Object.assign({}, b, { h: [86, 28], n: [88, 42], p: [96, 84], e1: [78, 64], w1: [70, 90], e2: [96, 64], w2: [104, 90] })), panel('VORBEUGEN', Object.assign({}, b, { h: [32, 70], n: [46, 72], p: [96, 84], e1: [30, 82], w1: [14, 90], e2: [34, 84], w2: [18, 92] }), arrow('M80 30 q-30 4 -42 30', 0))]); },
   turtle: () => svg([panel('SITZEN', { h: [56, 22], n: [58, 36], p: [62, 84], k1: [104, 64], f1: [140, 90], k2: [100, 64], f2: [136, 90], e1: [72, 56], w1: [96, 66] }), panel('SCHILDKRÖTE', { h: [112, 76], n: [98, 70], c: [72, 58], p: [62, 84], k1: [108, 62], f1: [146, 90], k2: [104, 62], f2: [142, 90], e1: [118, 84], w1: [146, 94] }, arrow('M60 26 q34 0 48 30', 0))])
+  ,tuer: () => { const x = '<path d="M30 92 V6 H150 V92" fill="none" stroke="#8d8d94" stroke-width="3" opacity=".7"/>';
+    const b = { x, h: [90, 18], n: [90, 32], k1: [84, 66], f1: [100, 92], k2: [96, 66], f2: [80, 92] };
+    return svg([panel('EINSPANNEN', Object.assign({}, b, { p: [90, 62], e1: [62, 34], w1: [32, 40], e2: [118, 34], w2: [148, 40] }), arrow('M74 76 H58', 0) + arrow('M106 76 H122', 0)), panel('HÜFTE RAUS', Object.assign({}, b, { h: [102, 18], n: [100, 32], c: [92, 46], p: [76, 62], k1: [80, 66], f1: [100, 92], k2: [92, 66], f2: [80, 92], e1: [120, 18], w1: [146, 8], e2: [112, 50], w2: [118, 62] }), arrow('M70 52 H44', 0) + arrow('M128 30 q10 -10 6 -22', 0))]); }
   ,froll_g: () => { const r = '<circle cx="92" cy="82" r="9" fill="none" stroke="#D4AF37" stroke-width="3" opacity=".8"/>';
     const b = { x: r, h: [60, 34], n: [70, 46], p: [92, 70], k1: [124, 56], f1: [146, 90], k2: [120, 58], f2: [142, 90], e1: [58, 70], w1: [48, 90] };
     return svg([panel('AUF ROLLE', b), panel('ROLLEN', Object.assign({}, b, { x: r.replace('92', '86'), p: [86, 70], n: [64, 46], h: [54, 34], e1: [52, 70], w1: [42, 90] }), arrow('M70 100 H112', 0) + arrow('M112 100 H70', 0))]); }
@@ -98,6 +101,9 @@ const EX = [
     err: ['Hohlkreuz beim Strecken', 'Luft anhalten', 'Zu schnell, Schwung'] }
 ];
 const EVE = [
+  { id: 'tuer', eve: 1, n: 'Seitdehnung im Türrahmen', sub: 'Abend · Flanke, unterer Rücken, Außenhüfte', dose: '3×45 s links, 2×45 s rechts', t: 'time', sets: 3, setsL: 3, setsR: 2, secs: 45, ps: true,
+    steps: ['Aufwärmen: beide Hände seitlich im Türrahmen einspannen, 5–8 langsame Hüftkreise bzw. Pendeln links-rechts.', 'Im Türrahmen stehen, Beine überkreuzen (für die Dehnung der linken Seite: rechtes Bein vor das linke).', 'Linke Hand greift oben an den Türrahmen.', 'Hüfte langsam nach links/außen schieben, bis Zug in der linken Flanke, im unteren Rücken und an der Außenhüfte entsteht.', 'Ruhig in die Flanke atmen, 45 s halten. Seite wechseln.'],
+    cues: ['Nicht nach vorne kippen – Rumpf bleibt in einer Ebene', 'Bauch leicht fest', 'Nur bis angenehmer Zug', 'Kein Kribbeln/Ausstrahlen ins Bein (Bandscheibe) – sonst lockerer'], err: ['Ins Hohlkreuz fallen', 'Schulter hochziehen', 'Ruckartig wippen'] },
   { id: 'kneel', eve: 1, n: 'Kniestand-Hüftbeuger-Dehnung', sub: 'Abend · Arm über Kopf', dose: '2×60 s pro Seite', t: 'time', sets: 2, secs: 60, ps: true,
     steps: ['Halbkniestand wie morgens, hinteres Knie gepolstert.', 'Gesäß anspannen, Becken leicht nach hinten kippen.', 'Arm der hinteren Seite über den Kopf strecken, leicht zur Gegenseite neigen.', 'Hüfte minimal nach vorn, 60 s ruhig atmen, dann Seite wechseln.'],
     cues: ['Dehnung vorn an der Hüfte bis in die Flanke', 'Oberkörper aufrecht'], err: ['Hohlkreuz', 'Zu tief nach vorn schieben'] },
@@ -276,7 +282,7 @@ Object.assign(A, {
     d.history.push({ date: tk(), ts: Date.now(), done, sets: Object.assign({}, d.today.sets), log: JSON.parse(JSON.stringify(d.today.log || {})), note: old.note || '' }); d.history.sort((a, b) => a.date < b.date ? -1 : 1); sv(d);
     beep(2, 990); const s = stats(); toast(`Stark, Markus! ${s.streak} ${s.streak === 1 ? 'Tag' : 'Tage'} in Folge 🔥`, 2200); render(true); setTimeout(() => A.mobExp({ date: tk() }), 400); },
   mobExp: dd => { const d = ld(); const h = d.history.find(x => x.date === dd.date); if (!h) return toast('Eintrag nicht gefunden');
-    openSheet(`<h3>Einheit exportieren</h3><div class="muted small">${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)} · ${h.done.length} Übungen</div>
+    openSheet(`<h3>Einheit exportieren</h3><div class="muted small">${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)} · ${h.done.length} ${h.done.length === 1 ? 'Übung' : 'Übungen'}</div>
       <label class="muted small" style="display:block;margin:12px 0 6px">Wie war's? Seitenunterschiede, Gefühl, Steifigkeit 0-10</label>
       <textarea class="field" id="mob-note" style="min-height:120px" placeholder="z. B. links deutlich steifer, Steifigkeit 6/10">${esc(h.note || '')}</textarea>
       <div style="height:10px"></div><button class="btn btn-gold" data-act="mobExpGo" data-date="${h.date}">📤 Exportieren</button>

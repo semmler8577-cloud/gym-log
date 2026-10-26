@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.6.3';
+const APP_VERSION = '1.6.4';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -699,7 +699,7 @@ function viewSession(id, fresh) {
     html: topbar(DAYS[s.type].name, WDL[d.getDay()] + ', ' + dateDE(dkey(s.start)), '#/history') +
       (fresh ? `<div class="card gold-frame sum-hero"><div class="trophy">🏆</div><div class="title gold" style="font-size:26px">Stark, Markus!</div><div class="muted">Training gespeichert.${st.prs ? ' ' + st.prs + '× Neuer Rekord!' : ''}</div></div>` : '') +
       `<div class="tiles"><div class="tile"><div class="v">${mins >= 60 ? Math.floor(mins / 60) + ':' + pad(mins % 60) : mins}<small style="font-size:12px;color:#888"> ${mins >= 60 ? 'h' : 'min'}</small></div><div class="k">Dauer</div></div><div class="tile"><div class="v">${fmt(st.vol, 0)}</div><div class="k">Volumen kg</div></div><div class="tile"><div class="v">${st.sets}</div><div class="k">Sätze</div></div>
-      <div class="tile"><div class="v">${st.exIds.length}</div><div class="k">Übungen</div></div><div class="tile kcal"><div class="v">${s.kcal ? fmt(s.kcal, 0) : '–'}</div><div class="k">Aktiv-kcal</div></div><div class="tile"><div class="v" style="color:var(--gold)">${st.prs}</div><div class="k">Rekorde</div></div></div>
+      <div class="tile"><div class="v">${st.exIds.length}</div><div class="k">${st.exIds.length === 1 ? 'Übung' : 'Übungen'}</div></div><div class="tile kcal"><div class="v">${s.kcal ? fmt(s.kcal, 0) : '–'}</div><div class="k">Aktiv-kcal</div></div><div class="tile"><div class="v" style="color:var(--gold)">${st.prs}</div><div class="k">Rekorde</div></div></div>
       <div class="sec-h"><span>Tagesdaten (optional)</span><span class="line"></span></div>
       <div class="card">
         <div class="row"><div><label class="lbl" style="margin-top:0">Körpergewicht (kg)</label><input class="field" inputmode="decimal" data-sf="bodyweight" value="${fmtIn(s.bodyweight)}" placeholder="z. B. 78,4"></div>
