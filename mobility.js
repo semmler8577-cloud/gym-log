@@ -109,10 +109,7 @@ const EVE = [
     cues: ['Dehnung vorn an der Hüfte bis in die Flanke', 'Oberkörper aufrecht'], err: ['Hohlkreuz', 'Zu tief nach vorn schieben'] },
   { id: 'pigeonq', eve: 1, n: 'Taube – Schienbein quer', sub: 'Abend · Gesäß/Piriformis außen', dose: '3×60 s links, 2×60 s rechts', t: 'time', sets: 3, setsL: 3, setsR: 2, secs: 60, ps: true,
     steps: ['Aus dem Vierfüßlerstand das linke Knie nach vorn bringen und das Schienbein QUER vor den Körper legen – so parallel zur vorderen Mattenkante, wie es angenehm ist. Die Wade zeigt Richtung Bauchnabel, der Fuß liegt Richtung andere Hüfte.', 'Hinteres Bein lang nach hinten ausstrecken.', 'Hüfte gerade ausrichten, aufrecht abstützen.', 'Dann langsam mit dem Oberkörper über das vordere Schienbein nach vorn sinken, Unterarme oder Stirn ablegen. 60 s halten, ruhig atmen, Seite wechseln.'],
-    cues: ['Kissen unter die linke Pobacke, wenn du nicht runterkommst', 'Knie ca. 90°, Fuß aktiv (Zehen angezogen) schützt das Knie', 'Dehnung tief im Gesäß, nicht im Knie'], err: ['Hüfte kippt zur Seite', 'Schienbein erzwingen – lieber Fuß näher zum Körper', 'Knieschmerz ignorieren'] },
-  { id: 'pigeon', eve: 1, n: 'Taube – Ferse eng', sub: 'Abend · Gesäß/Hüfte außen', dose: '3×60 s links, 2×60 s rechts', t: 'time', sets: 3, setsL: 3, setsR: 2, secs: 60, ps: true,
-    steps: ['Aus dem Vierfüßlerstand das linke Knie nach vorn zur Hand bringen, die Ferse eng Richtung Leiste ziehen (Wade liegt am Oberschenkel).', 'Hinteres Bein lang nach hinten ausstrecken.', 'Hüfte gerade ausrichten, aufrecht abstützen – oder, wenn angenehm, auf die Unterarme sinken.', '60 s halten, ruhig atmen, Seite wechseln.'],
-    cues: ['Kissen unter die linke Pobacke, wenn du nicht runterkommst', 'Bei Knieschmerz: Ferse näher zur Hüfte oder Kissen unter das Gesäß', 'Dehnung im Gesäß, nicht im Knie'], err: ['Hüfte kippt zur Seite', 'Knie erzwingen / Schmerz im Knie ignorieren'] },
+    cues: ['In zwei Phasen: zuerst aufrecht halten, dann mit dem Oberkörper nach vorne unten sinken', 'Kissen unter die linke Pobacke, wenn du nicht runterkommst', 'Knie ca. 90°, Fuß aktiv (Zehen angezogen) schützt das Knie', 'Dehnung tief im Gesäß, nicht im Knie'], err: ['Hüfte kippt zur Seite', 'Schienbein erzwingen – lieber Fuß näher zum Körper', 'Knieschmerz ignorieren'] },
   { id: 'turtle', eve: 1, n: 'Schildkröte (Yoga)', sub: 'Abend · Kurmasana, sanfte Variante', dose: '2×60 s', t: 'time', sets: 2, secs: 60,
     steps: ['Sitzen, Beine weit gegrätscht, Knie gebeugt, Füße am Boden.', 'Oberkörper langsam nach vorn sinken lassen.', 'Arme unter den Knien nach außen schieben, Handflächen am Boden.', 'Locker lassen, 60 s ruhig atmen. Langsam wieder aufrollen.'],
     cues: ['Nur bis kurz vor Kribbeln – dann etwas zurück', 'Nur abends – nichts erzwingen', 'Knie so weit gebeugt wie nötig'], err: ['Mit Kraft nach unten drücken', 'Bei Rücken-/Ausstrahlungsschmerz weitermachen → sofort abbrechen'] }
@@ -135,7 +132,13 @@ const FAS = [
     steps: ['Matte auf eine ebene Unterlage legen, langsam darauf hinlegen (Rücken, ggf. dünnes Shirt am Anfang).', 'Beine lang oder angewinkelt, Arme locker neben den Körper.', 'Die ersten 1–2 Minuten sind intensiv – ruhig weiteratmen.', '10 Min liegen bleiben, langsam über die Seite aufstehen.'],
     cues: ['Lange, ruhige Ausatmung', 'Ideal abends vor dem Schlafen'], err: ['Schnell aufspringen (Kreislauf)', 'Sich auf die Matte „fallen lassen“'] }
 ];
-const ALL = [...EX, ...EVE, ...FAS];
+// v1.7.0: aus dem Plan entfernt, bleibt nur für alte Verlaufs-Einträge (vgl-mob) erhalten
+const RET = [
+  { id: 'pigeon', eve: 1, n: 'Taube – Ferse eng', sub: 'Abend · Gesäß/Hüfte außen', dose: '3×60 s links, 2×60 s rechts', t: 'time', sets: 3, setsL: 3, setsR: 2, secs: 60, ps: true,
+    steps: ['Aus dem Vierfüßlerstand das linke Knie nach vorn zur Hand bringen, die Ferse eng Richtung Leiste ziehen (Wade liegt am Oberschenkel).', 'Hinteres Bein lang nach hinten ausstrecken.', 'Hüfte gerade ausrichten, aufrecht abstützen – oder, wenn angenehm, auf die Unterarme sinken.', '60 s halten, ruhig atmen, Seite wechseln.'],
+    cues: ['Kissen unter die linke Pobacke, wenn du nicht runterkommst', 'Bei Knieschmerz: Ferse näher zur Hüfte oder Kissen unter das Gesäß', 'Dehnung im Gesäß, nicht im Knie'], err: ['Hüfte kippt zur Seite', 'Knie erzwingen / Schmerz im Knie ignorieren'] }
+];
+const ALL = [...EX, ...EVE, ...FAS, ...RET];
 const byId = id => ALL.find(e => e.id === id);
 
 /* ---------- Statistik ---------- */
@@ -212,7 +215,7 @@ function viewList() {
   const d = day(); const s = stats(); const nDone = EX.filter(e => d.today.done[e.id]).length;
   const eDone = EVE.filter(e => d.today.done[e.id]).length, fDone = FAS.filter(e => d.today.done[e.id]).length;
   const st = (n, t) => n >= t ? '<span class="mob-st ok">✓ heute erledigt</span>' : n ? `<span class="mob-st part">${n}/${t} · läuft</span>` : '<span class="mob-st">noch offen</span>';
-  const hist = [...d.history].reverse().slice(0, 8).map(h => `<div class="mob-h"><span>${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)}</span><span class="muted small">${h.note ? '📝 ' : ''}${h.done.filter(x => EX.some(e => e.id === x)).length}/${EX.length} Übungen${h.done.some(x => EVE.some(e => e.id === x)) ? ' · ☾ Abend' : ''}${h.done.some(x => FAS.some(e => e.id === x)) ? ' · ◎ Faszien' : ''}</span><button class="btn btn-ghost btn-sm" style="width:auto;padding:4px 10px;margin-left:6px" data-act="mobExp" data-date="${h.date}">Exportieren</button></div>`).join('') || '<div class="muted small">Noch keine Einheit – heute ist ein guter Tag zum Starten 🙂</div>';
+  const hist = [...d.history].reverse().slice(0, 8).map(h => `<div class="mob-h"><span>${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)}</span><span class="muted small">${h.note ? '📝 ' : ''}${h.done.filter(x => EX.some(e => e.id === x)).length}/${EX.length} Übungen${h.done.some(x => [...EVE, ...RET].some(e => e.id === x)) ? ' · ☾ Abend' : ''}${h.done.some(x => FAS.some(e => e.id === x)) ? ' · ◎ Faszien' : ''}</span><button class="btn btn-ghost btn-sm" style="width:auto;padding:4px 10px;margin-left:6px" data-act="mobExp" data-date="${h.date}">Exportieren</button></div>`).join('') || '<div class="muted small">Noch keine Einheit – heute ist ein guter Tag zum Starten 🙂</div>';
   return {
     html: topbar('Hüft-Beweglichkeit', 'Dehnung & Gesundheit', null) + `
     <div class="mob-stats">
@@ -298,7 +301,7 @@ Object.assign(A, {
 });
 function saveNote(date) { const d = ld(); const h = d.history.find(x => x.date === date); const ta = document.getElementById('mob-note'); if (h && ta) { h.note = ta.value.trim(); sv(d); } return h; }
 function mobText(h) {
-  const L = h.log || {}, S2 = h.sets || {}; const blk = [['☀️ Morgen-Routine', EX], ['☾ Abend', EVE], ['◎ Faszien', FAS]];
+  const L = h.log || {}, S2 = h.sets || {}; const blk = [['☀️ Morgen-Routine', EX], ['☾ Abend', [...EVE, ...RET]], ['◎ Faszien', FAS]];
   const out = [`Hüft-Beweglichkeit – ${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)}`];
   const bd = blk.filter(([, l]) => l.some(e => h.done.includes(e.id))).map(([n, l]) => `${n} (${l.filter(e => h.done.includes(e.id)).length}/${l.length})`);
   out.push('Blöcke: ' + (bd.join(', ') || '–'));
