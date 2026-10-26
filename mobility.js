@@ -1,4 +1,4 @@
-/* Voccola Gym Log – Hüft-Beweglichkeit (v1.6.8). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
+/* Voccola Gym Log – Hüft-Beweglichkeit (v1.6.9). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
 'use strict';
 (function () {
 const KEY = 'vgl-mob';
