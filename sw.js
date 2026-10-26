@@ -1,7 +1,8 @@
-/* Voccola Gym Log – Service Worker (v1.6.4: Türrahmen-Seitdehnung; Mobility-Export, asymmetrische Seiten) */
-const CACHE = 'vgl-v1.6.4';
+/* Voccola Gym Log – Service Worker (v1.6.5: anatomische Übungsbilder Hüfte) */
+const CACHE = 'vgl-v1.6.5';
 const ASSETS = ['./', './index.html', './styles.css', './app.js', './mobility.js', './manifest.webmanifest',
-  './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png', './icons/icon-maskable-512.png', './assets/dumbbell.webp', './assets/keepawake.mp4'];
+  './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png', './icons/icon-maskable-512.png', './assets/dumbbell.webp', './assets/keepawake.mp4',
+  './assets/mob/catcow.webp', './assets/mob/hipflex.webp', './assets/mob/wgs.webp', './assets/mob/n9090.webp', './assets/mob/bridge.webp', './assets/mob/birddog.webp', './assets/mob/deadbug.webp', './assets/mob/tuer.webp', './assets/mob/kneel.webp', './assets/mob/pigeon.webp', './assets/mob/turtle.webp', './assets/mob/froll_g.webp', './assets/mob/froll_t.webp', './assets/mob/ballpir.webp', './assets/mob/duoball.webp', './assets/mob/shakti.webp'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS.map(u => new Request(u, { cache: 'reload' })))).then(() => self.skipWaiting()));
 });

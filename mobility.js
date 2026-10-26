@@ -1,4 +1,4 @@
-/* Voccola Gym Log – Hüft-Beweglichkeit (v1.6.4). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
+/* Voccola Gym Log – Hüft-Beweglichkeit (v1.6.5). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
 'use strict';
 (function () {
 const KEY = 'vgl-mob';
@@ -202,7 +202,7 @@ function row(ex, d) {
   const ok = !!d.today.done[ex.id]; const i = ALL.indexOf(ex);
   return `<div class="card mob-row ${ok ? 'ok' : ''}" data-act="go" data-to="#/mob/${ex.id}">
     <button class="mob-chk ${ok ? 'on' : ''}" data-act="mobChk" data-id="${ex.id}" aria-label="Abhaken">${ok ? '✓' : (ex.eve ? '☾' : ex.fas ? '◎' : i + 1)}</button>
-    <div class="mob-thumb">${ILL[ex.id]()}</div>
+    <div class="mob-thumb"><img class="mob-thumb-img" src="./assets/mob/${ex.id}.webp" alt="" loading="lazy"></div>
     <div class="mob-rt"><b>${esc(ex.n)}</b><div class="muted small">${esc(ex.dose)}</div></div><span class="mob-go">›</span></div>`;
 }
 function viewList() {
@@ -253,7 +253,7 @@ function viewDetail(id) {
   const li = a => `<ul class="mob-ul">${a.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
   return {
     html: `<div id="mob-detail">` + topbar(ex.n, ex.eve ? 'Abend · vor dem Schlafen' : ex.fas ? 'Faszien · optional' : `Morgens · Übung ${idx + 1} von ${EX.length}`, '#/mob') + `
-    <div class="card mob-ill">${ILL[id]()}<div class="muted small" style="margin-top:6px">${esc(ex.sub)} · <span class="gold">→ Pfeil = Bewegungsrichtung</span></div></div>
+    <div class="card mob-ill"><img class="mob-anat" src="./assets/mob/${id}.webp" alt="${esc(ex.n)} – Zielmuskulatur rot markiert"><div class="muted small mob-anat-cap"><span style="color:#ff6b6b">●</span> rot = Zielmuskulatur</div>${ILL[id]()}<div class="muted small" style="margin-top:6px">${esc(ex.sub)} · <span class="gold">→ Pfeil = Bewegungsrichtung</span></div></div>
     <div class="mob-dose">${esc(ex.dose)}</div>
     ${tool}
     <div class="card"><h3 class="mob-h3">So geht's</h3><ol class="mob-ol">${ex.steps.map(x => `<li>${esc(x)}</li>`).join('')}</ol></div>
