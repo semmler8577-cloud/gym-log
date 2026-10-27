@@ -213,7 +213,7 @@ function tPaint() {
 }
 
 /* ---------- Tagesstand ---------- */
-function markDone(id, val) { const d = day(); if (val) d.today.done[id] = true; else delete d.today.done[id]; sv(d); const b = document.querySelector('[data-act=mobChk]'); if (b && document.getElementById('mob-detail')) render(true); }
+function markDone(id, val) { const d = day(); if (val) { d.today.done[id] = true; const ex = byId(id); if (ex && ex.t === 'reps') d.today.sets[id] = ex.sets * (ex.ps ? 2 : 1); } else delete d.today.done[id]; sv(d); const b = document.querySelector('[data-act=mobChk]'); if (b && document.getElementById('mob-detail')) render(true); }
 
 /* ---------- Views ---------- */
 function row(ex, d) {
