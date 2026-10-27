@@ -148,13 +148,54 @@ const FAS = [
     steps: ['Matte auf eine ebene Unterlage legen, langsam darauf hinlegen (Rücken, ggf. dünnes Shirt am Anfang).', 'Beine lang oder angewinkelt, Arme locker neben den Körper.', 'Die ersten 1–2 Minuten sind intensiv – ruhig weiteratmen.', '10 Min liegen bleiben, langsam über die Seite aufstehen.'],
     cues: ['Lange, ruhige Ausatmung', 'Ideal abends vor dem Schlafen'], err: ['Schnell aufspringen (Kreislauf)', 'Sich auf die Matte „fallen lassen“'] }
 ];
+// v1.7.5: Abwechslung – Pool aus 9 Übungen, täglich 3 nach Wochentag (Woche deckt alle ab)
+const ROT = [
+  { id: 'rbutter', rot: 1, n: 'Liegender Schmetterling', sub: 'Abwechslung · Adduktoren/Leiste & Hüfte', dose: '1×30 s', t: 'time', sets: 1, secs: 30,
+    steps: ['Rückenlage, Knie gebeugt, Füße am Boden.', 'Fußsohlen aneinanderlegen und die Knie langsam nach außen sinken lassen.', 'Arme locker neben dem Körper, unterer Rücken bleibt entspannt am Boden.', '30 s ruhig atmen und mit jeder Ausatmung etwas mehr loslassen. Knie mit den Händen zusammenführen und lösen.'],
+    cues: ['Schwerkraft arbeiten lassen – nicht mit den Händen drücken', 'Linkes Knie darf höher bleiben – Kissen drunter ist ok', 'Kribbeln in den Zehen → Füße weiter weg vom Becken, lockerer'],
+    err: ['Knie aktiv nach unten pressen', 'Hohlkreuz', 'Luft anhalten'] },
+  { id: 'kneechest', rot: 1, n: 'Knie zur Brust', sub: 'Abwechslung · unterer Rücken & Gesäß', dose: '8 pro Seite, im Wechsel', t: 'reps', sets: 1, reps: 8, ps: true,
+    steps: ['Rückenlage, beide Beine lang ausgestreckt.', 'Ein Knie mit beiden Händen (unterhalb der Kniescheibe oder an der Kniekehle) sanft zur Brust ziehen.', 'Das andere Bein bleibt lang am Boden liegen.', '2–3 s halten, ablegen, Seite wechseln – 8 pro Seite.'],
+    cues: ['Kopf und Schultern bleiben am Boden', 'Langsam, ruhig ausatmen beim Heranziehen', 'Kribbeln in den Zehen → weniger weit ziehen'],
+    err: ['Ruckartig ziehen', 'Langes Bein hebt mit ab', 'Kopf zum Knie heben'] },
+  { id: 'recpig', rot: 1, n: 'Liegende Taube (Figur 4)', sub: 'Abwechslung · Gesäß/Piriformis', dose: '30 s pro Seite, links 40 s', t: 'time', sets: 1, secs: 30, secsL: 40, secsR: 30, ps: true,
+    steps: ['Rückenlage, beide Knie gebeugt, Füße am Boden.', 'Linken Knöchel auf das rechte Knie legen (Figur 4), Fuß aktiv angezogen.', 'Mit beiden Händen hinter den rechten Oberschenkel greifen und ihn sanft zu dir ziehen.', 'Links 40 s, rechts 30 s halten, ruhig atmen.'],
+    cues: ['Dehnung im Gesäß der oberen Seite, nicht im Knie', 'Becken und Kopf bleiben am Boden', 'Links etwas länger – die steifere Seite', 'Kribbeln in den Zehen → weniger ziehen'],
+    err: ['Becken hebt ab / rollt ein', 'Am Knie statt am Oberschenkel ziehen', 'Schultern verkrampfen'] },
+  { id: 'halfhero', rot: 1, n: 'Halber Held', sub: 'Abwechslung · Oberschenkel vorne & Hüftbeuger', dose: '30 s pro Seite', t: 'time', sets: 1, secs: 30, ps: true,
+    steps: ['Aufrecht sitzen, ein Bein lang nach vorn.', 'Das andere Bein nach hinten beugen, der Fuß liegt neben der Hüfte, Fußrücken am Boden.', 'Mit den Händen hinter dir abstützen und vorsichtig nur so weit zurücklehnen, wie es angenehm ist.', '30 s ruhig atmen, langsam aufrichten, Seite wechseln.'],
+    cues: ['Vorsicht mit dem Knie – bei Knieschmerz Kissen unters Gesäß oder aufrecht bleiben', 'Bauch leicht fest, Becken nach hinten kippen – kein Hohlkreuz', 'Kribbeln in den Zehen → sofort lockerer'],
+    err: ['Ins Hohlkreuz zurücklehnen', 'Knie zeigt nach außen', 'Zu weit nach hinten erzwingen'] },
+  { id: 'sphinx', rot: 1, n: 'Sphinx', sub: 'Abwechslung · Wirbelsäule/Bauch, sanfte Streckung', dose: '1×30 s', t: 'time', sets: 1, secs: 30,
+    steps: ['Bauchlage, Beine lang, Stirn am Boden.', 'Ellbogen unter die Schultern, Unterarme parallel ablegen.', 'Brust sanft anheben, Blick nach vorn unten, Nacken lang.', 'Gesäß locker lassen, 30 s ruhig in den Bauch atmen, dann langsam ablegen.'],
+    cues: ['Oft angenehm für die Bandscheibe', 'Gesäß entspannt, Schultern weg von den Ohren', 'Strahlt es ins Bein aus oder kribbeln die Zehen → sofort abbrechen'],
+    err: ['Gesäß anspannen', 'Schultern hochziehen', 'Kopf in den Nacken'] },
+  { id: 'sphinxrot', rot: 1, n: 'Sphinx mit Öffnung', sub: 'Abwechslung · Brustwirbelsäule-Rotation', dose: '8 pro Seite', t: 'reps', sets: 1, reps: 8, ps: true,
+    steps: ['Aus der Sphinx: Unterarme unter den Schultern, Brust leicht angehoben.', 'Einen Arm seitlich nach außen und oben öffnen, Blick folgt der Hand.', 'Brustkorb dreht mit auf, das Becken bleibt am Boden.', 'Langsam zurück, 8 pro Seite.'],
+    cues: ['Drehung aus der Brust, nicht aus dem unteren Rücken', 'Stützarm aktiv, Schulter stabil', 'Ausstrahlen oder Zehen-Kribbeln → kleiner bewegen oder abbrechen'],
+    err: ['Becken dreht mit', 'Schwung statt Kontrolle', 'Ins Hohlkreuz sinken'] },
+  { id: 'sidehip', rot: 1, n: 'Seitliche Hüftdehnung', sub: 'Abwechslung · Adduktoren & Hüfte innen', dose: '30 s pro Seite', t: 'time', sets: 1, secs: 30, ps: true,
+    steps: ['Aus dem Ausfallschritt am Boden (ein Knie unten).', 'Das vordere Bein seitlich nach außen stellen, Fuß flach, Zehen leicht nach außen.', 'Mit der Hand am Boden oder Knie abstützen.', 'Hüfte sanft zur Seite/nach unten schieben, 30 s halten, Seite wechseln.'],
+    cues: ['Dehnung an der Innenseite des Oberschenkels', 'Rücken lang, Bauch leicht fest', 'Linke Seite darf etwas länger', 'Kribbeln in den Zehen → weniger tief'],
+    err: ['Knie fällt nach innen', 'Rundrücken', 'Wippen'] },
+  { id: 'sideadd', rot: 1, n: 'Adduktion in Seitlage', sub: 'Abwechslung · Adduktoren kräftigen', dose: '10 pro Seite', t: 'reps', sets: 1, reps: 10, ps: true,
+    steps: ['Seitlage, Kopf auf dem Arm abgelegt.', 'Oberes Bein gebeugt vor dir auf den Boden stellen.', 'Unteres Bein gestreckt, Fuß angezogen.', 'Unteres Bein langsam anheben und ablegen – 10 pro Seite.'],
+    cues: ['Kleine, kontrollierte Bewegung', 'Becken stabil, nicht nach hinten kippen', 'Kribbeln in den Zehen → Pause'],
+    err: ['Schwung holen', 'Becken rollt nach hinten', 'Bein zu hoch reißen'] },
+  { id: 'bearrock', rot: 1, n: 'Bärengang zum Rolling Rock', sub: 'Abwechslung · Rumpf, Hüfte & Schultern', dose: '8 Wiederholungen', t: 'reps', sets: 1, reps: 8,
+    steps: ['Vierfüßlerstand, Hände unter den Schultern, Knie unter der Hüfte.', 'Knie wenige Zentimeter vom Boden abheben (schweben).', 'Einen kleinen Schritt vor und zurück machen, Rücken flach.', 'Knie ablegen und das Gesäß sanft Richtung Fersen zurückschaukeln, dann wieder nach vorn – 8 Wiederholungen.'],
+    cues: ['Rücken neutral wie ein Tisch', 'Ruhig atmen, Bauch fest', 'Zurückschaukeln nur so weit, wie der Rücken lang bleibt', 'Kribbeln in den Zehen → abbrechen'],
+    err: ['Hohlkreuz oder Rundrücken', 'Gesäß zu hoch', 'Hektisch'] }
+];
+const ROT_PLAN = ['aei', 'abc', 'def', 'ghi', 'adg', 'beh', 'cfi']; // So..Sa
+const rotFor = k => ROT_PLAN[fromKey(k).getDay()].split('').map(c => ROT['abcdefghi'.indexOf(c)]);
 // v1.7.0: aus dem Plan entfernt, bleibt nur für alte Verlaufs-Einträge (vgl-mob) erhalten
 const RET = [
   { id: 'pigeon', eve: 1, n: 'Taube – Ferse eng', sub: 'Abend · Gesäß/Hüfte außen', dose: '3×60 s links, 2×60 s rechts', t: 'time', sets: 3, setsL: 3, setsR: 2, secs: 60, ps: true,
     steps: ['Aus dem Vierfüßlerstand das linke Knie nach vorn zur Hand bringen, die Ferse eng Richtung Leiste ziehen (Wade liegt am Oberschenkel).', 'Hinteres Bein lang nach hinten ausstrecken.', 'Hüfte gerade ausrichten, aufrecht abstützen – oder, wenn angenehm, auf die Unterarme sinken.', '60 s halten, ruhig atmen, Seite wechseln.'],
     cues: ['Kissen unter die linke Pobacke, wenn du nicht runterkommst', 'Bei Knieschmerz: Ferse näher zur Hüfte oder Kissen unter das Gesäß', 'Dehnung im Gesäß, nicht im Knie'], err: ['Hüfte kippt zur Seite', 'Knie erzwingen / Schmerz im Knie ignorieren'] }
 ];
-const ALL = [...EX, ...EVE, ...FAS, ...RET];
+const ALL = [...EX, ...ROT, ...EVE, ...FAS, ...RET];
 const byId = id => ALL.find(e => e.id === id);
 
 /* ---------- Statistik ---------- */
@@ -223,15 +264,15 @@ function markDone(id, val) { const d = day(); if (val) { d.today.done[id] = true
 function row(ex, d) {
   const ok = !!d.today.done[ex.id]; const i = ALL.indexOf(ex);
   return `<div class="card mob-row ${ok ? 'ok' : ''}" data-act="go" data-to="#/mob/${ex.id}">
-    <button class="mob-chk ${ok ? 'on' : ''}" data-act="mobChk" data-id="${ex.id}" aria-label="Abhaken">${ok ? '✓' : (ex.eve ? '☾' : ex.fas ? '◎' : i + 1)}</button>
+    <button class="mob-chk ${ok ? 'on' : ''}" data-act="mobChk" data-id="${ex.id}" aria-label="Abhaken">${ok ? '✓' : (ex.eve ? '☾' : ex.fas ? '◎' : ex.rot ? '🔄' : i + 1)}</button>
     <div class="mob-thumb"><img class="mob-thumb-img" src="./assets/mob/${ex.id}.webp" alt="" loading="lazy"></div>
     <div class="mob-rt"><b>${esc(ex.n)}</b><div class="muted small">${esc(ex.dose)}</div></div><span class="mob-go">›</span></div>`;
 }
 function viewList() {
   const d = day(); const s = stats(); const nDone = EX.filter(e => d.today.done[e.id]).length;
-  const eDone = EVE.filter(e => d.today.done[e.id]).length, fDone = FAS.filter(e => d.today.done[e.id]).length;
+  const RT = rotFor(tk()), rDone = RT.filter(e => d.today.done[e.id]).length; const eDone = EVE.filter(e => d.today.done[e.id]).length, fDone = FAS.filter(e => d.today.done[e.id]).length;
   const st = (n, t) => n >= t ? '<span class="mob-st ok">✓ heute erledigt</span>' : n ? `<span class="mob-st part">${n}/${t} · läuft</span>` : '<span class="mob-st">noch offen</span>';
-  const hist = [...d.history].reverse().slice(0, 8).map(h => `<div class="mob-h"><span>${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)}</span><span class="muted small">${h.note ? '📝 ' : ''}${h.done.filter(x => EX.some(e => e.id === x)).length}/${EX.length} Übungen${h.done.some(x => [...EVE, ...RET].some(e => e.id === x)) ? ' · ☾ Abend' : ''}${h.done.some(x => FAS.some(e => e.id === x)) ? ' · ◎ Faszien' : ''}</span><button class="btn btn-ghost btn-sm" style="width:auto;padding:4px 10px;margin-left:6px" data-act="mobExp" data-date="${h.date}">Exportieren</button></div>`).join('') || '<div class="muted small">Noch keine Einheit – heute ist ein guter Tag zum Starten 🙂</div>';
+  const hist = [...d.history].reverse().slice(0, 8).map(h => `<div class="mob-h"><span>${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)}</span><span class="muted small">${h.note ? '📝 ' : ''}${h.done.filter(x => EX.some(e => e.id === x)).length}/${EX.length} Übungen${h.done.some(x => ROT.some(e => e.id === x)) ? ' · 🔄 Abwechslung' : ''}${h.done.some(x => [...EVE, ...RET].some(e => e.id === x)) ? ' · ☾ Abend' : ''}${h.done.some(x => FAS.some(e => e.id === x)) ? ' · ◎ Faszien' : ''}</span><button class="btn btn-ghost btn-sm" style="width:auto;padding:4px 10px;margin-left:6px" data-act="mobExp" data-date="${h.date}">Exportieren</button></div>`).join('') || '<div class="muted small">Noch keine Einheit – heute ist ein guter Tag zum Starten 🙂</div>';
   return {
     html: topbar('Hüft-Beweglichkeit', 'Dehnung & Gesundheit', null) + `
     <div class="mob-stats">
@@ -242,9 +283,11 @@ function viewList() {
     <div class="card mob-note">⚠️ <b>Morgens kein langes Vorbeugen</b> (Bandscheibe). Nichts erzwingen – <b>schmerzfrei bleiben</b>. Bei ausstrahlendem Schmerz abbrechen.</div>
     <div class="mob-prog"><div style="width:${nDone / EX.length * 100}%"></div></div>
     <div class="card mob-today"><b>Heute</b> · ${s.todayDone ? '<span class="mob-st ok">✓ Einheit abgeschlossen</span>' : '<span class="mob-st">Einheit noch offen</span>'}
-      <div class="mob-tl"><span>☀️ Morgen-Routine</span>${st(nDone, EX.length)}</div><div class="mob-tl"><span>☾ Abend</span>${st(eDone, EVE.length)}</div><div class="mob-tl"><span>◎ Faszien</span>${st(fDone, FAS.length)}</div></div>
+      <div class="mob-tl"><span>☀️ Morgen-Routine</span>${st(nDone, EX.length)}</div><div class="mob-tl"><span>🔄 Abwechslung</span>${st(rDone, 3)}</div><div class="mob-tl"><span>☾ Abend</span>${st(eDone, EVE.length)}</div><div class="mob-tl"><span>◎ Faszien</span>${st(fDone, FAS.length)}</div></div>
     <div class="sec-h muted small" style="margin:10px 2px 2px">☀️ MORGEN-ROUTINE · ${nDone}/${EX.length} erledigt</div><div class="mob-when">Morgens nach dem Aufstehen</div>
     ${EX.map(e => row(e, d)).join('')}
+    <div class="sec-h muted small" style="margin:18px 2px 2px">🔄 ABWECHSLUNG · ${rDone}/3 erledigt</div><div class="mob-when">Heute (${WD[new Date().getDay()]}) · täglich 3 andere – in einer Woche alle 9</div>
+    ${RT.map(e => row(e, d)).join('')}
     <div class="sec-h muted small" style="margin:18px 2px 2px">☾ ABEND (OPTIONAL)</div><div class="mob-when">Abends vor dem Schlafen</div>
     ${EVE.map(e => row(e, d)).join('')}
     <div class="sec-h muted small" style="margin:18px 2px 2px">◎ FASZIEN (OPTIONAL)</div><div class="mob-when">Blackroll · Duoball/Bälle · Shakti-Matte – ideal abends</div>
@@ -257,7 +300,7 @@ function viewList() {
 }
 function viewDetail(id) {
   const ex = byId(id); if (!ex) { location.hash = '#/mob'; return { html: '' }; }
-  const d = day(); const ok = !!d.today.done[id]; const list = ex.eve ? EVE : ex.fas ? FAS : EX; const idx = list.indexOf(ex); const next = list[idx + 1];
+  const d = day(); const ok = !!d.today.done[id]; const list = ex.eve ? EVE : ex.fas ? FAS : ex.rot ? (rotFor(tk()).includes(ex) ? rotFor(tk()) : [ex]) : EX; const idx = list.indexOf(ex); const next = list[idx + 1];
   let tool;
   if (ex.t === 'time') {
     tInit(ex); const C = 2 * Math.PI * 88;
@@ -274,14 +317,14 @@ function viewDetail(id) {
   }
   const li = a => `<ul class="mob-ul">${a.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
   return {
-    html: `<div id="mob-detail">` + topbar(ex.n, ex.eve ? 'Abend · vor dem Schlafen' : ex.fas ? 'Faszien · optional' : `Morgens · Übung ${idx + 1} von ${EX.length}`, '#/mob') + `
+    html: `<div id="mob-detail">` + topbar(ex.n, ex.eve ? 'Abend · vor dem Schlafen' : ex.fas ? 'Faszien · optional' : ex.rot ? `Abwechslung · Übung ${idx + 1} von ${list.length}` : `Morgens · Übung ${idx + 1} von ${EX.length}`, '#/mob') + `
     <div class="card mob-ill"><img class="mob-anat" src="./assets/mob/${id}.webp" alt="${esc(ex.n)} – Zielmuskulatur rot markiert"><div class="muted small mob-anat-cap"><span style="color:#ff6b6b">●</span> rot = Zielmuskulatur</div><img class="mob-seq" src="./assets/mob/seq_${id}.webp" alt="Bewegungsablauf ${esc(ex.n)}" loading="lazy"><div class="muted small" style="margin-top:6px">${esc(ex.sub)} · <span class="gold">→ Pfeil = Bewegungsablauf</span></div></div>
     <div class="mob-dose">${esc(ex.dose)}</div>
     ${tool}
     <div class="card"><h3 class="mob-h3">So geht's</h3><ol class="mob-ol">${ex.steps.map(x => `<li>${esc(x)}</li>`).join('')}</ol></div>
     <div class="card mob-cue"><h3 class="mob-h3">✅ Darauf achten</h3>${li(ex.cues)}</div>
     <div class="card mob-err"><h3 class="mob-h3">❌ Häufige Fehler</h3>${li(ex.err)}</div>
-    <div class="card mob-note small">Nichts erzwingen, schmerzfrei bleiben.${ex.eve || ex.fas ? '' : ' Morgens kein langes Vorbeugen.'}</div>
+    <div class="card mob-note small">Nichts erzwingen, schmerzfrei bleiben.${ex.eve || ex.fas || ex.rot ? '' : ' Morgens kein langes Vorbeugen.'}</div>
     <button class="btn ${ok ? 'btn-outline-gold' : 'btn-red'}" data-act="mobChk" data-id="${id}">${ok ? '✓ Erledigt (tippen zum Zurücksetzen)' : 'Als erledigt abhaken'}</button>
     <div style="height:10px"></div>
     ${next ? `<button class="btn btn-ghost btn-sm" data-act="go" data-to="#/mob/${next.id}">Nächste: ${esc(next.n)} ›</button>` : `<button class="btn btn-ghost btn-sm" data-act="go" data-to="#/mob">Zur Übersicht ›</button>`}</div>`,
@@ -317,9 +360,9 @@ Object.assign(A, {
 });
 function saveNote(date) { const d = ld(); const h = d.history.find(x => x.date === date); const ta = document.getElementById('mob-note'); if (h && ta) { h.note = ta.value.trim(); sv(d); } return h; }
 function mobText(h) {
-  const L = h.log || {}, S2 = h.sets || {}; const blk = [['☀️ Morgen-Routine', EX], ['☾ Abend', [...EVE, ...RET]], ['◎ Faszien', FAS]];
+  const L = h.log || {}, S2 = h.sets || {}; const blk = [['☀️ Morgen-Routine', EX], ['🔄 Abwechslung', [...rotFor(h.date), ...ROT.filter(e => !rotFor(h.date).includes(e) && h.done.includes(e.id))]], ['☾ Abend', [...EVE, ...RET]], ['◎ Faszien', FAS]];
   const out = [`Hüft-Beweglichkeit – ${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)}`];
-  const bd = blk.filter(([, l]) => l.some(e => h.done.includes(e.id))).map(([n, l]) => `${n} (${l.filter(e => h.done.includes(e.id)).length}/${l.length})`);
+  const bd = blk.filter(([, l]) => l.some(e => h.done.includes(e.id))).map(([n, l]) => `${n} (${l.filter(e => h.done.includes(e.id)).length}/${l === blk[1][1] ? Math.max(3, l.length) : l.length})`);
   out.push('Blöcke: ' + (bd.join(', ') || '–'));
   for (const [n, l] of blk) { const ex = l.filter(e => h.done.includes(e.id) || (L[e.id] || []).length || S2[e.id]); if (!ex.length) continue; out.push('', n);
     for (const e of ex) { let det;
