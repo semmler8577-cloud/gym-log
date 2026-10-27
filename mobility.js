@@ -211,7 +211,8 @@ function stats() {
 let T = null; // {id, segs:[{set,side}], i, left, run, last}
 function segsOf(ex) { const a = []; const nL = ex.setsL || ex.sets, nR = ex.setsR || ex.sets, mx = ex.ps ? Math.max(nL, nR) : ex.sets;
   for (let s = 1; s <= mx; s++) { if (!ex.ps) a.push({ set: s, side: '', secs: ex.secs, n: ex.sets }); else { if (s <= nL) a.push({ set: s, side: 'Links', secs: ex.secsL || ex.secs, n: nL }); if (s <= nR) a.push({ set: s, side: 'Rechts', secs: ex.secsR || ex.secs, n: nR }); } }
-  return a; }
+  const b = []; a.forEach((g, k) => { b.push(g); if (k < a.length - 1) { const nx = a[k + 1]; b.push({ pause: true, set: nx.set, side: 'Pause → ' + (nx.side || 'nächster Satz'), secs: 12, n: nx.n }); } });
+  return b; }
 function logSeg(id, sg, secs) { const d = day(); const L = d.today.log || (d.today.log = {}); (L[id] || (L[id] = [])).push({ side: sg.side, set: sg.set, secs: Math.round(secs) }); sv(d); }
 function beep(n = 1, f = 880) {
   try { const C = beep.c || (beep.c = new (window.AudioContext || window.webkitAudioContext)()); C.resume && C.resume();
@@ -225,8 +226,8 @@ function tTick() {
   const cl = Math.ceil(T.left); if (cl < pl && cl >= 1 && cl <= 3) beep(1, 660);
   if (T.left <= 0) {
     const ex = byId(T.id);
-    logSeg(T.id, T.segs[T.i], T.segs[T.i].secs);
-    if (T.i < T.segs.length - 1) { T.i++; T.left = T.segs[T.i].secs; beep(1); toast(T.segs[T.i].side ? 'Seite wechseln → ' + T.segs[T.i].side : 'Nächster Satz', 1600); }
+    if (!T.segs[T.i].pause) logSeg(T.id, T.segs[T.i], T.segs[T.i].secs);
+    if (T.i < T.segs.length - 1) { T.i++; T.left = T.segs[T.i].secs; beep(1); toast(T.segs[T.i].pause ? '⏸ 12 s Pause – in Ruhe umsetzen' : (T.segs[T.i].side ? 'Los → ' + T.segs[T.i].side : 'Los – nächster Satz'), 1600); }
     else { T.run = false; T.left = 0; T.done = true; beep(3, 990); markDone(T.id, true); toast('Übung geschafft ✓', 1600); wakeSync(); }
   }
   tPaint();
@@ -250,7 +251,7 @@ function tPaint() {
   const el = document.getElementById('mt'); if (!el || !T) return; const ex = byId(T.id); const sg = T.segs[T.i];
   const left = Math.max(0, Math.ceil(T.left)); const frac = T.left / sg.secs; const C = 2 * Math.PI * 88;
   el.querySelector('.mt-num').textContent = Math.floor(left / 60) + ':' + pad(left % 60);
-  el.querySelector('.mt-sub').textContent = T.done ? 'Fertig 💪' : `Satz ${sg.set}/${sg.n}${sg.side ? ' · ' + sg.side + (ex.secsL ? ' · ' + sg.secs + ' s' : '') : ''}${'' ? ' · ' + sg.side : ''}`;
+  el.querySelector('.mt-sub').textContent = T.done ? 'Fertig 💪' : sg.pause ? '⏸ ' + sg.side : `Satz ${sg.set}/${sg.n}${sg.side ? ' · ' + sg.side + (ex.secsL ? ' · ' + sg.secs + ' s' : '') : ''}${'' ? ' · ' + sg.side : ''}`;
   el.querySelector('.mt-fg').style.strokeDashoffset = C * (1 - frac);
   el.querySelector('[data-act=mobT]').textContent = T.run ? '❚❚ Pause' : (T.done ? '↻ Nochmal' : (T.left < sg.secs || T.i ? '▶ Weiter' : '▶ Start'));
   el.classList.toggle('run', T.run);
@@ -306,9 +307,9 @@ function viewDetail(id) {
     tInit(ex); const C = 2 * Math.PI * 88;
     tool = `<div class="card mob-timer" id="mt"><svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="88" class="mt-bg"/><circle cx="100" cy="100" r="88" class="mt-fg" stroke-dasharray="${C}" transform="rotate(-90 100 100)"/></svg>
       <div class="mt-in"><div class="mt-num">0:00</div><div class="mt-sub"></div></div>
-      <div class="mt-segs">${T.segs.map(s => `<span class="mt-seg">${s.side ? s.side[0] : 'S'}${s.set}</span>`).join('')}</div>
+      <div class="mt-segs">${T.segs.filter(s => !s.pause).map(s => `<span class="mt-seg">${s.side ? s.side[0] : 'S'}${s.set}</span>`).join('')}</div>
       <div class="row" style="margin-top:12px"><button class="btn btn-red btn-sm" data-act="mobT">▶ Start</button><button class="btn btn-ghost btn-sm" data-act="mobTR" style="max-width:120px">↺ Reset</button></div>
-      <div class="muted small" style="margin-top:8px;text-align:center">${ex.ps ? 'Seitenwechsel automatisch mit Signalton/Vibration' : 'Signalton/Vibration am Ende'} · 3-2-1-Countdown · Display bleibt an</div></div>`;
+      <div class="muted small" style="margin-top:8px;text-align:center">${ex.ps ? 'Seitenwechsel automatisch mit Signalton/Vibration · 12 s Pause zum Umsetzen' : (ex.sets > 1 ? '12 s Pause zwischen den Sätzen · ' : '') + 'Signalton/Vibration am Ende'} · 3-2-1-Countdown · Display bleibt an</div></div>`;
   } else {
     const n = d.today.sets[id] || 0; const tot = ex.sets * (ex.ps ? 2 : 1);
     const segs = []; for (let s = 1; s <= ex.sets; s++) (ex.ps ? ['Links', 'Rechts'] : ['']).forEach(side => segs.push({ s, side }));
