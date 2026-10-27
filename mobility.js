@@ -335,11 +335,11 @@ window.viewMob = a => a ? viewDetail(a) : viewList();
 
 /* ---------- Aktionen ---------- */
 Object.assign(A, {
-  mobChk: (dd, el) => { const d = day(); markDone(dd.id, !d.today.done[dd.id]); render(true); },
-  mobSet: dd => { const ex = byId(dd.id); const d = day(); const i = +dd.i; const cur = d.today.sets[dd.id] || 0; d.today.sets[dd.id] = i < cur ? i : i + 1; const tot = ex.sets * (ex.ps ? 2 : 1);
+  mobChk: (dd, el) => { const d = day(); if (d.today.done[dd.id] && !confirm('Heute schon erledigt ✓ – wirklich wieder offen machen?')) return; markDone(dd.id, !d.today.done[dd.id]); render(true); },
+  mobSet: dd => { const ex = byId(dd.id); const d = day(); if (d.today.done[dd.id]) { toast('Heute schon erledigt ✓', 1400); return; } const i = +dd.i; const cur = d.today.sets[dd.id] || 0; d.today.sets[dd.id] = i < cur ? i : i + 1; const tot = ex.sets * (ex.ps ? 2 : 1);
     if (d.today.sets[dd.id] >= tot) { d.today.done[dd.id] = true; beep(2, 990); toast('Übung geschafft ✓', 1400); } else try { navigator.vibrate && navigator.vibrate(40); } catch (_) { }
     sv(d); render(true); },
-  mobT: () => { if (!T) return; beep.c || beep(0); if (T.done) { const ex = byId(T.id); T = null; tInit(ex); } T.run = !T.run; T.last = Date.now(); if (T.run && !('wakeLock' in navigator)) wvStart(); wakeSync(); tPaint(); },
+  mobT: () => { if (!T) return; if (!T.run && day().today.done[T.id]) { toast('Heute schon erledigt ✓', 1400); return; } beep.c || beep(0); if (T.done) { const ex = byId(T.id); T = null; tInit(ex); } T.run = !T.run; T.last = Date.now(); if (T.run && !('wakeLock' in navigator)) wvStart(); wakeSync(); tPaint(); },
   mobTR: () => { if (!T) return; const ex = byId(T.id); T = null; tInit(ex); wakeSync(); tPaint(); },
   mobFinish: () => { const d = day(); const done = Object.keys(d.today.done);
     if (!done.length && !confirm('Noch keine Übung abgehakt. Trotzdem als Einheit speichern?')) return;
