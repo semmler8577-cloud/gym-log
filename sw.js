@@ -1,5 +1,5 @@
-/* Voccola Gym Log – Service Worker (v1.7.0: Duoball LWS in 2 Phasen) */
-const CACHE = 'vgl-v1.7.8';
+/* Voccola Gym Log – Service Worker (v1.7.9: Flo Extras) */
+const CACHE = 'vgl-v1.7.9';
 const ASSETS = ['./', './index.html', './styles.css', './app.js', './mobility.js', './manifest.webmanifest',
   './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png', './icons/icon-maskable-512.png', './assets/dumbbell.webp', './assets/keepawake.mp4',
   './assets/ex/bauch-crunch-maschine.webp', './assets/ex/r-facepull.webp', './assets/ex/r-revfly.webp', './assets/ex/s-presse-kabel-liegend.webp', './assets/ex/s-seitheben-kabel-einarm.webp', './assets/ex/s-seitheben-vorgebeugt.webp', './assets/ex/x1.webp', './assets/ex/x10.webp', './assets/ex/x11.webp', './assets/ex/x12.webp', './assets/ex/x13.webp', './assets/ex/x14.webp', './assets/ex/x15.webp', './assets/ex/x16.webp', './assets/ex/x17.webp', './assets/ex/x18.webp', './assets/ex/x19.webp', './assets/ex/x2.webp', './assets/ex/x20.webp', './assets/ex/x21.webp', './assets/ex/x22.webp', './assets/ex/x23.webp', './assets/ex/x24.webp', './assets/ex/x25.webp', './assets/ex/x26.webp', './assets/ex/x27.webp', './assets/ex/x28.webp', './assets/ex/x3.webp', './assets/ex/x4.webp', './assets/ex/x5.webp', './assets/ex/x6.webp', './assets/ex/x7.webp', './assets/ex/x8.webp', './assets/ex/x9.webp', 

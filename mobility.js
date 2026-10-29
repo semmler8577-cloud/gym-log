@@ -1,4 +1,4 @@
-/* Voccola Gym Log – Hüft-Beweglichkeit (v1.7.0). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
+/* Voccola Gym Log – Hüft-Beweglichkeit (v1.7.9). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
 'use strict';
 (function () {
 const KEY = 'vgl-mob';
@@ -195,7 +195,23 @@ const RET = [
     steps: ['Aus dem Vierfüßlerstand das linke Knie nach vorn zur Hand bringen, die Ferse eng Richtung Leiste ziehen (Wade liegt am Oberschenkel).', 'Hinteres Bein lang nach hinten ausstrecken.', 'Hüfte gerade ausrichten, aufrecht abstützen – oder, wenn angenehm, auf die Unterarme sinken.', '60 s halten, ruhig atmen, Seite wechseln.'],
     cues: ['Kissen unter die linke Pobacke, wenn du nicht runterkommst', 'Bei Knieschmerz: Ferse näher zur Hüfte oder Kissen unter das Gesäß', 'Dehnung im Gesäß, nicht im Knie'], err: ['Hüfte kippt zur Seite', 'Knie erzwingen / Schmerz im Knie ignorieren'] }
 ];
-const ALL = [...EX, ...ROT, ...EVE, ...FAS, ...RET];
+// v1.7.9: Block „Flo Extras“ – 4 Zusatzübungen; Muskelbilder (img) werden von vorhandenen Übungen wiederverwendet
+const FLO = [
+  { id: 'flo_couch', flo: 1, img: 'hipflex', n: 'Couch Stretch', sub: 'Flo Extras · Hüftbeuger & Quadrizeps', dose: '1×2 min pro Seite', t: 'time', sets: 1, secs: 120, ps: true,
+    steps: ['Knie auf einer weichen Unterlage (Kissen/Matte) vor dem Sofa absetzen.', 'Den hinteren Fuß erhöht aufs Sofa legen, Schienbein an der Lehne.', 'Becken nach vorn schieben, Gesäß der hinteren Seite fest anspannen.', 'Oberkörper aufrecht halten, 2 min ruhig atmen. Seite wechseln.'],
+    cues: ['Dehnung vorn an Hüfte und Oberschenkel des hinteren Beins', 'Oberkörper aufrecht, Rippen unten', 'Nur bis angenehmer Zug – Knie weiter vom Sofa weg = sanfter'], err: ['Ins Hohlkreuz ausweichen', 'Knieschmerz ignorieren', 'Zu aggressiv ins Sofa pressen'] },
+  { id: 'flo_hipflex', flo: 1, img: 'kneel', n: 'Aktiver Hüftbeuger-Stretch', sub: 'Flo Extras · Hüftbeuger, Becken nach vorn & lösen', dose: '20 Wdh. pro Seite', t: 'reps', sets: 1, reps: 20, ps: true,
+    steps: ['Großer Ausfallschritt nach vorn, hinteres Knie gepolstert oder Bein lang.', 'Becken nach vorn schieben, bis vorn in der Hüfte ein Zug kommt.', 'Becken wieder lösen (zurücknehmen), ohne die Position zu verlassen.', '20 ruhige Wiederholungen, dann Seite wechseln.'],
+    cues: ['Kontrollierte, fließende Bewegung', 'Gesäß der hinteren Seite aktiv anspannen', 'Oberkörper aufrecht, Rippen unten'], err: ['Ins Hohlkreuz fallen', 'Wippen mit Schwung', 'Vorderes Knie fällt nach innen'] },
+  { id: 'flo_seit', flo: 1, img: 'tuer', n: 'Seitstretch am Türrahmen', sub: 'Flo Extras · seitliche Rumpfmuskulatur & Hüftabduktoren', dose: '60 s pro Seite', t: 'time', sets: 1, secs: 60, ps: true,
+    steps: ['Im Türrahmen stehen, Beine überkreuzen.', 'Den Türrahmen mit einer Hand oben halten.', 'Hüfte seitlich rausschieben.', 'Oberkörper zur Gegenseite ziehen, 60 s ruhig in die Flanke atmen. Seite wechseln.'],
+    cues: ['Rumpf bleibt in einer Ebene – nicht nach vorn kippen', 'Bauch leicht fest', 'Nur bis angenehmer Zug'], err: ['Ins Hohlkreuz fallen', 'Schulter hochziehen', 'Ruckartig wippen'] },
+  { id: 'flo_rolle', flo: 1, img: 'rollschien', n: 'Bein über die Rolle', sub: 'Flo Extras · Blackroll · Hüfte kontrolliert bewegen', dose: '10 Wdh. pro Seite', t: 'reps', sets: 1, reps: 10, ps: true,
+    steps: ['Im Sitzen aufrecht hinsetzen, Blackroll vor dir am Boden bzw. neben dem Bein platzieren.', 'Ein Bein kontrolliert über die Blackroll heben.', 'Langsam wieder zurückführen, ohne Schwung.', '10 Wiederholungen pro Seite. Fortgeschritten: Rolle höher stellen (hochkant).'],
+    cues: ['Oberkörper aufrecht, Becken stabil', 'Langsam und kontrolliert heben und absenken', 'Fortgeschritten: Rolle höher stellen'], err: ['Schwung holen', 'Rücken rund machen', 'Becken kippt zur Seite'] }
+];
+const ALL = [...EX, ...ROT, ...EVE, ...FAS, ...RET, ...FLO];
+const im = ex => ex.img || ex.id;
 const byId = id => ALL.find(e => e.id === id);
 
 /* ---------- Statistik ---------- */
@@ -265,15 +281,15 @@ function markDone(id, val) { const d = day(); if (val) { d.today.done[id] = true
 function row(ex, d) {
   const ok = !!d.today.done[ex.id]; const i = ALL.indexOf(ex);
   return `<div class="card mob-row ${ok ? 'ok' : ''}" data-act="go" data-to="#/mob/${ex.id}">
-    <button class="mob-chk ${ok ? 'on' : ''}" data-act="mobChk" data-id="${ex.id}" aria-label="Abhaken">${ok ? '✓' : (ex.eve ? '☾' : ex.fas ? '◎' : ex.rot ? '🔄' : i + 1)}</button>
-    <div class="mob-thumb"><img class="mob-thumb-img" src="./assets/mob/${ex.id}.webp" alt="" loading="lazy"></div>
+    <button class="mob-chk ${ok ? 'on' : ''}" data-act="mobChk" data-id="${ex.id}" aria-label="Abhaken">${ok ? '✓' : (ex.eve ? '☾' : ex.fas ? '◎' : ex.flo ? '★' : ex.rot ? '🔄' : i + 1)}</button>
+    <div class="mob-thumb"><img class="mob-thumb-img" src="./assets/mob/${im(ex)}.webp" alt="" loading="lazy"></div>
     <div class="mob-rt"><b>${esc(ex.n)}</b><div class="muted small">${esc(ex.dose)}</div></div><span class="mob-go">›</span></div>`;
 }
 function viewList() {
   const d = day(); const s = stats(); const nDone = EX.filter(e => d.today.done[e.id]).length;
-  const RT = rotFor(tk()), rDone = RT.filter(e => d.today.done[e.id]).length; const eDone = EVE.filter(e => d.today.done[e.id]).length, fDone = FAS.filter(e => d.today.done[e.id]).length;
+  const RT = rotFor(tk()), rDone = RT.filter(e => d.today.done[e.id]).length; const eDone = EVE.filter(e => d.today.done[e.id]).length, fDone = FAS.filter(e => d.today.done[e.id]).length, floDone = FLO.filter(e => d.today.done[e.id]).length;
   const st = (n, t) => n >= t ? '<span class="mob-st ok">✓ heute erledigt</span>' : n ? `<span class="mob-st part">${n}/${t} · läuft</span>` : '<span class="mob-st">noch offen</span>';
-  const hist = [...d.history].reverse().slice(0, 8).map(h => `<div class="mob-h"><span>${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)}</span><span class="muted small">${h.note ? '📝 ' : ''}${h.done.filter(x => EX.some(e => e.id === x)).length}/${EX.length} Übungen${h.done.some(x => ROT.some(e => e.id === x)) ? ' · 🔄 Abwechslung' : ''}${h.done.some(x => [...EVE, ...RET].some(e => e.id === x)) ? ' · ☾ Abend' : ''}${h.done.some(x => FAS.some(e => e.id === x)) ? ' · ◎ Faszien' : ''}</span><button class="btn btn-ghost btn-sm" style="width:auto;padding:4px 10px;margin-left:6px" data-act="mobExp" data-date="${h.date}">Exportieren</button></div>`).join('') || '<div class="muted small">Noch keine Einheit – heute ist ein guter Tag zum Starten 🙂</div>';
+  const hist = [...d.history].reverse().slice(0, 8).map(h => `<div class="mob-h"><span>${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)}</span><span class="muted small">${h.note ? '📝 ' : ''}${h.done.filter(x => EX.some(e => e.id === x)).length}/${EX.length} Übungen${h.done.some(x => ROT.some(e => e.id === x)) ? ' · 🔄 Abwechslung' : ''}${h.done.some(x => [...EVE, ...RET].some(e => e.id === x)) ? ' · ☾ Abend' : ''}${h.done.some(x => FAS.some(e => e.id === x)) ? ' · ◎ Faszien' : ''}${h.done.some(x => FLO.some(e => e.id === x)) ? ' · ★ Flo Extras' : ''}</span><button class="btn btn-ghost btn-sm" style="width:auto;padding:4px 10px;margin-left:6px" data-act="mobExp" data-date="${h.date}">Exportieren</button></div>`).join('') || '<div class="muted small">Noch keine Einheit – heute ist ein guter Tag zum Starten 🙂</div>';
   return {
     html: topbar('Hüft-Beweglichkeit', 'Dehnung & Gesundheit', null) + `
     <div class="mob-stats">
@@ -284,7 +300,7 @@ function viewList() {
     <div class="card mob-note">⚠️ <b>Morgens kein langes Vorbeugen</b> (Bandscheibe). Nichts erzwingen – <b>schmerzfrei bleiben</b>. Bei ausstrahlendem Schmerz abbrechen.</div>
     <div class="mob-prog"><div style="width:${nDone / EX.length * 100}%"></div></div>
     <div class="card mob-today"><b>Heute</b> · ${s.todayDone ? '<span class="mob-st ok">✓ Einheit abgeschlossen</span>' : '<span class="mob-st">Einheit noch offen</span>'}
-      <div class="mob-tl"><span>☀️ Morgen-Routine</span>${st(nDone, EX.length)}</div><div class="mob-tl"><span>🔄 Abwechslung</span>${st(rDone, 3)}</div><div class="mob-tl"><span>☾ Abend</span>${st(eDone, EVE.length)}</div><div class="mob-tl"><span>◎ Faszien</span>${st(fDone, FAS.length)}</div></div>
+      <div class="mob-tl"><span>☀️ Morgen-Routine</span>${st(nDone, EX.length)}</div><div class="mob-tl"><span>🔄 Abwechslung</span>${st(rDone, 3)}</div><div class="mob-tl"><span>☾ Abend</span>${st(eDone, EVE.length)}</div><div class="mob-tl"><span>◎ Faszien</span>${st(fDone, FAS.length)}</div><div class="mob-tl"><span>★ Flo Extras</span>${st(floDone, FLO.length)}</div></div>
     <div class="sec-h muted small" style="margin:10px 2px 2px">☀️ MORGEN-ROUTINE · ${nDone}/${EX.length} erledigt</div><div class="mob-when">Morgens nach dem Aufstehen</div>
     ${EX.map(e => row(e, d)).join('')}
     <div class="sec-h muted small" style="margin:18px 2px 2px">🔄 ABWECHSLUNG · ${rDone}/3 erledigt</div><div class="mob-when">Heute (${WD[new Date().getDay()]}) · täglich 3 andere – in einer Woche alle 9</div>
@@ -293,6 +309,8 @@ function viewList() {
     ${EVE.map(e => row(e, d)).join('')}
     <div class="sec-h muted small" style="margin:18px 2px 2px">◎ FASZIEN (OPTIONAL)</div><div class="mob-when">Blackroll · Duoball/Bälle · Shakti-Matte – ideal abends</div>
     ${FAS.map(e => row(e, d)).join('')}
+    <div class="sec-h muted small" style="margin:18px 2px 2px">★ FLO EXTRAS (OPTIONAL) · ${floDone}/${FLO.length} erledigt</div><div class="mob-when">Couch Stretch · Hüftbeuger · Türrahmen · Blackroll</div>
+    ${FLO.map(e => row(e, d)).join('')}
     <div style="height:6px"></div>
     ${s.todayDone ? `<button class="btn btn-outline-gold" data-act="mobFinish">✓ Heute erledigt – Eintrag aktualisieren</button>` : `<button class="btn btn-red" data-act="mobFinish">Einheit abschließen ✓</button>`}
     ${s.todayDone ? `<div style="height:8px"></div><button class="btn btn-gold" data-act="mobExp" data-date="${tk()}">📋 Exportieren</button>` : ''}
@@ -301,7 +319,7 @@ function viewList() {
 }
 function viewDetail(id) {
   const ex = byId(id); if (!ex) { location.hash = '#/mob'; return { html: '' }; }
-  const d = day(); const ok = !!d.today.done[id]; const list = ex.eve ? EVE : ex.fas ? FAS : ex.rot ? (rotFor(tk()).includes(ex) ? rotFor(tk()) : [ex]) : EX; const idx = list.indexOf(ex); const next = list[idx + 1];
+  const d = day(); const ok = !!d.today.done[id]; const list = ex.eve ? EVE : ex.fas ? FAS : ex.flo ? FLO : ex.rot ? (rotFor(tk()).includes(ex) ? rotFor(tk()) : [ex]) : EX; const idx = list.indexOf(ex); const next = list[idx + 1];
   let tool;
   if (ex.t === 'time') {
     tInit(ex); const C = 2 * Math.PI * 88;
@@ -318,14 +336,14 @@ function viewDetail(id) {
   }
   const li = a => `<ul class="mob-ul">${a.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
   return {
-    html: `<div id="mob-detail">` + topbar(ex.n, ex.eve ? 'Abend · vor dem Schlafen' : ex.fas ? 'Faszien · optional' : ex.rot ? `Abwechslung · Übung ${idx + 1} von ${list.length}` : `Morgens · Übung ${idx + 1} von ${EX.length}`, '#/mob') + `
-    <div class="card mob-ill"><img class="mob-anat" src="./assets/mob/${id}.webp" alt="${esc(ex.n)} – Zielmuskulatur rot markiert"><div class="muted small mob-anat-cap"><span style="color:#ff6b6b">●</span> rot = Zielmuskulatur</div><img class="mob-seq" src="./assets/mob/seq_${id}.webp" alt="Bewegungsablauf ${esc(ex.n)}" loading="lazy"><div class="muted small" style="margin-top:6px">${esc(ex.sub)} · <span class="gold">→ Pfeil = Bewegungsablauf</span></div></div>
+    html: `<div id="mob-detail">` + topbar(ex.n, ex.eve ? 'Abend · vor dem Schlafen' : ex.fas ? 'Faszien · optional' : ex.flo ? `Flo Extras · Übung ${idx + 1} von ${list.length}` : ex.rot ? `Abwechslung · Übung ${idx + 1} von ${list.length}` : `Morgens · Übung ${idx + 1} von ${EX.length}`, '#/mob') + `
+    <div class="card mob-ill"><img class="mob-anat" src="./assets/mob/${im(ex)}.webp" alt="${esc(ex.n)} – Zielmuskulatur rot markiert"><div class="muted small mob-anat-cap"><span style="color:#ff6b6b">●</span> rot = Zielmuskulatur</div><img class="mob-seq" src="./assets/mob/seq_${im(ex)}.webp" alt="Bewegungsablauf ${esc(ex.n)}" loading="lazy"><div class="muted small" style="margin-top:6px">${esc(ex.sub)} · <span class="gold">→ Pfeil = Bewegungsablauf</span></div></div>
     <div class="mob-dose">${esc(ex.dose)}</div>
     ${tool}
     <div class="card"><h3 class="mob-h3">So geht's</h3><ol class="mob-ol">${ex.steps.map(x => `<li>${esc(x)}</li>`).join('')}</ol></div>
     <div class="card mob-cue"><h3 class="mob-h3">✅ Darauf achten</h3>${li(ex.cues)}</div>
     <div class="card mob-err"><h3 class="mob-h3">❌ Häufige Fehler</h3>${li(ex.err)}</div>
-    <div class="card mob-note small">Nichts erzwingen, schmerzfrei bleiben.${ex.eve || ex.fas || ex.rot ? '' : ' Morgens kein langes Vorbeugen.'}</div>
+    <div class="card mob-note small">Nichts erzwingen, schmerzfrei bleiben.${ex.eve || ex.fas || ex.rot || ex.flo ? '' : ' Morgens kein langes Vorbeugen.'}</div>
     <button class="btn ${ok ? 'btn-outline-gold' : 'btn-red'}" data-act="mobChk" data-id="${id}">${ok ? '✓ Erledigt (tippen zum Zurücksetzen)' : 'Als erledigt abhaken'}</button>
     <div style="height:10px"></div>
     ${next ? `<button class="btn btn-ghost btn-sm" data-act="go" data-to="#/mob/${next.id}">Nächste: ${esc(next.n)} ›</button>` : `<button class="btn btn-ghost btn-sm" data-act="go" data-to="#/mob">Zur Übersicht ›</button>`}</div>`,
@@ -361,7 +379,7 @@ Object.assign(A, {
 });
 function saveNote(date) { const d = ld(); const h = d.history.find(x => x.date === date); const ta = document.getElementById('mob-note'); if (h && ta) { h.note = ta.value.trim(); sv(d); } return h; }
 function mobText(h) {
-  const L = h.log || {}, S2 = h.sets || {}; const blk = [['☀️ Morgen-Routine', EX], ['🔄 Abwechslung', [...rotFor(h.date), ...ROT.filter(e => !rotFor(h.date).includes(e) && h.done.includes(e.id))]], ['☾ Abend', [...EVE, ...RET]], ['◎ Faszien', FAS]];
+  const L = h.log || {}, S2 = h.sets || {}; const blk = [['☀️ Morgen-Routine', EX], ['🔄 Abwechslung', [...rotFor(h.date), ...ROT.filter(e => !rotFor(h.date).includes(e) && h.done.includes(e.id))]], ['☾ Abend', [...EVE, ...RET]], ['◎ Faszien', FAS], ['★ Flo Extras', FLO]];
   const out = [`Hüft-Beweglichkeit – ${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)}`];
   const bd = blk.filter(([, l]) => l.some(e => h.done.includes(e.id))).map(([n, l]) => `${n} (${l.filter(e => h.done.includes(e.id)).length}/${l === blk[1][1] ? Math.max(3, l.length) : l.length})`);
   out.push('Blöcke: ' + (bd.join(', ') || '–'));
