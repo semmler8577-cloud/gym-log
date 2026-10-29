@@ -370,14 +370,14 @@ Object.assign(A, {
 });
 function saveNote(date) { const d = ld(); const h = d.history.find(x => x.date === date); const ta = document.getElementById('mob-note'); if (h && ta) { h.note = ta.value.trim(); sv(d); } return h; }
 function mobText(h) {
-  const L = h.log || {}, S2 = h.sets || {}; const blk = [['☀️ Morgen-Routine', EX], ['🔄 Abwechslung', [...rotFor(h.date), ...ROT.filter(e => !rotFor(h.date).includes(e) && h.done.includes(e.id))]], ['☾ Abend', [...EVE, ...RET]], ['◎ Faszien', FAS]];
+  const L = h.log || {}, S2 = h.sets || {}; const blk = [['☀️ Morgen-Routine', EX], ['🔄 Abwechslung', [...rotFor(h.date), ...ROT.filter(e => !rotFor(h.date).includes(e) && h.done.includes(e.id))]], ['☾ Abend', [...EVE, ...RET], EVE], ['◎ Faszien', FAS]];
   const out = [`Hüft-Beweglichkeit – ${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)}`];
-  const bd = blk.filter(([, l]) => l.some(e => h.done.includes(e.id))).map(([n, l]) => `${n} (${l.filter(e => h.done.includes(e.id)).length}/${l === blk[1][1] ? Math.max(3, l.length) : l.length})`);
+  const bd = blk.filter(([, l]) => l.some(e => h.done.includes(e.id))).map(([n, l, act]) => { const a = act || l; return `${n} (${a.filter(e => h.done.includes(e.id)).length}/${l === blk[1][1] ? Math.max(3, a.length) : a.length})`; });
   out.push('Blöcke: ' + (bd.join(', ') || '–'));
   for (const [n, l] of blk) { const ex = l.filter(e => h.done.includes(e.id) || (L[e.id] || []).length || S2[e.id]); if (!ex.length) continue; out.push('', n);
     for (const e of ex) { let det;
       if (e.t === 'time') { const lg = L[e.id] || []; if (lg.length) { const by = {}; lg.forEach(x => (by[x.side || ''] = by[x.side || ''] || []).push(x.secs));
-          det = Object.entries(by).map(([sd, a]) => `${sd ? sd + ': ' : ''}${a.length}× ${a.map(fmtS).join('/')}`).join(' · '); }
+          det = Object.entries(by).map(([sd, a]) => { const pl = sd === 'Links' ? (e.setsL || e.sets) : sd === 'Rechts' ? (e.setsR || e.sets) : e.sets; return `${sd ? sd + ': ' : ''}${a.length}× ${a.map(fmtS).join('/')}${a.length < pl ? ` (${a.length}/${pl} Sätze)` : ''}`; }).join(' · '); }
         else det = 'abgehakt (' + e.dose + ')'; }
       else { const n2 = S2[e.id] || 0; const segs = e.sets * (e.ps ? 2 : 1); det = n2 ? (e.ps ? `${Math.ceil(n2 / 2)}×${e.reps} pro Seite` : `${n2}×${e.reps}`) + (n2 < segs ? ` (${n2}/${segs})` : '') : 'abgehakt (' + e.dose + ')'; }
       out.push(`${h.done.includes(e.id) ? '✓' : '◐'} ${e.n}: ${det}`); } }
