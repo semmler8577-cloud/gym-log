@@ -1,4 +1,4 @@
-/* Voccola Gym Log – Hüft-Beweglichkeit (v1.7.9). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
+/* Voccola Gym Log – Hüft-Beweglichkeit (v1.7.10). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
 'use strict';
 (function () {
 const KEY = 'vgl-mob';
@@ -79,10 +79,10 @@ const EX = [
     steps: ['Hüftbreit stehen, Knie zunächst leicht gebeugt.', 'Mit langem Rücken aus der Hüfte nach vorn neigen, Hände auf die Schienbeine oder auf einen Block legen – der Boden muss nicht erreicht werden.', 'Ein Knie beugen, das andere sanft strecken, bis hinten am Oberschenkel/in der Wade ein leichtes Ziehen kommt.', 'Langsam wechseln, wie auf der Stelle gehen. Ruhig atmen, ca. 2–3 s pro Wechsel. Zum Schluss mit gebeugten Knien und Händen auf den Oberschenkeln langsam aufrichten.'],
     cues: ['Markus, Bandscheibe zuerst: Knie anfangs ruhig etwas mehr beugen, Rücken lang statt rund', 'Hände stützen auf Schienbeinen oder Block – nicht zum Boden zwingen', 'Langsam ein- und ausatmen, Dehnung nur sanft (max. 3–4/10)', 'Kribbeln in den Zehen oder Ziehen ins Bein → sofort lockerer lassen bzw. abbrechen'],
     err: ['Mit rundem Rücken tief „hängen“ statt aus der Hüfte zu beugen', 'Knie durchdrücken oder federn', 'Luft anhalten', 'Weitermachen trotz Kribbeln/Ausstrahlen ins Bein'] },
-  { id: 'hipflex', n: 'Hüftbeuger-Dehnung im Halbknien', sub: 'Gesäß anspannen, Becken leicht nach hinten kippen', dose: '2×45 s pro Seite', t: 'time', sets: 2, secs: 45, ps: true,
-    steps: ['Halbkniestand: hinteres Knie auf einer weichen Unterlage, vorderer Fuß flach, beide Knie ca. 90°.', 'Oberkörper aufrecht, Hände an die Hüfte.', 'Gesäß der hinteren Seite fest anspannen und das Becken leicht nach hinten kippen (Schambein Richtung Bauchnabel).', 'Jetzt minimal die Hüfte nach vorn schieben, bis vorne in der Leiste ein Ziehen kommt. Halten, ruhig atmen.'],
-    cues: ['Dehnung vorne an der Hüfte/Leiste des hinteren Beins', 'Rippen unten, Bauch leicht fest', 'Vorderes Knie über dem Fuß'],
-    err: ['Ins Hohlkreuz ausweichen statt Becken zu kippen', 'Zu weit nach vorn schieben – weniger ist mehr', 'Gesäß locker lassen'] },
+  { id: 'hipflex', n: 'Aktiver Hüftbeuger-Stretch im Ausfallschritt', sub: 'Becken nach vorn schieben & lösen · Gesäß aktiv', dose: '20 Wdh. pro Seite', t: 'reps', sets: 1, reps: 20, ps: true,
+    steps: ['Großer Ausfallschritt: hinteres Knie auf einer weichen Unterlage (oder Bein lang), vorderer Fuß flach, Oberkörper aufrecht, Hände an die Hüfte.', 'Gesäß der hinteren Seite fest anspannen und das Becken leicht nach hinten kippen (Schambein Richtung Bauchnabel).', 'Becken ruhig nach vorn schieben, bis vorne in der Hüfte/Leiste ein Ziehen kommt – dann wieder lösen (zurücknehmen).', '20 langsame Wiederholungen, dann Seite wechseln.'],
+    cues: ['Dehnung vorne an der Hüfte/Leiste des hinteren Beins', 'Rippen unten, Bauch leicht fest – nur die Hüfte bewegt sich', 'Kleine, fließende Bewegung ohne Schwung', 'Vorderes Knie über dem Fuß'],
+    err: ['Ins Hohlkreuz ausweichen statt Becken zu kippen', 'Zu weit nach vorn schieben – weniger ist mehr', 'Gesäß locker lassen', 'Wippen mit Schwung'] },
   { id: 'wgs', n: "World's Greatest Stretch", sub: 'Ausfallschritt + Rotation', dose: '5 pro Seite', t: 'reps', sets: 1, reps: 5, ps: true,
     steps: ['Großer Ausfallschritt nach vorn, hinteres Bein lang, Hände innen neben dem vorderen Fuß aufsetzen.', 'Hüfte sanft Richtung Boden sinken lassen.', 'Den Arm auf der Seite des vorderen Beins zur Decke aufdrehen, Blick folgt der Hand.', 'Langsam zurück, Hand absetzen. 5× wiederholen, dann Seite wechseln.'],
     cues: ['Rotation kommt aus der Brustwirbelsäule', 'Hinteres Bein aktiv lang', 'Bewegung ruhig, 2 s oben halten'],
@@ -102,15 +102,20 @@ const EX = [
   { id: 'deadbug', n: 'Dead Bug', sub: 'Rücken flach', dose: '2×8 pro Seite, Rücken flach', t: 'reps', sets: 2, reps: 8, ps: true,
     steps: ['Rückenlage, Arme senkrecht zur Decke, Beine angehoben: Hüfte und Knie 90°.', 'Unteren Rücken sanft in den Boden drücken – er bleibt die ganze Zeit flach.', 'Ausatmen: rechten Arm nach hinten und linkes Bein nach vorn lang strecken, knapp über dem Boden.', 'Zurück in die Mitte, Seite wechseln.'],
     cues: ['Rücken flach am Boden – das ist die eigentliche Übung', 'Langsam ausatmen beim Strecken', 'Nur so weit strecken, wie der Rücken unten bleibt'],
-    err: ['Hohlkreuz beim Strecken', 'Luft anhalten', 'Zu schnell, Schwung'] }
+    err: ['Hohlkreuz beim Strecken', 'Luft anhalten', 'Zu schnell, Schwung'] },
+  { id: 'rolle', img: 'rollschien', n: 'Bein über die Rolle', sub: 'Sitzend · Blackroll · Hüfte aktiv & kontrolliert', dose: '10 Wdh. pro Seite', t: 'reps', sets: 1, reps: 10, ps: true,
+    steps: ['Aufrecht sitzen (Stuhl oder Boden), die Blackroll liegt quer vor dem Fuß am Boden.', 'Oberkörper bleibt aufrecht, Hände stützen seitlich oder an den Oberschenkeln.', 'Ein Bein kontrolliert anheben und über die Blackroll führen, ohne Schwung.', 'Langsam wieder zurückführen. 10 Wdh., dann Seite wechseln. Fortgeschritten: Rolle höher stellen (hochkant).'],
+    cues: ['Rücken lang, Bauch leicht fest – das Becken bleibt ruhig', 'Langsam heben, langsam zurück', 'Fortgeschritten: Rolle höher stellen', 'Kein Vorbeugen – bleib aufrecht'],
+    err: ['Mit Schwung über die Rolle schleudern', 'Oberkörper kippt zur Seite oder nach hinten', 'Rundrücken'] }
 ];
 const EVE = [
-  { id: 'tuer', eve: 1, n: 'Seitdehnung im Türrahmen', sub: 'Abend · Flanke, unterer Rücken, Außenhüfte', dose: '3×45 s links, 2×45 s rechts', t: 'time', sets: 3, setsL: 3, setsR: 2, secs: 45, ps: true,
-    steps: ['Aufwärmen: beide Hände seitlich im Türrahmen einspannen, 5–8 langsame Hüftkreise bzw. Pendeln links-rechts.', 'Im Türrahmen stehen, Beine überkreuzen (für die Dehnung der linken Seite: rechtes Bein vor das linke).', 'Linke Hand greift oben an den Türrahmen.', 'Hüfte langsam nach links/außen schieben, bis Zug in der linken Flanke, im unteren Rücken und an der Außenhüfte entsteht.', 'Ruhig in die Flanke atmen, 45 s halten. Seite wechseln.'],
+  { id: 'tuer', eve: 1, n: 'Seitdehnung im Türrahmen', sub: 'Abend · seitliche Rumpfmuskulatur, Hüftabduktoren, Außenhüfte', dose: '3×60 s links, 2×60 s rechts', t: 'time', sets: 3, setsL: 3, setsR: 2, secs: 60, ps: true,
+    steps: ['Aufwärmen: beide Hände seitlich im Türrahmen einspannen, 5–8 langsame Hüftkreise bzw. Pendeln links-rechts.', 'Im Türrahmen stehen, Beine überkreuzen (für die Dehnung der linken Seite: rechtes Bein vor das linke).', 'Linke Hand greift oben an den Türrahmen.', 'Hüfte langsam nach links/außen rausschieben und den Oberkörper zur Gegenseite ziehen, bis Zug in der linken Flanke, im unteren Rücken und an der Außenhüfte entsteht.', 'Ruhig in die Flanke atmen, 60 s halten. Seite wechseln.'],
     cues: ['Nicht nach vorne kippen – Rumpf bleibt in einer Ebene', 'Bauch leicht fest', 'Nur bis angenehmer Zug', 'Kein Kribbeln/Ausstrahlen ins Bein (Bandscheibe) – sonst lockerer'], err: ['Ins Hohlkreuz fallen', 'Schulter hochziehen', 'Ruckartig wippen'] },
-  { id: 'kneel', eve: 1, n: 'Kniestand-Hüftbeuger-Dehnung', sub: 'Abend · Arm über Kopf', dose: '2×60 s pro Seite', t: 'time', sets: 2, secs: 60, ps: true,
-    steps: ['Halbkniestand wie morgens, hinteres Knie gepolstert.', 'Gesäß anspannen, Becken leicht nach hinten kippen.', 'Arm der hinteren Seite über den Kopf strecken, leicht zur Gegenseite neigen.', 'Hüfte minimal nach vorn, 60 s ruhig atmen, dann Seite wechseln.'],
-    cues: ['Dehnung vorn an der Hüfte bis in die Flanke', 'Oberkörper aufrecht'], err: ['Hohlkreuz', 'Zu tief nach vorn schieben'] },
+  { id: 'couch', eve: 1, img: 'hipflex', n: 'Couch Stretch', sub: 'Abend · Hüftbeuger & Quadrizeps', dose: '1×2 min pro Seite', t: 'time', sets: 1, secs: 120, ps: true,
+    steps: ['Knie auf einer weichen Unterlage (Kissen/Matte) vor dem Sofa absetzen, vorderer Fuß flach, Knie ca. 90°.', 'Den hinteren Fuß erhöht aufs Sofa legen, Schienbein an der Lehne.', 'Gesäß der hinteren Seite fest anspannen und das Becken leicht nach hinten kippen, dann Becken nach vorn schieben, bis vorne an Hüfte und Oberschenkel ein Zug kommt.', 'Oberkörper aufrecht, 2 min ruhig atmen. Seite wechseln.'],
+    cues: ['Dehnung vorne an Hüfte und Oberschenkel des hinteren Beins', 'Rippen unten, Bauch leicht fest – nicht ins Hohlkreuz', 'Knie weiter vom Sofa weg = sanfter', 'Nur bis angenehmer Zug – nichts erzwingen'],
+    err: ['Ins Hohlkreuz ausweichen', 'Knieschmerz ignorieren', 'Zu aggressiv ins Sofa pressen'] },
   { id: 'pigeonq', eve: 1, n: 'Taube – Schienbein quer', sub: 'Abend · Gesäß/Piriformis außen', dose: '3×60 s links, 2×60 s rechts', t: 'time', sets: 3, setsL: 3, setsR: 2, secs: 60, ps: true,
     steps: ['Aus dem Vierfüßlerstand das linke Knie nach vorn bringen und das Schienbein QUER vor den Körper legen – so parallel zur vorderen Mattenkante, wie es angenehm ist. Die Wade zeigt Richtung Bauchnabel, der Fuß liegt Richtung andere Hüfte.', 'Hinteres Bein lang nach hinten ausstrecken.', 'Hüfte gerade ausrichten, aufrecht abstützen.', 'Dann langsam mit dem Oberkörper über das vordere Schienbein nach vorn sinken, Unterarme oder Stirn ablegen. 60 s halten, ruhig atmen, Seite wechseln.'],
     cues: ['In zwei Phasen: zuerst aufrecht halten, dann mit dem Oberkörper nach vorne unten sinken', 'Kissen unter die linke Pobacke, wenn du nicht runterkommst', 'Knie ca. 90°, Fuß aktiv (Zehen angezogen) schützt das Knie', 'Dehnung tief im Gesäß, nicht im Knie'], err: ['Hüfte kippt zur Seite', 'Schienbein erzwingen – lieber Fuß näher zum Körper', 'Knieschmerz ignorieren'] },
@@ -193,26 +198,14 @@ const rotFor = k => ROT_PLAN[fromKey(k).getDay()].split('').map(c => ROT['abcdef
 const RET = [
   { id: 'pigeon', eve: 1, n: 'Taube – Ferse eng', sub: 'Abend · Gesäß/Hüfte außen', dose: '3×60 s links, 2×60 s rechts', t: 'time', sets: 3, setsL: 3, setsR: 2, secs: 60, ps: true,
     steps: ['Aus dem Vierfüßlerstand das linke Knie nach vorn zur Hand bringen, die Ferse eng Richtung Leiste ziehen (Wade liegt am Oberschenkel).', 'Hinteres Bein lang nach hinten ausstrecken.', 'Hüfte gerade ausrichten, aufrecht abstützen – oder, wenn angenehm, auf die Unterarme sinken.', '60 s halten, ruhig atmen, Seite wechseln.'],
-    cues: ['Kissen unter die linke Pobacke, wenn du nicht runterkommst', 'Bei Knieschmerz: Ferse näher zur Hüfte oder Kissen unter das Gesäß', 'Dehnung im Gesäß, nicht im Knie'], err: ['Hüfte kippt zur Seite', 'Knie erzwingen / Schmerz im Knie ignorieren'] }
+    cues: ['Kissen unter die linke Pobacke, wenn du nicht runterkommst', 'Bei Knieschmerz: Ferse näher zur Hüfte oder Kissen unter das Gesäß', 'Dehnung im Gesäß, nicht im Knie'], err: ['Hüfte kippt zur Seite', 'Knie erzwingen / Schmerz im Knie ignorieren'] },
+  { id: 'kneel', eve: 1, n: 'Kniestand-Hüftbeuger-Dehnung', sub: 'Abend · Arm über Kopf', dose: '2×60 s pro Seite', t: 'time', sets: 2, secs: 60, ps: true,
+    steps: ['Halbkniestand wie morgens, hinteres Knie gepolstert.', 'Gesäß anspannen, Becken leicht nach hinten kippen.', 'Arm der hinteren Seite über den Kopf strecken, leicht zur Gegenseite neigen.', 'Hüfte minimal nach vorn, 60 s ruhig atmen, dann Seite wechseln.'],
+    cues: ['Dehnung vorn an der Hüfte bis in die Flanke', 'Oberkörper aufrecht'], err: ['Hohlkreuz', 'Zu tief nach vorn schieben'] }
 ];
-// v1.7.9: Block „Flo Extras“ – 4 Zusatzübungen; Muskelbilder (img) werden von vorhandenen Übungen wiederverwendet
-const FLO = [
-  { id: 'flo_couch', flo: 1, img: 'hipflex', n: 'Couch Stretch', sub: 'Flo Extras · Hüftbeuger & Quadrizeps', dose: '1×2 min pro Seite', t: 'time', sets: 1, secs: 120, ps: true,
-    steps: ['Knie auf einer weichen Unterlage (Kissen/Matte) vor dem Sofa absetzen.', 'Den hinteren Fuß erhöht aufs Sofa legen, Schienbein an der Lehne.', 'Becken nach vorn schieben, Gesäß der hinteren Seite fest anspannen.', 'Oberkörper aufrecht halten, 2 min ruhig atmen. Seite wechseln.'],
-    cues: ['Dehnung vorn an Hüfte und Oberschenkel des hinteren Beins', 'Oberkörper aufrecht, Rippen unten', 'Nur bis angenehmer Zug – Knie weiter vom Sofa weg = sanfter'], err: ['Ins Hohlkreuz ausweichen', 'Knieschmerz ignorieren', 'Zu aggressiv ins Sofa pressen'] },
-  { id: 'flo_hipflex', flo: 1, img: 'kneel', n: 'Aktiver Hüftbeuger-Stretch', sub: 'Flo Extras · Hüftbeuger, Becken nach vorn & lösen', dose: '20 Wdh. pro Seite', t: 'reps', sets: 1, reps: 20, ps: true,
-    steps: ['Großer Ausfallschritt nach vorn, hinteres Knie gepolstert oder Bein lang.', 'Becken nach vorn schieben, bis vorn in der Hüfte ein Zug kommt.', 'Becken wieder lösen (zurücknehmen), ohne die Position zu verlassen.', '20 ruhige Wiederholungen, dann Seite wechseln.'],
-    cues: ['Kontrollierte, fließende Bewegung', 'Gesäß der hinteren Seite aktiv anspannen', 'Oberkörper aufrecht, Rippen unten'], err: ['Ins Hohlkreuz fallen', 'Wippen mit Schwung', 'Vorderes Knie fällt nach innen'] },
-  { id: 'flo_seit', flo: 1, img: 'tuer', n: 'Seitstretch am Türrahmen', sub: 'Flo Extras · seitliche Rumpfmuskulatur & Hüftabduktoren', dose: '60 s pro Seite', t: 'time', sets: 1, secs: 60, ps: true,
-    steps: ['Im Türrahmen stehen, Beine überkreuzen.', 'Den Türrahmen mit einer Hand oben halten.', 'Hüfte seitlich rausschieben.', 'Oberkörper zur Gegenseite ziehen, 60 s ruhig in die Flanke atmen. Seite wechseln.'],
-    cues: ['Rumpf bleibt in einer Ebene – nicht nach vorn kippen', 'Bauch leicht fest', 'Nur bis angenehmer Zug'], err: ['Ins Hohlkreuz fallen', 'Schulter hochziehen', 'Ruckartig wippen'] },
-  { id: 'flo_rolle', flo: 1, img: 'rollschien', n: 'Bein über die Rolle', sub: 'Flo Extras · Blackroll · Hüfte kontrolliert bewegen', dose: '10 Wdh. pro Seite', t: 'reps', sets: 1, reps: 10, ps: true,
-    steps: ['Im Sitzen aufrecht hinsetzen, Blackroll vor dir am Boden bzw. neben dem Bein platzieren.', 'Ein Bein kontrolliert über die Blackroll heben.', 'Langsam wieder zurückführen, ohne Schwung.', '10 Wiederholungen pro Seite. Fortgeschritten: Rolle höher stellen (hochkant).'],
-    cues: ['Oberkörper aufrecht, Becken stabil', 'Langsam und kontrolliert heben und absenken', 'Fortgeschritten: Rolle höher stellen'], err: ['Schwung holen', 'Rücken rund machen', 'Becken kippt zur Seite'] }
-];
-const ALL = [...EX, ...ROT, ...EVE, ...FAS, ...RET, ...FLO];
-const im = ex => ex.img || ex.id;
+const ALL = [...EX, ...ROT, ...EVE, ...FAS, ...RET];
 const byId = id => ALL.find(e => e.id === id);
+const im = ex => ex.img || ex.id;
 
 /* ---------- Statistik ---------- */
 function stats() {
@@ -281,15 +274,15 @@ function markDone(id, val) { const d = day(); if (val) { d.today.done[id] = true
 function row(ex, d) {
   const ok = !!d.today.done[ex.id]; const i = ALL.indexOf(ex);
   return `<div class="card mob-row ${ok ? 'ok' : ''}" data-act="go" data-to="#/mob/${ex.id}">
-    <button class="mob-chk ${ok ? 'on' : ''}" data-act="mobChk" data-id="${ex.id}" aria-label="Abhaken">${ok ? '✓' : (ex.eve ? '☾' : ex.fas ? '◎' : ex.flo ? '★' : ex.rot ? '🔄' : i + 1)}</button>
+    <button class="mob-chk ${ok ? 'on' : ''}" data-act="mobChk" data-id="${ex.id}" aria-label="Abhaken">${ok ? '✓' : (ex.eve ? '☾' : ex.fas ? '◎' : ex.rot ? '🔄' : i + 1)}</button>
     <div class="mob-thumb"><img class="mob-thumb-img" src="./assets/mob/${im(ex)}.webp" alt="" loading="lazy"></div>
     <div class="mob-rt"><b>${esc(ex.n)}</b><div class="muted small">${esc(ex.dose)}</div></div><span class="mob-go">›</span></div>`;
 }
 function viewList() {
   const d = day(); const s = stats(); const nDone = EX.filter(e => d.today.done[e.id]).length;
-  const RT = rotFor(tk()), rDone = RT.filter(e => d.today.done[e.id]).length; const eDone = EVE.filter(e => d.today.done[e.id]).length, fDone = FAS.filter(e => d.today.done[e.id]).length, floDone = FLO.filter(e => d.today.done[e.id]).length;
+  const RT = rotFor(tk()), rDone = RT.filter(e => d.today.done[e.id]).length; const eDone = EVE.filter(e => d.today.done[e.id]).length, fDone = FAS.filter(e => d.today.done[e.id]).length;
   const st = (n, t) => n >= t ? '<span class="mob-st ok">✓ heute erledigt</span>' : n ? `<span class="mob-st part">${n}/${t} · läuft</span>` : '<span class="mob-st">noch offen</span>';
-  const hist = [...d.history].reverse().slice(0, 8).map(h => `<div class="mob-h"><span>${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)}</span><span class="muted small">${h.note ? '📝 ' : ''}${h.done.filter(x => EX.some(e => e.id === x)).length}/${EX.length} Übungen${h.done.some(x => ROT.some(e => e.id === x)) ? ' · 🔄 Abwechslung' : ''}${h.done.some(x => [...EVE, ...RET].some(e => e.id === x)) ? ' · ☾ Abend' : ''}${h.done.some(x => FAS.some(e => e.id === x)) ? ' · ◎ Faszien' : ''}${h.done.some(x => FLO.some(e => e.id === x)) ? ' · ★ Flo Extras' : ''}</span><button class="btn btn-ghost btn-sm" style="width:auto;padding:4px 10px;margin-left:6px" data-act="mobExp" data-date="${h.date}">Exportieren</button></div>`).join('') || '<div class="muted small">Noch keine Einheit – heute ist ein guter Tag zum Starten 🙂</div>';
+  const hist = [...d.history].reverse().slice(0, 8).map(h => `<div class="mob-h"><span>${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)}</span><span class="muted small">${h.note ? '📝 ' : ''}${h.done.filter(x => EX.some(e => e.id === x)).length}/${EX.length} Übungen${h.done.some(x => ROT.some(e => e.id === x)) ? ' · 🔄 Abwechslung' : ''}${h.done.some(x => [...EVE, ...RET].some(e => e.id === x)) ? ' · ☾ Abend' : ''}${h.done.some(x => FAS.some(e => e.id === x)) ? ' · ◎ Faszien' : ''}</span><button class="btn btn-ghost btn-sm" style="width:auto;padding:4px 10px;margin-left:6px" data-act="mobExp" data-date="${h.date}">Exportieren</button></div>`).join('') || '<div class="muted small">Noch keine Einheit – heute ist ein guter Tag zum Starten 🙂</div>';
   return {
     html: topbar('Hüft-Beweglichkeit', 'Dehnung & Gesundheit', null) + `
     <div class="mob-stats">
@@ -300,7 +293,7 @@ function viewList() {
     <div class="card mob-note">⚠️ <b>Morgens kein langes Vorbeugen</b> (Bandscheibe). Nichts erzwingen – <b>schmerzfrei bleiben</b>. Bei ausstrahlendem Schmerz abbrechen.</div>
     <div class="mob-prog"><div style="width:${nDone / EX.length * 100}%"></div></div>
     <div class="card mob-today"><b>Heute</b> · ${s.todayDone ? '<span class="mob-st ok">✓ Einheit abgeschlossen</span>' : '<span class="mob-st">Einheit noch offen</span>'}
-      <div class="mob-tl"><span>☀️ Morgen-Routine</span>${st(nDone, EX.length)}</div><div class="mob-tl"><span>🔄 Abwechslung</span>${st(rDone, 3)}</div><div class="mob-tl"><span>☾ Abend</span>${st(eDone, EVE.length)}</div><div class="mob-tl"><span>◎ Faszien</span>${st(fDone, FAS.length)}</div><div class="mob-tl"><span>★ Flo Extras</span>${st(floDone, FLO.length)}</div></div>
+      <div class="mob-tl"><span>☀️ Morgen-Routine</span>${st(nDone, EX.length)}</div><div class="mob-tl"><span>🔄 Abwechslung</span>${st(rDone, 3)}</div><div class="mob-tl"><span>☾ Abend</span>${st(eDone, EVE.length)}</div><div class="mob-tl"><span>◎ Faszien</span>${st(fDone, FAS.length)}</div></div>
     <div class="sec-h muted small" style="margin:10px 2px 2px">☀️ MORGEN-ROUTINE · ${nDone}/${EX.length} erledigt</div><div class="mob-when">Morgens nach dem Aufstehen</div>
     ${EX.map(e => row(e, d)).join('')}
     <div class="sec-h muted small" style="margin:18px 2px 2px">🔄 ABWECHSLUNG · ${rDone}/3 erledigt</div><div class="mob-when">Heute (${WD[new Date().getDay()]}) · täglich 3 andere – in einer Woche alle 9</div>
@@ -309,8 +302,6 @@ function viewList() {
     ${EVE.map(e => row(e, d)).join('')}
     <div class="sec-h muted small" style="margin:18px 2px 2px">◎ FASZIEN (OPTIONAL)</div><div class="mob-when">Blackroll · Duoball/Bälle · Shakti-Matte – ideal abends</div>
     ${FAS.map(e => row(e, d)).join('')}
-    <div class="sec-h muted small" style="margin:18px 2px 2px">★ FLO EXTRAS (OPTIONAL) · ${floDone}/${FLO.length} erledigt</div><div class="mob-when">Couch Stretch · Hüftbeuger · Türrahmen · Blackroll</div>
-    ${FLO.map(e => row(e, d)).join('')}
     <div style="height:6px"></div>
     ${s.todayDone ? `<button class="btn btn-outline-gold" data-act="mobFinish">✓ Heute erledigt – Eintrag aktualisieren</button>` : `<button class="btn btn-red" data-act="mobFinish">Einheit abschließen ✓</button>`}
     ${s.todayDone ? `<div style="height:8px"></div><button class="btn btn-gold" data-act="mobExp" data-date="${tk()}">📋 Exportieren</button>` : ''}
@@ -319,7 +310,7 @@ function viewList() {
 }
 function viewDetail(id) {
   const ex = byId(id); if (!ex) { location.hash = '#/mob'; return { html: '' }; }
-  const d = day(); const ok = !!d.today.done[id]; const list = ex.eve ? EVE : ex.fas ? FAS : ex.flo ? FLO : ex.rot ? (rotFor(tk()).includes(ex) ? rotFor(tk()) : [ex]) : EX; const idx = list.indexOf(ex); const next = list[idx + 1];
+  const d = day(); const ok = !!d.today.done[id]; const list = ex.eve ? EVE : ex.fas ? FAS : ex.rot ? (rotFor(tk()).includes(ex) ? rotFor(tk()) : [ex]) : EX; const idx = list.indexOf(ex); const next = list[idx + 1];
   let tool;
   if (ex.t === 'time') {
     tInit(ex); const C = 2 * Math.PI * 88;
@@ -336,14 +327,14 @@ function viewDetail(id) {
   }
   const li = a => `<ul class="mob-ul">${a.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
   return {
-    html: `<div id="mob-detail">` + topbar(ex.n, ex.eve ? 'Abend · vor dem Schlafen' : ex.fas ? 'Faszien · optional' : ex.flo ? `Flo Extras · Übung ${idx + 1} von ${list.length}` : ex.rot ? `Abwechslung · Übung ${idx + 1} von ${list.length}` : `Morgens · Übung ${idx + 1} von ${EX.length}`, '#/mob') + `
+    html: `<div id="mob-detail">` + topbar(ex.n, ex.eve ? 'Abend · vor dem Schlafen' : ex.fas ? 'Faszien · optional' : ex.rot ? `Abwechslung · Übung ${idx + 1} von ${list.length}` : `Morgens · Übung ${idx + 1} von ${EX.length}`, '#/mob') + `
     <div class="card mob-ill"><img class="mob-anat" src="./assets/mob/${im(ex)}.webp" alt="${esc(ex.n)} – Zielmuskulatur rot markiert"><div class="muted small mob-anat-cap"><span style="color:#ff6b6b">●</span> rot = Zielmuskulatur</div><img class="mob-seq" src="./assets/mob/seq_${im(ex)}.webp" alt="Bewegungsablauf ${esc(ex.n)}" loading="lazy"><div class="muted small" style="margin-top:6px">${esc(ex.sub)} · <span class="gold">→ Pfeil = Bewegungsablauf</span></div></div>
     <div class="mob-dose">${esc(ex.dose)}</div>
     ${tool}
     <div class="card"><h3 class="mob-h3">So geht's</h3><ol class="mob-ol">${ex.steps.map(x => `<li>${esc(x)}</li>`).join('')}</ol></div>
     <div class="card mob-cue"><h3 class="mob-h3">✅ Darauf achten</h3>${li(ex.cues)}</div>
     <div class="card mob-err"><h3 class="mob-h3">❌ Häufige Fehler</h3>${li(ex.err)}</div>
-    <div class="card mob-note small">Nichts erzwingen, schmerzfrei bleiben.${ex.eve || ex.fas || ex.rot || ex.flo ? '' : ' Morgens kein langes Vorbeugen.'}</div>
+    <div class="card mob-note small">Nichts erzwingen, schmerzfrei bleiben.${ex.eve || ex.fas || ex.rot ? '' : ' Morgens kein langes Vorbeugen.'}</div>
     <button class="btn ${ok ? 'btn-outline-gold' : 'btn-red'}" data-act="mobChk" data-id="${id}">${ok ? '✓ Erledigt (tippen zum Zurücksetzen)' : 'Als erledigt abhaken'}</button>
     <div style="height:10px"></div>
     ${next ? `<button class="btn btn-ghost btn-sm" data-act="go" data-to="#/mob/${next.id}">Nächste: ${esc(next.n)} ›</button>` : `<button class="btn btn-ghost btn-sm" data-act="go" data-to="#/mob">Zur Übersicht ›</button>`}</div>`,
@@ -379,7 +370,7 @@ Object.assign(A, {
 });
 function saveNote(date) { const d = ld(); const h = d.history.find(x => x.date === date); const ta = document.getElementById('mob-note'); if (h && ta) { h.note = ta.value.trim(); sv(d); } return h; }
 function mobText(h) {
-  const L = h.log || {}, S2 = h.sets || {}; const blk = [['☀️ Morgen-Routine', EX], ['🔄 Abwechslung', [...rotFor(h.date), ...ROT.filter(e => !rotFor(h.date).includes(e) && h.done.includes(e.id))]], ['☾ Abend', [...EVE, ...RET]], ['◎ Faszien', FAS], ['★ Flo Extras', FLO]];
+  const L = h.log || {}, S2 = h.sets || {}; const blk = [['☀️ Morgen-Routine', EX], ['🔄 Abwechslung', [...rotFor(h.date), ...ROT.filter(e => !rotFor(h.date).includes(e) && h.done.includes(e.id))]], ['☾ Abend', [...EVE, ...RET]], ['◎ Faszien', FAS]];
   const out = [`Hüft-Beweglichkeit – ${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)}`];
   const bd = blk.filter(([, l]) => l.some(e => h.done.includes(e.id))).map(([n, l]) => `${n} (${l.filter(e => h.done.includes(e.id)).length}/${l === blk[1][1] ? Math.max(3, l.length) : l.length})`);
   out.push('Blöcke: ' + (bd.join(', ') || '–'));
