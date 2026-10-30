@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.7.11';
+const APP_VERSION = '1.7.12';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -118,6 +118,9 @@ const FREE_EX = [
 const FREE_PRESET = [['r-revfly', 'Reverse Butterfly (hintere Schulter)'], ['r-facepull', 'Face Pulls (Seil)'], ['s-seitheben-vorgebeugt', 'Vorgebeugtes Seitheben (hintere Schulter)'],
   ['s-seitheben-kabel-einarm', 'Seitheben Kabel einarmig'], ['x11', 'Schulterpresse Maschine'], ['bauch-crunch-maschine', 'Crunchmaschine'],
   ['x19', 'Knieheben am Beinstrecker'], ['x21', 'Seitbeugen'], ['x20', 'Crunch am Seilzug']];
+/* v1.7.12: Incline Row (Seilzug, Schrägbank) – im Oberkörper-Plan (Rücken), nach „Rudern Maschine enger Griff“ */
+const INCLINE_ROW = { id: 'r-row-incline-kabel', name: 'Incline Row (Seilzug, Schrägbank)', group: 'Rücken', unit: 'reps', perSide: false, elbow: 'e', target: 12, order: 6.5,
+  desc: 'Plan: 3×12 Wdh.\n\nSchrägbank vor den Seilzug, Brust aufliegend, Seil/Griff tief ziehen, flüssig bleiben und Richtung Hüfte ziehen.' };
 /* v1.2.1: neue Standard-Übungen, die direkt im Plan sichtbar sind (Migration fügt fehlende per ID ein) */
 const EXTRA_EX = [
   { id: 's-presse-kabel-liegend', name: 'Schulterpresse Kabelzug (liegend)', group: 'Schultern', unit: 'reps', perSide: false, elbow: 'w', order: 10.5,
@@ -232,6 +235,11 @@ async function loadAll() {
     const ecc = S.exercises.find(e => /tennisarm exzentrisch/i.test(e.name));
     if (ecc && !ecc.desc) { ecc.desc = ECC_DESC; await save('exercises', ecc); }
     await setMeta('catalogVersion', 7);
+  }
+  if ((S.meta.catalogVersion || 0) < 8) {
+    // Nur ergänzen: Incline Row sichtbar im Oberkörper-Plan (Rücken) – bestehende Übungen/Sätze bleiben unverändert
+    if (!exById(INCLINE_ROW.id) && !S.exercises.some(x => x.name === INCLINE_ROW.name)) await save('exercises', { ...INCLINE_ROW, photo: null });
+    await setMeta('catalogVersion', 8);
   }
 }
 
@@ -536,7 +544,7 @@ function viewEx(id) {
       `<div style="height:6px"></div>` + editorHTML(ex, act)
   };
 }
-const EX_IMG = new Set(["bauch-crunch-maschine", "r-facepull", "r-revfly", "s-presse-kabel-liegend", "s-seitheben-kabel-einarm", "s-seitheben-vorgebeugt", "x1", "x10", "x11", "x12", "x13", "x14", "x15", "x16", "x17", "x18", "x19", "x2", "x20", "x21", "x22", "x23", "x24", "x25", "x26", "x27", "x28", "x3", "x4", "x5", "x6", "x7", "x8", "x9"]);
+const EX_IMG = new Set(["bauch-crunch-maschine", "r-facepull", "r-revfly", "r-row-incline-kabel", "s-presse-kabel-liegend", "s-seitheben-kabel-einarm", "s-seitheben-vorgebeugt", "x1", "x10", "x11", "x12", "x13", "x14", "x15", "x16", "x17", "x18", "x19", "x2", "x20", "x21", "x22", "x23", "x24", "x25", "x26", "x27", "x28", "x3", "x4", "x5", "x6", "x7", "x8", "x9"]);
 const exImg = ex => EX_IMG.has(ex.id) ? `./assets/ex/${ex.id}.webp` : '';
 function setEdField(f, v, raw) {
   if (f === 'note') { ED.note = v; return; }
