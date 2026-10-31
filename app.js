@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.7.12';
+const APP_VERSION = '1.7.13';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -118,7 +118,7 @@ const FREE_EX = [
 const FREE_PRESET = [['r-revfly', 'Reverse Butterfly (hintere Schulter)'], ['r-facepull', 'Face Pulls (Seil)'], ['s-seitheben-vorgebeugt', 'Vorgebeugtes Seitheben (hintere Schulter)'],
   ['s-seitheben-kabel-einarm', 'Seitheben Kabel einarmig'], ['x11', 'Schulterpresse Maschine'], ['bauch-crunch-maschine', 'Crunchmaschine'],
   ['x19', 'Knieheben am Beinstrecker'], ['x21', 'Seitbeugen'], ['x20', 'Crunch am Seilzug']];
-/* v1.7.12: Incline Row (Seilzug, Schrägbank) – im Oberkörper-Plan (Rücken), nach „Rudern Maschine enger Griff“ */
+/* v1.7.13: Incline Row (Seilzug, Schrägbank) – im Oberkörper-Plan (Rücken), nach „Rudern Maschine enger Griff“ */
 const INCLINE_ROW = { id: 'r-row-incline-kabel', name: 'Incline Row (Seilzug, Schrägbank)', group: 'Rücken', unit: 'reps', perSide: false, elbow: 'e', target: 12, order: 6.5,
   desc: 'Plan: 3×12 Wdh.\n\nSchrägbank vor den Seilzug, Brust aufliegend, Seil/Griff tief ziehen, flüssig bleiben und Richtung Hüfte ziehen.' };
 /* v1.2.1: neue Standard-Übungen, die direkt im Plan sichtbar sind (Migration fügt fehlende per ID ein) */

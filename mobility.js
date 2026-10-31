@@ -133,7 +133,11 @@ const EVE = [
   { id: 'rollknie', eve: 1, n: 'Rolle zwischen den Knien – liegende Hüftrotation', sub: 'Abend · Blackroll · LWS (QL) & Gesäß/Piriformis', dose: '2–3×30–40 s pro Seite', t: 'time', sets: 3, secs: 35, ps: true,
     steps: ['Rückenlage, Knie gebeugt, Füße am Boden, Arme seitlich ausgebreitet.', 'Blackroll senkrecht zwischen bzw. an Knie und Fuß eines Beins klemmen.', 'Knie langsam und sanft zu einer Seite sinken lassen – Rotation in LWS und Hüfte. Schultern bleiben am Boden.', '30–40 s ruhig atmen, langsam zur Mitte zurück, Seite wechseln.'],
     cues: ['Nur so weit sinken lassen, wie es angenehm ist – kein Ziehen ins Bein', 'Lange Ausatmung, Flanke und Gesäß loslassen', 'Kribbeln/ausstrahlender Schmerz → weniger tief oder abbrechen'],
-    err: ['Knie fallen lassen / ruckartig drehen', 'Schulter hebt ab', 'Druck im unteren Rücken ignorieren'] }
+    err: ['Knie fallen lassen / ruckartig drehen', 'Schulter hebt ab', 'Druck im unteren Rücken ignorieren'] },
+  { id: 'beckenreset', eve: 1, n: 'Becken-Reset (Shotgun)', sub: 'Abend · ISG/Becken ausgleichen, sanfte Muskelspannung', dose: '3 Teile à 3×5 s', t: 'reps', sets: 3, reps: 3,
+    steps: ['Rückenlage, Knie gebeugt, Füße hüftbreit am Boden.', 'Teil 1 – Knie auseinander: Gürtel um die Knie oder Hände außen an die Knie. 5 s mit ca. halber Kraft nach außen drücken, lösen. 3×.', 'Teil 2 – Knie zusammen: Ball oder gefaltetes Kissen zwischen die Knie. 3× kurz und kräftig zusammendrücken, je ca. 5 s. Ein leises Klacken ist okay.', 'Teil 3 – Gegeneinander: Linkes Knie zur Brust ziehen und gegen die Hand drücken, gleichzeitig rechtes Bein gestreckt in den Boden drücken. 5 s halten, 3×, dann Seiten tauschen.', 'Danach vor dem Spiegel oder in der Badewanne die Beinlänge vergleichen. Auch vor langem Stehen gut.'],
+    cues: ['Nur Spannung, kein Ruck und kein Knacken erzwingen', 'Ruhig weiteratmen, nicht pressen', 'Halbe Kraft reicht'],
+    err: ['Stechender Schmerz → sofort abbrechen', 'Luft anhalten', 'Hohlkreuz beim Drücken'] }
 ];
 
 const FAS = [
