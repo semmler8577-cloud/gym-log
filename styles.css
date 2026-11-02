@@ -404,6 +404,7 @@ details.manual[open] summary{margin-bottom:8px}
 .mob-h{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line)}
 .mob-h:last-child{border:0}
 .mob-when{font-size:12px;color:var(--goldL);margin:0 2px 8px}
+.mob-rotl{font-size:11px;color:var(--goldL);opacity:.75;margin-top:2px;letter-spacing:.2px}
 .mob-today{font-size:14px}.mob-tl{display:flex;justify-content:space-between;margin-top:6px}
 .mob-st{font-size:12px;padding:2px 8px;border-radius:8px;border:1px solid var(--line);color:var(--tx3)}
 .mob-st.ok{background:var(--goldG);color:#1a1405;border:0}.mob-st.part{color:var(--goldL);border-color:rgba(212,175,55,.5)}
