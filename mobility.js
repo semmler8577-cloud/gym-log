@@ -202,7 +202,11 @@ const ROT = [
   { id: 'bearrock', rot: 1, n: 'Bärengang zum Rolling Rock', sub: 'Abwechslung · Rumpf, Hüfte & Schultern', dose: '8 Wiederholungen', t: 'reps', sets: 1, reps: 8,
     steps: ['Vierfüßlerstand, Hände unter den Schultern, Knie unter der Hüfte.', 'Knie wenige Zentimeter vom Boden abheben (schweben).', 'Einen kleinen Schritt vor und zurück machen, Rücken flach.', 'Knie ablegen und das Gesäß sanft Richtung Fersen zurückschaukeln, dann wieder nach vorn – 8 Wiederholungen.'],
     cues: ['Rücken neutral wie ein Tisch', 'Ruhig atmen, Bauch fest', 'Zurückschaukeln nur so weit, wie der Rücken lang bleibt', 'Kribbeln in den Zehen → abbrechen'],
-    err: ['Hohlkreuz oder Rundrücken', 'Gesäß zu hoch', 'Hektisch'] }
+    err: ['Hohlkreuz oder Rundrücken', 'Gesäß zu hoch', 'Hektisch'] },
+  { id: 'armbeinwisch', rot: 1, n: 'Arm-Bein-Wischübung in Bauchlage (diagonal)', sub: 'Abwechslung · Hüfte & seitlicher Rumpf, Gesäß leicht aktiv · links betont', dose: '1×8 pro Seite · 6–8 Wdh, links ein paar mehr', t: 'reps', sets: 1, reps: 8, ps: true,
+    steps: ['Bauchlage, Stirn auf der Matte, Arme und Beine lang.', 'Diagonal einen Arm und das gegenüberliegende Bein gestreckt seitlich über den Boden nach außen wischen (Arm nach oben-außen, Bein nach außen).', 'Kurz halten, dann zurück in die Mitte, Seite wechseln.', 'Langsam, Bauch leicht angespannt, Becken bleibt am Boden. 6–8 Wdh pro Seite – links ein paar mehr (links betont).'],
+    cues: ['Nur im schmerzfreien Bereich', 'Wenn der Rücken zwickt: Bewegung kleiner machen', 'Becken bleibt am Boden, Bauch leicht fest', 'Links ein paar Wiederholungen mehr als rechts', 'Langsam wischen, kurz halten – kein Schwung'],
+    err: ['Becken hebt ab oder dreht mit', 'Ins Hohlkreuz drücken', 'Mit Schwung und zu hektisch', 'Bewegung erzwingen, obwohl der Rücken zwickt'] }
 ];
 const ROT_PLAN = ['aei', 'abc', 'def', 'ghi', 'adg', 'beh', 'cfi']; // So..Sa
 const rotForOld = k => ROT_PLAN[fromKey(k).getDay()].split('').map(c => ROT['abcdefghi'.indexOf(c)]); // nur für Verlauf vor v1.7.15
@@ -325,7 +329,7 @@ function viewList() {
       <div class="mob-tl"><span>☀️ Morgen-Routine</span>${st(nDone, MT.length)}</div><div class="mob-tl"><span>🔄 Abwechslung</span>${st(rDone, RT.length)}</div><div class="mob-tl"><span>☾ Abend</span>${st(eDone, ET.length)}</div><div class="mob-tl"><span>◎ Faszien</span>${st(fDone, FT.length)}</div></div>
     <div class="sec-h muted small" style="margin:10px 2px 2px">☀️ MORGEN-ROUTINE · ${nDone}/${MT.length} erledigt</div><div class="mob-when">Morgens nach dem Aufstehen · ${nCore('m')} täglich + ${MT.length - nCore('m')} im Wechsel</div>
     ${MT.map((e, i) => row(e, d, i + 1, 'm')).join('')}
-    <div class="sec-h muted small" style="margin:18px 2px 2px">🔄 ABWECHSLUNG · ${rDone}/${RT.length} erledigt</div><div class="mob-when">Heute (${WD[new Date().getDay()]}) · täglich 3 andere – in 3 Tagen alle 9</div>
+    <div class="sec-h muted small" style="margin:18px 2px 2px">🔄 ABWECHSLUNG · ${rDone}/${RT.length} erledigt</div><div class="mob-when">Heute (${WD[new Date().getDay()]}) · täglich 3 andere – in ${Math.ceil(ROT.length / 3)} Tagen alle ${ROT.length}</div>
     ${RT.map((e, i) => row(e, d, i + 1, 'w')).join('')}
     <div class="sec-h muted small" style="margin:18px 2px 2px">☾ ABEND (OPTIONAL) · ${eDone}/${ET.length} erledigt</div><div class="mob-when">Abends vor dem Schlafen · ${nCore('a')} täglich + ${ET.length - nCore('a')} im Wechsel</div>
     ${ET.map((e, i) => row(e, d, i + 1, 'a')).join('')}
