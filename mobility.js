@@ -141,7 +141,11 @@ const EVE = [
   { id: 'psoasreset', core: 1, eve: 1, n: 'Psoas-Reset an der Wand (links betont)', sub: 'Abend · Hüftbeuger/Psoas lösen, Becken links zurückdrehen', dose: '1 Satz · 5–10 tiefe Atemzüge', t: 'reps', sets: 1, reps: 10,
     steps: ['Rückenlage, Füße flach an der Wand, Hüfte und Knie je 90°. Faszienrolle zwischen die Oberschenkel klemmen, Kinn locker zur Decke.', 'Fersen an der Wand nach unten ziehen, ohne zu rutschen – der untere Rücken wird flach, die hinteren Oberschenkel spannen.', 'Spannung halten, linkes Knie sanft nach unten, rechtes Knie nach oben bewegen – die Rolle bleibt dabei eingeklemmt (aktiviert linke Hamstrings + Adduktoren, dreht das Becken links zurück).', '5–10 langsame Bauchatmungen, dabei Spannung und Knieposition halten. Danach lösen und Beine ablegen.'],
     cues: ['Unterer Rücken bleibt flach am Boden', 'Spannung kommt aus den hinteren Oberschenkeln und der Innenseite – kein Ruck', 'Rolle die ganze Zeit eingeklemmt halten', 'Lange, ruhige Bauchatmung – nicht pressen'],
-    err: ['Fersen rutschen an der Wand ab', 'Hohlkreuz statt flachem Rücken', 'Rolle fällt raus / wird nicht gehalten', 'Luft anhalten oder Schultern hochziehen'] }
+    err: ['Fersen rutschen an der Wand ab', 'Hohlkreuz statt flachem Rücken', 'Rolle fällt raus / wird nicht gehalten', 'Luft anhalten oder Schultern hochziehen'] },
+  { id: 'kniefersenrock', core: 1, eve: 1, n: 'Kniestand-Fersensitz-Rock (links betont)', sub: 'Abend · Hüfte, Lenden & Rücken lang ziehen, links betont', dose: '5 Wdh × 20 s halten · links 1–2 mehr', t: 'time', sets: 6, setsL: 6, setsR: 5, secs: 20, ps: true,
+    steps: ['Vierfüßlerstand, Zehen aufgestellt bzw. Fußrücken am Boden.', 'Das Gesäß langsam Richtung Fersen nach hinten schieben.', 'Arme lang nach vorn strecken, Rücken lang lassen.', '20 s halten, ruhig ausatmen. 5 Wiederholungen – links 1–2 mehr (6–7), da es links stark zieht und rechts gut geht.'],
+    cues: ['Nur bis Ziehen – nie Schmerz', 'Links 1–2 Wiederholungen mehr als rechts', 'Lange, ruhige Ausatmung beim Halten', 'Rücken bleibt lang, nicht rund einsinken'],
+    err: ['Bis in den Schmerz gehen', 'Rücken rundet sich / Arme verkürzt', 'Ruckartig nach hinten schieben', 'Luft anhalten'] }
 ];
 
 const FAS = [
@@ -229,7 +233,7 @@ const blockOf = e => e.eve ? 'a' : e.fas ? 'f' : e.rot ? 'w' : EX.includes(e) ? 
 function todayList(b, d) { const lu = lineup(b, tk()); return lu.concat(BLK[b].pool.filter(e => !lu.includes(e) && d.today.done[e.id])); }
 // Plan eines gespeicherten Tages: neue Einträge haben h.lineup, ältere (vor v1.7.15) bekommen den damaligen Plan
 function planOf(h, b) { if (h.lineup && h.lineup[b]) return h.lineup[b].map(byId).filter(Boolean);
-  return b === 'm' ? EX.slice() : b === 'w' ? rotForOld(h.date) : b === 'a' ? EVE.filter(e => e.id !== 'psoasreset') : FAS.slice(); }
+  return b === 'm' ? EX.slice() : b === 'w' ? rotForOld(h.date) : b === 'a' ? EVE.filter(e => e.id !== 'psoasreset' && e.id !== 'kniefersenrock') : FAS.slice(); }
 
 /* ---------- Statistik ---------- */
 function stats() {

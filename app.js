@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.7.15';
+const APP_VERSION = '1.7.16';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -118,6 +118,7 @@ const FREE_EX = [
 const FREE_PRESET = [['r-revfly', 'Reverse Butterfly (hintere Schulter)'], ['r-facepull', 'Face Pulls (Seil)'], ['s-seitheben-vorgebeugt', 'Vorgebeugtes Seitheben (hintere Schulter)'],
   ['s-seitheben-kabel-einarm', 'Seitheben Kabel einarmig'], ['x11', 'Schulterpresse Maschine'], ['bauch-crunch-maschine', 'Crunchmaschine'],
   ['x19', 'Knieheben am Beinstrecker'], ['x21', 'Seitbeugen'], ['x20', 'Crunch am Seilzug']];
+/* v1.7.16: Kniestand-Fersensitz-Rock (links betont, Abend täglich, mobility.js) – Bilder kniefersenrock.webp + seq_kniefersenrock.webp */
 /* v1.7.15: Tages-Rotation der Hüft-Übungen (Kern täglich + Wechsel nach Datum) + Psoas-Reset an der Wand (Abend) – mobility.js */
 /* v1.7.14: Becken-Reset (Shotgun) – Übungsbilder beckenreset.webp + seq_beckenreset.webp (Abend-Block, mobility.js) */
 /* v1.7.13: Incline Row (Seilzug, Schrägbank) – im Oberkörper-Plan (Rücken), nach „Rudern Maschine enger Griff“ */
