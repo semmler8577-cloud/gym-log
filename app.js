@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.7.17';
+const APP_VERSION = '1.7.18';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -118,6 +118,10 @@ const FREE_EX = [
 const FREE_PRESET = [['r-revfly', 'Reverse Butterfly (hintere Schulter)'], ['r-facepull', 'Face Pulls (Seil)'], ['s-seitheben-vorgebeugt', 'Vorgebeugtes Seitheben (hintere Schulter)'],
   ['s-seitheben-kabel-einarm', 'Seitheben Kabel einarmig'], ['x11', 'Schulterpresse Maschine'], ['bauch-crunch-maschine', 'Crunchmaschine'],
   ['x19', 'Knieheben am Beinstrecker'], ['x21', 'Seitbeugen'], ['x20', 'Crunch am Seilzug']];
+/* v1.7.18: Schrägbank-Kabelfly (obere Brust) – im Oberkörper-Plan (Brust, nach „Fliegende liegend“), Bild b-fly-schraeg-kabel.webp; nur ergänzt, bestehende Verläufe unverändert */
+const INCLINE_FLY = { id: 'b-fly-schraeg-kabel', name: 'Schrägbank-Kabelfly (obere Brust)', group: 'Brust', unit: 'reps', perSide: false, elbow: 'e', target: 12, order: 4.5,
+  desc: 'Plan: 3–4×12–15 Wdh., moderates Gewicht. Fokus: Dehnung und Squeeze.\n\nSetup: Verstellbare Bank auf Schräge (ca. 30–45°) mittig zwischen die beiden Kabeltürme stellen, Kabel ganz unten (untere Rollen). Zurücklehnen, Arme leicht gebeugt.\n\nAusführung: Griffe in einem Bogen von unten nach oben über der oberen Brust zusammenführen (Low-to-High).\n• Ellenbogen leicht gebeugt und fix\n• Schulterblätter zurück und nach unten\n• Oben über der oberen Brust zusammenführen und 1 s squeezen\n• Langsam in 2–3 s ablassen bis zur Dehnung',
+  elbowNote: 'Tennisarm: Ellenbogen weich halten, keine schweren Gewichte – lieber leichter, sauber und mit Dehnung.' };
 /* v1.7.17: Arm-Bein-Wischübung in Bauchlage (diagonal) – Abwechslung-Rotationspool (ROT, jetzt 10 Übungen, 3/Tag), Bilder armbeinwisch.webp + seq_armbeinwisch.webp; alte Verläufe unverändert (rotForOld nutzt nur die ersten 9, am Ende angehängt) */
 /* v1.7.16: Kniestand-Fersensitz-Rock (links betont, Abend täglich, mobility.js) – Bilder kniefersenrock.webp + seq_kniefersenrock.webp */
 /* v1.7.15: Tages-Rotation der Hüft-Übungen (Kern täglich + Wechsel nach Datum) + Psoas-Reset an der Wand (Abend) – mobility.js */
@@ -244,6 +248,11 @@ async function loadAll() {
     // Nur ergänzen: Incline Row sichtbar im Oberkörper-Plan (Rücken) – bestehende Übungen/Sätze bleiben unverändert
     if (!exById(INCLINE_ROW.id) && !S.exercises.some(x => x.name === INCLINE_ROW.name)) await save('exercises', { ...INCLINE_ROW, photo: null });
     await setMeta('catalogVersion', 8);
+  }
+  if ((S.meta.catalogVersion || 0) < 9) {
+    // Nur ergänzen: Schrägbank-Kabelfly sichtbar im Oberkörper-Plan (Brust) – bestehende Übungen/Sätze bleiben unverändert
+    if (!exById(INCLINE_FLY.id) && !S.exercises.some(x => x.name === INCLINE_FLY.name)) await save('exercises', { ...INCLINE_FLY, photo: null });
+    await setMeta('catalogVersion', 9);
   }
 }
 
@@ -548,7 +557,7 @@ function viewEx(id) {
       `<div style="height:6px"></div>` + editorHTML(ex, act)
   };
 }
-const EX_IMG = new Set(["bauch-crunch-maschine", "r-facepull", "r-revfly", "r-row-incline-kabel", "s-presse-kabel-liegend", "s-seitheben-kabel-einarm", "s-seitheben-vorgebeugt", "x1", "x10", "x11", "x12", "x13", "x14", "x15", "x16", "x17", "x18", "x19", "x2", "x20", "x21", "x22", "x23", "x24", "x25", "x26", "x27", "x28", "x3", "x4", "x5", "x6", "x7", "x8", "x9"]);
+const EX_IMG = new Set(["b-fly-schraeg-kabel", "bauch-crunch-maschine", "r-facepull", "r-revfly", "r-row-incline-kabel", "s-presse-kabel-liegend", "s-seitheben-kabel-einarm", "s-seitheben-vorgebeugt", "x1", "x10", "x11", "x12", "x13", "x14", "x15", "x16", "x17", "x18", "x19", "x2", "x20", "x21", "x22", "x23", "x24", "x25", "x26", "x27", "x28", "x3", "x4", "x5", "x6", "x7", "x8", "x9"]);
 const exImg = ex => EX_IMG.has(ex.id) ? `./assets/ex/${ex.id}.webp` : '';
 function setEdField(f, v, raw) {
   if (f === 'note') { ED.note = v; return; }
