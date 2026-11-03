@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.7.18';
+const APP_VERSION = '1.7.19';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -118,10 +118,10 @@ const FREE_EX = [
 const FREE_PRESET = [['r-revfly', 'Reverse Butterfly (hintere Schulter)'], ['r-facepull', 'Face Pulls (Seil)'], ['s-seitheben-vorgebeugt', 'Vorgebeugtes Seitheben (hintere Schulter)'],
   ['s-seitheben-kabel-einarm', 'Seitheben Kabel einarmig'], ['x11', 'Schulterpresse Maschine'], ['bauch-crunch-maschine', 'Crunchmaschine'],
   ['x19', 'Knieheben am Beinstrecker'], ['x21', 'Seitbeugen'], ['x20', 'Crunch am Seilzug']];
-/* v1.7.18: Schrägbank-Kabelfly (obere Brust) – im Oberkörper-Plan (Brust, nach „Fliegende liegend“), Bild b-fly-schraeg-kabel.webp; nur ergänzt, bestehende Verläufe unverändert */
-const INCLINE_FLY = { id: 'b-fly-schraeg-kabel', name: 'Schrägbank-Kabelfly (obere Brust)', group: 'Brust', unit: 'reps', perSide: false, elbow: 'e', target: 12, order: 4.5,
-  desc: 'Plan: 3–4×12–15 Wdh., moderates Gewicht. Fokus: Dehnung und Squeeze.\n\nSetup: Verstellbare Bank auf Schräge (ca. 30–45°) mittig zwischen die beiden Kabeltürme stellen, Kabel ganz unten (untere Rollen). Zurücklehnen, Arme leicht gebeugt.\n\nAusführung: Griffe in einem Bogen von unten nach oben über der oberen Brust zusammenführen (Low-to-High).\n• Ellenbogen leicht gebeugt und fix\n• Schulterblätter zurück und nach unten\n• Oben über der oberen Brust zusammenführen und 1 s squeezen\n• Langsam in 2–3 s ablassen bis zur Dehnung',
-  elbowNote: 'Tennisarm: Ellenbogen weich halten, keine schweren Gewichte – lieber leichter, sauber und mit Dehnung.' };
+/* v1.7.19: Schrägbank-Kabelfly jetzt in BAUCHLAGE (Brust auf dem Polster, Kabel unten, Griffe nach vorn-oben) – Name/Beschreibung/Bild korrigiert (Migration v10, gleiche ID); v1.7.18: erstmals im Oberkörper-Plan (Brust, nach „Fliegende liegend“), Bild b-fly-schraeg-kabel.webp */
+const INCLINE_FLY = { id: 'b-fly-schraeg-kabel', name: 'Schrägbank-Kabelfly in Bauchlage (obere Brust)', group: 'Brust', unit: 'reps', perSide: false, elbow: 'e', target: 12, order: 4.5,
+  desc: 'Plan: 3–4×12–15 Wdh., moderates Gewicht. Fokus: Squeeze oben, saubere Kontrolle.\n\nSetup: Verstellbare Bank auf Schräge (ca. 30–45°) vor bzw. zwischen die beiden Kabeltürme stellen, Kabel ganz unten (untere Rollen). Bauchlage: mit der Brust auf das Polster legen, Gesicht zum Kabelturm, Zehen am Boden. Je einen Griff greifen, Arme hängen leicht gebeugt nach unten.\n\nAusführung: Griffe in einem Bogen von unten nach vorn-oben führen (Low-to-High) und etwa auf Augenhöhe vor dir zusammenführen.\n• Brust bleibt auf dem Polster\n• Schultern tief, nicht hochziehen\n• Ellenbogen leicht gebeugt und weich\n• Oben 1 s squeezen\n• 2–3 s langsam zurück, bis die Arme unten sind\n• Kein Schwung',
+  elbowNote: 'Tennisarm: Ellenbogen weich halten, keine schweren Gewichte – lieber leichter, sauber und kontrolliert.' };
 /* v1.7.17: Arm-Bein-Wischübung in Bauchlage (diagonal) – Abwechslung-Rotationspool (ROT, jetzt 10 Übungen, 3/Tag), Bilder armbeinwisch.webp + seq_armbeinwisch.webp; alte Verläufe unverändert (rotForOld nutzt nur die ersten 9, am Ende angehängt) */
 /* v1.7.16: Kniestand-Fersensitz-Rock (links betont, Abend täglich, mobility.js) – Bilder kniefersenrock.webp + seq_kniefersenrock.webp */
 /* v1.7.15: Tages-Rotation der Hüft-Übungen (Kern täglich + Wechsel nach Datum) + Psoas-Reset an der Wand (Abend) – mobility.js */
@@ -253,6 +253,12 @@ async function loadAll() {
     // Nur ergänzen: Schrägbank-Kabelfly sichtbar im Oberkörper-Plan (Brust) – bestehende Übungen/Sätze bleiben unverändert
     if (!exById(INCLINE_FLY.id) && !S.exercises.some(x => x.name === INCLINE_FLY.name)) await save('exercises', { ...INCLINE_FLY, photo: null });
     await setMeta('catalogVersion', 9);
+  }
+  if ((S.meta.catalogVersion || 0) < 10) {
+    // Korrektur: Kabelfly in Bauchlage – gespeicherten Eintrag (gleiche ID) auf neuen Namen/Text bringen; Sätze/Verläufe hängen an der ID und bleiben erhalten
+    const fl = exById(INCLINE_FLY.id);
+    if (fl) { fl.name = INCLINE_FLY.name; fl.desc = INCLINE_FLY.desc; fl.elbowNote = INCLINE_FLY.elbowNote; await save('exercises', fl); }
+    await setMeta('catalogVersion', 10);
   }
 }
 
