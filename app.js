@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.7.20';
+const APP_VERSION = '1.7.21';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -118,6 +118,7 @@ const FREE_EX = [
 const FREE_PRESET = [['r-revfly', 'Reverse Butterfly (hintere Schulter)'], ['r-facepull', 'Face Pulls (Seil)'], ['s-seitheben-vorgebeugt', 'Vorgebeugtes Seitheben (hintere Schulter)'],
   ['s-seitheben-kabel-einarm', 'Seitheben Kabel einarmig'], ['x11', 'Schulterpresse Maschine'], ['bauch-crunch-maschine', 'Crunchmaschine'],
   ['x19', 'Knieheben am Beinstrecker'], ['x21', 'Seitbeugen'], ['x20', 'Crunch am Seilzug']];
+/* v1.7.21: Halber Frosch + Seitlicher Ausfallschritt im Knien – Abwechslung-Rotationspool (ROT, jetzt 12 Übungen, 3/Tag), Bilder halbfrosch/seitausfall + seq_*; bestehende Übungen/Dosen unverändert */
 /* v1.7.20: Schrägbank-Kabelfly in Bauchlage – Richtung korrigiert: Rücken zu den Kabeltürmen, Kabel von hinten-unten nach vorn-oben (Brust-Übung); Text/Bild neu, Migration v11, gleiche ID. v1.7.19: Bauchlage; v1.7.18: erstmals im Oberkörper-Plan (Brust, nach „Fliegende liegend“), Bild b-fly-schraeg-kabel.webp */
 const INCLINE_FLY = { id: 'b-fly-schraeg-kabel', name: 'Schrägbank-Kabelfly in Bauchlage (obere Brust)', group: 'Brust', unit: 'reps', perSide: false, elbow: 'e', target: 12, order: 4.5,
   desc: 'Plan: 3–4×12–15 Wdh., moderates Gewicht. Fokus: Squeeze oben und Dehnung unten, saubere Kontrolle.\n\nSetup: Verstellbare Bank auf Schräge (ca. 30–45°) mit dem Rücken zu den Kabeltürmen aufstellen – die Türme stehen hinter dir. Kabel ganz unten (untere Rollen). Bauchlage: mit der Brust aufs Polster legen, Blick weg vom Kabelturm, Zehen am Boden. Je einen Griff greifen, die Arme hängen leicht gebeugt nach hinten-unten, die Kabel laufen von hinten an deinem Körper vorbei.\n\nAusführung: Griffe von hinten-unten seitlich am Körper vorbei im Bogen nach vorn-oben führen (Low-to-High) und vor der Brust bis etwa Augenhöhe zusammenführen – eine Brust-Übung, kein Schulter-Rudern.\n• Brust bleibt auf dem Polster\n• Schultern tief, nicht hochziehen\n• Ellenbogen leicht gebeugt und weich\n• Oben 1 s squeezen\n• 2–3 s langsam zurück in die Dehnung\n• Kein Schwung',

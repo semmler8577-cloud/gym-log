@@ -1,4 +1,4 @@
-/* Voccola Gym Log – Hüft-Beweglichkeit (v1.7.15). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
+/* Voccola Gym Log – Hüft-Beweglichkeit (v1.7.21). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
 'use strict';
 (function () {
 const KEY = 'vgl-mob';
@@ -165,7 +165,7 @@ const FAS = [
     steps: ['Matte auf eine ebene Unterlage legen, langsam darauf hinlegen (Rücken, ggf. dünnes Shirt am Anfang).', 'Beine lang oder angewinkelt, Arme locker neben den Körper.', 'Die ersten 1–2 Minuten sind intensiv – ruhig weiteratmen.', '10 Min liegen bleiben, langsam über die Seite aufstehen.'],
     cues: ['Lange, ruhige Ausatmung', 'Ideal abends vor dem Schlafen'], err: ['Schnell aufspringen (Kreislauf)', 'Sich auf die Matte „fallen lassen“'] }
 ];
-// v1.7.5: Abwechslung – Pool aus 9 Übungen, täglich 3 nach Wochentag (Woche deckt alle ab)
+// v1.7.5: Abwechslung – Pool (täglich 3 nach Datum); v1.7.21: +Halber Frosch, +Seitlicher Ausfallschritt im Knien
 const ROT = [
   { id: 'rbutter', rot: 1, n: 'Liegender Schmetterling', sub: 'Abwechslung · Adduktoren/Leiste & Hüfte', dose: '1×30 s', t: 'time', sets: 1, secs: 30,
     steps: ['Rückenlage, Knie gebeugt, Füße am Boden.', 'Fußsohlen aneinanderlegen und die Knie langsam nach außen sinken lassen.', 'Arme locker neben dem Körper, unterer Rücken bleibt entspannt am Boden.', '30 s ruhig atmen und mit jeder Ausatmung etwas mehr loslassen. Knie mit den Händen zusammenführen und lösen.'],
@@ -206,7 +206,16 @@ const ROT = [
   { id: 'armbeinwisch', rot: 1, n: 'Arm-Bein-Wischübung in Bauchlage (diagonal)', sub: 'Abwechslung · Hüfte & seitlicher Rumpf, Gesäß leicht aktiv · links betont', dose: '1×8 pro Seite · 6–8 Wdh, links ein paar mehr', t: 'reps', sets: 1, reps: 8, ps: true,
     steps: ['Bauchlage, Stirn auf der Matte, Arme und Beine lang.', 'Diagonal einen Arm und das gegenüberliegende Bein gestreckt seitlich über den Boden nach außen wischen (Arm nach oben-außen, Bein nach außen).', 'Kurz halten, dann zurück in die Mitte, Seite wechseln.', 'Langsam, Bauch leicht angespannt, Becken bleibt am Boden. 6–8 Wdh pro Seite – links ein paar mehr (links betont).'],
     cues: ['Nur im schmerzfreien Bereich', 'Wenn der Rücken zwickt: Bewegung kleiner machen', 'Becken bleibt am Boden, Bauch leicht fest', 'Links ein paar Wiederholungen mehr als rechts', 'Langsam wischen, kurz halten – kein Schwung'],
-    err: ['Becken hebt ab oder dreht mit', 'Ins Hohlkreuz drücken', 'Mit Schwung und zu hektisch', 'Bewegung erzwingen, obwohl der Rücken zwickt'] }
+    err: ['Becken hebt ab oder dreht mit', 'Ins Hohlkreuz drücken', 'Mit Schwung und zu hektisch', 'Bewegung erzwingen, obwohl der Rücken zwickt'] },
+  { id: 'halbfrosch', rot: 1, n: 'Halber Frosch', sub: 'Abwechslung · Adduktoren-Stretch (Half Frog)', dose: '1×10 Wdh. pro Seite + 20 s halten am Ende', t: 'reps', sets: 1, reps: 10, ps: true,
+    steps: ['Vierfüßlerstand: Hände unter den Schultern, Knie unter den Hüften.', 'Ein Bein gestreckt zur Seite abspreizen, Fuß flach am Boden, Zehen zeigen nach vorn.', 'Hüfte langsam Richtung Ferse des knienden Beins nach hinten schaukeln und wieder nach vorn – Rücken bleibt lang.', '10 Wiederholungen, dann am Ende 20 s in der Dehnung halten. Seite wechseln – beide Seiten gleich.'],
+    cues: ['Schmerzfrei, mittlere Intensität (angenehm-ziehend)', 'Beide Seiten gleich belasten', 'Rücken lang, Bauch leicht fest', 'Bein geht zur Seite – nicht nach hinten', 'Nur so weit, wie die Innenseite sanft zieht'],
+    err: ['Bein nach hinten statt zur Seite', 'Ins Hohlkreuz sinken / Rücken runden', 'Mit Schwung wippen', 'In den Schmerz gehen'] },
+  { id: 'seitausfall', rot: 1, n: 'Seitlicher Ausfallschritt im Knien', sub: 'Abwechslung · Adduktoren-Rock (Kneeling side lunge)', dose: '1×8 pro Seite', t: 'reps', sets: 1, reps: 8, ps: true,
+    steps: ['Auf ein Knie knien, Oberkörper aufrecht.', 'Das andere Bein gestreckt zur Seite abspreizen, Fuß flach am Boden.', 'Gewicht seitlich über das gestreckte Bein schieben, bis innen am Oberschenkel ein sanfter Zug entsteht – dann wieder zurück zur Mitte.', '8 Wiederholungen, Seite wechseln – beide Seiten gleich.'],
+    cues: ['Schmerzfrei, mittlere Intensität', 'Beide Seiten gleich', 'Oberkörper bleibt aufrecht', 'Kleine, kontrollierte Seitverschiebung – kein Schwung'],
+    err: ['Oberkörper nach vorn kippen', 'Knie des gestreckten Beins nach innen fallen lassen', 'Zu weit / in den Schmerz schieben', 'Mit Schwung wippen'] }
+
 ];
 const ROT_PLAN = ['aei', 'abc', 'def', 'ghi', 'adg', 'beh', 'cfi']; // So..Sa
 const rotForOld = k => ROT_PLAN[fromKey(k).getDay()].split('').map(c => ROT['abcdefghi'.indexOf(c)]); // nur für Verlauf vor v1.7.15
