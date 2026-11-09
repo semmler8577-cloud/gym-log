@@ -1,4 +1,4 @@
-/* Voccola Gym Log – Hüft-Beweglichkeit (v1.7.23). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
+/* Voccola Gym Log – Hüft-Beweglichkeit (v1.7.24). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
 'use strict';
 (function () {
 const KEY = 'vgl-mob';
@@ -108,6 +108,7 @@ const EX = [
     cues: ['Rücken lang, Bauch leicht fest – das Becken bleibt ruhig', 'Langsam heben, langsam zurück', 'Fortgeschritten: Rolle höher stellen', 'Kein Vorbeugen – bleib aufrecht'],
     err: ['Mit Schwung über die Rolle schleudern', 'Oberkörper kippt zur Seite oder nach hinten', 'Rundrücken'] }
 ];
+/* v1.7.24: +Hüft-Rotation an der Wand (Seitlage) – Abend-Kern (core), Zähler 10/10 */
 /* v1.7.23: +Hüftbeuger-Dehnung im Stehen (Fuß erhöht) – Abend-Kern (core), Zähler 9/9 */
 const EVE = [
   { id: 'tuer', eve: 1, n: 'Seitdehnung im Türrahmen', sub: 'Abend · seitliche Rumpfmuskulatur, Hüftabduktoren, Außenhüfte', dose: '3×60 s links, 2×60 s rechts', t: 'time', sets: 3, setsL: 3, setsR: 2, secs: 60, ps: true,
@@ -151,6 +152,10 @@ const EVE = [
     steps: ['Vorderen Fuß auf eine Erhöhung stellen (Stufe oder Bank), hinteres Bein gestreckt am Boden.', 'Gesäß des hinteren Beins fest anspannen und das Becken leicht nach hinten kippen (Schambein Richtung Bauchnabel).', 'Dann die Hüfte nur ein kleines Stück nach vorn Richtung vorderes Knie schieben, bis es im Hüftbeuger des hinteren Beins zieht.', 'Oberkörper aufrecht, ruhig atmen, 30–45 s halten. Seite wechseln – 2 Sätze pro Seite.'],
     cues: ['Kein Hohlkreuz – Rippen unten, Bauch leicht fest', 'Oberkörper bleibt aufrecht', 'Ruhig atmen, Zug deutlich aber nie stechend', 'Nicht nachfedern'],
     err: ['Ins Hohlkreuz ausweichen', 'Zu weit nach vorn schieben / wippen', 'Stechenden Schmerz ignorieren', 'Oberkörper nach vorn kippen'] },
+  { id: 'hipwallrot', core: 1, eve: 1, n: 'Hüft-Rotation an der Wand (Seitlage)', sub: 'Abend · Hüftrotatoren & seitliches Gesäß, Becken neutral', dose: '2×5 Atemzüge à ~5 s pro Seite', t: 'reps', sets: 2, reps: 5, ps: true,
+    steps: ['Seitlage, Kopf auf dem unteren Arm abgelegt. Unteres Bein leicht gebeugt, oberes Bein gestreckt.', 'Fuß des oberen Beins auf Hüfthöhe an die Wand stellen – nur die Außenkante berührt die Wand.', 'Außenkante des Fußes sanft in die Wand drücken (ca. 30–40 % Kraft), Becken bleibt ruhig und neutral – nicht nach hinten kippen.', 'Ruhig ausatmen beim Drücken, 5 Atemzüge à ca. 5 s. Lösen, 2 Runden pro Seite. Variante im Stehen (Ausfallschritt) möglich.'],
+    cues: ['Becken bleibt ruhig und neutral – nicht nach hinten kippen', 'Leichter Druck, 30–40 % Kraft – kein Schmerz, kein Krampf', 'Ruhig ausatmen beim Drücken', 'Soll sich aktivierend anfühlen', 'Beide Seiten machen'],
+    err: ['Becken nach hinten kippen / rollen', 'Zu stark drücken bis Krampf', 'Stechenden Schmerz ignorieren', 'Atem anhalten'] },
 ];
 
 const FAS = [
@@ -251,7 +256,7 @@ const blockOf = e => e.eve ? 'a' : e.fas ? 'f' : e.rot ? 'w' : EX.includes(e) ? 
 function todayList(b, d) { const lu = lineup(b, tk()); return lu.concat(BLK[b].pool.filter(e => !lu.includes(e) && d.today.done[e.id])); }
 // Plan eines gespeicherten Tages: neue Einträge haben h.lineup, ältere (vor v1.7.15) bekommen den damaligen Plan
 function planOf(h, b) { if (h.lineup && h.lineup[b]) return h.lineup[b].map(byId).filter(Boolean);
-  return b === 'm' ? EX.slice() : b === 'w' ? rotForOld(h.date) : b === 'a' ? EVE.filter(e => e.id !== 'psoasreset' && e.id !== 'kniefersenrock' && e.id !== 'hipflexstand') : FAS.slice(); }
+  return b === 'm' ? EX.slice() : b === 'w' ? rotForOld(h.date) : b === 'a' ? EVE.filter(e => e.id !== 'psoasreset' && e.id !== 'kniefersenrock' && e.id !== 'hipflexstand' && e.id !== 'hipwallrot') : FAS.slice(); }
 
 /* ---------- Statistik ---------- */
 function stats() {
