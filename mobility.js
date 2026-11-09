@@ -1,11 +1,11 @@
-/* Voccola Gym Log – Hüft-Beweglichkeit (v1.7.25). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
+/* Voccola Gym Log – Hüft-Beweglichkeit (v1.7.26). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
 'use strict';
 (function () {
 const KEY = 'vgl-mob';
 const ld = () => { try { return Object.assign({ today: null, history: [] }, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (_) { return { today: null, history: [] }; } };
 const sv = d => { try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (_) { } };
 const tk = () => dkey();
-function day() { const d = ld(); if (!d.today || d.today.date !== tk()) { d.today = { date: tk(), done: {}, sets: {}, log: {} }; sv(d); } return d; }
+function day() { const d = ld(); if (!d.today || d.today.date !== tk()) { d.today = { date: tk(), done: {}, sets: {}, log: {}, extra: { m: [], a: [] } }; sv(d); } if (!d.today.extra) d.today.extra = { m: [], a: [] }; if (!Array.isArray(d.today.extra.m)) d.today.extra.m = []; if (!Array.isArray(d.today.extra.a)) d.today.extra.a = []; return d; }
 
 /* ---------- Strichfiguren ---------- */
 const FG = '#ececee', FAR = '#8d8d94', ARW = '#D4AF37', GR = '#3a3a40';
@@ -103,7 +103,7 @@ const EX = [
     steps: ['Rückenlage, Arme senkrecht zur Decke, Beine angehoben: Hüfte und Knie 90°.', 'Unteren Rücken sanft in den Boden drücken – er bleibt die ganze Zeit flach.', 'Ausatmen: rechten Arm nach hinten und linkes Bein nach vorn lang strecken, knapp über dem Boden.', 'Zurück in die Mitte, Seite wechseln.'],
     cues: ['Rücken flach am Boden – das ist die eigentliche Übung', 'Langsam ausatmen beim Strecken', 'Nur so weit strecken, wie der Rücken unten bleibt'],
     err: ['Hohlkreuz beim Strecken', 'Luft anhalten', 'Zu schnell, Schwung'] },
-  { id: 'rolle', img: 'rollschien', n: 'Bein über die Rolle', sub: 'Sitzend · Blackroll · Hüfte aktiv & kontrolliert', dose: '10 Wdh. pro Seite', t: 'reps', sets: 1, reps: 10, ps: true,
+  { id: 'rolle', n: 'Bein über die Rolle', sub: 'Sitzend · Blackroll · Hüfte aktiv & kontrolliert', dose: '10 Wdh. pro Seite', t: 'reps', sets: 1, reps: 10, ps: true,
     steps: ['Aufrecht sitzen (Stuhl oder Boden), die Blackroll liegt quer vor dem Fuß am Boden.', 'Oberkörper bleibt aufrecht, Hände stützen seitlich oder an den Oberschenkeln.', 'Ein Bein kontrolliert anheben und über die Blackroll führen, ohne Schwung.', 'Langsam wieder zurückführen. 10 Wdh., dann Seite wechseln. Fortgeschritten: Rolle höher stellen (hochkant).'],
     cues: ['Rücken lang, Bauch leicht fest – das Becken bleibt ruhig', 'Langsam heben, langsam zurück', 'Fortgeschritten: Rolle höher stellen', 'Kein Vorbeugen – bleib aufrecht'],
     err: ['Mit Schwung über die Rolle schleudern', 'Oberkörper kippt zur Seite oder nach hinten', 'Rundrücken'] }
@@ -115,7 +115,7 @@ const EVE = [
   { id: 'tuer', eve: 1, n: 'Seitdehnung im Türrahmen', sub: 'Abend · seitliche Rumpfmuskulatur, Hüftabduktoren, Außenhüfte', dose: '3×60 s links, 2×60 s rechts', t: 'time', sets: 3, setsL: 3, setsR: 2, secs: 60, ps: true,
     steps: ['Aufwärmen: beide Hände seitlich im Türrahmen einspannen, 5–8 langsame Hüftkreise bzw. Pendeln links-rechts.', 'Im Türrahmen stehen, Beine überkreuzen (für die Dehnung der linken Seite: rechtes Bein vor das linke).', 'Linke Hand greift oben an den Türrahmen.', 'Hüfte langsam nach links/außen rausschieben und den Oberkörper zur Gegenseite ziehen, bis Zug in der linken Flanke, im unteren Rücken und an der Außenhüfte entsteht.', 'Ruhig in die Flanke atmen, 60 s halten. Seite wechseln.'],
     cues: ['Nicht nach vorne kippen – Rumpf bleibt in einer Ebene', 'Bauch leicht fest', 'Nur bis angenehmer Zug', 'Kein Kribbeln/Ausstrahlen ins Bein (Bandscheibe) – sonst lockerer'], err: ['Ins Hohlkreuz fallen', 'Schulter hochziehen', 'Ruckartig wippen'] },
-  { id: 'couch', eve: 1, img: 'hipflex', n: 'Couch Stretch', sub: 'Abend · Hüftbeuger & Quadrizeps', dose: '1×2 min pro Seite', t: 'time', sets: 1, secs: 120, ps: true,
+  { id: 'couch', eve: 1, n: 'Couch Stretch', sub: 'Abend · Hüftbeuger & Quadrizeps', dose: '1×2 min pro Seite', t: 'time', sets: 1, secs: 120, ps: true,
     steps: ['Knie auf einer weichen Unterlage (Kissen/Matte) vor dem Sofa absetzen, vorderer Fuß flach, Knie ca. 90°.', 'Den hinteren Fuß erhöht aufs Sofa legen, Schienbein an der Lehne.', 'Gesäß der hinteren Seite fest anspannen und das Becken leicht nach hinten kippen, dann Becken nach vorn schieben, bis vorne an Hüfte und Oberschenkel ein Zug kommt.', 'Oberkörper aufrecht, 2 min ruhig atmen. Seite wechseln.'],
     cues: ['Dehnung vorne an Hüfte und Oberschenkel des hinteren Beins', 'Rippen unten, Bauch leicht fest – nicht ins Hohlkreuz', 'Knie weiter vom Sofa weg = sanfter', 'Nur bis angenehmer Zug – nichts erzwingen'],
     err: ['Ins Hohlkreuz ausweichen', 'Knieschmerz ignorieren', 'Zu aggressiv ins Sofa pressen'] },
@@ -250,7 +250,7 @@ const im = ex => ex.img || ex.id;
 /* ---------- v1.7.15: Tages-Rotation ----------
    Jeder Block hat feste Kern-Übungen (core: 1, täglich) + einen Wechsel-Pool. Aus dem Pool kommen pro Tag k Übungen,
    deterministisch nach Datum (Tag-Nr. × k mod Poolgröße → lückenlos, jede Übung kommt regelmäßig dran). */
-const BLK = { m: { pool: EX, k: 2 }, w: { pool: ROT, k: 3 }, a: { pool: EVE, k: 5 }, f: { pool: FAS, k: 3 } };
+const BLK = { m: { pool: EX, k: 2 }, w: { pool: ROT, k: 3 }, a: { pool: EVE, k: 3 }, f: { pool: FAS, k: 3 } };
 const dayNum = key => { const [y, m, d] = key.split('-').map(Number); return Math.floor(Date.UTC(y, m - 1, d) / 864e5); };
 function lineup(b, key) { const B = BLK[b]; const rot = B.pool.filter(e => !e.core); const n = dayNum(key), m = rot.length;
   if (!m || B.k >= m) return B.pool.slice(); const s0 = (n * B.k) % m; const pick = new Set(Array.from({ length: B.k }, (_, i) => rot[(s0 + i) % m]));
@@ -259,6 +259,18 @@ const isRotToday = (e, b) => b !== 'w' && !e.core;
 const blockOf = e => e.eve ? 'a' : e.fas ? 'f' : e.rot ? 'w' : EX.includes(e) ? 'm' : null;
 // heutige Liste eines Blocks: Tages-Lineup + heute bereits Abgehaktes (z. B. vor dem Update), damit nichts verschwindet
 function todayList(b, d) { const lu = lineup(b, tk()); return lu.concat(BLK[b].pool.filter(e => !lu.includes(e) && d.today.done[e.id])); }
+
+/* ---------- v1.7.26: optionale Zusatzübungen (Morgen/Abend) ----------
+   Extras liegen in d.today.extra.{m|a}; zählen NICHT zum Block-Zähler, werden aber geloggt. */
+const extraPool = b => b === 'm' ? [...EX, ...ROT] : b === 'a' ? [...EVE, ...RET] : [];
+function extrasOf(b, d) { const ids = (d.today.extra && d.today.extra[b]) || []; return ids.map(byId).filter(Boolean); }
+function blockList(b, d) {
+  const base = todayList(b, d); const seen = new Set(base.map(e => e.id));
+  return base.concat(extrasOf(b, d).filter(e => !seen.has(e.id)));
+}
+function planCount(b, d) { return lineup(b, tk()).length; } // Zähler ohne Extras
+function isExtra(ex, b, d) { return !!(d.today.extra && (d.today.extra[b] || []).includes(ex.id)) && !lineup(b, tk()).some(e => e.id === ex.id); }
+
 // Plan eines gespeicherten Tages: neue Einträge haben h.lineup, ältere (vor v1.7.15) bekommen den damaligen Plan
 function planOf(h, b) { if (h.lineup && h.lineup[b]) return h.lineup[b].map(byId).filter(Boolean);
   return b === 'm' ? EX.slice() : b === 'w' ? rotForOld(h.date) : b === 'a' ? EVE.filter(e => e.id !== 'psoasreset' && e.id !== 'kniefersenrock' && e.id !== 'hipflexstand' && e.id !== 'hipwallrot' && e.id !== 'hipwallstep') : FAS.slice(); }
@@ -328,17 +340,23 @@ function markDone(id, val) { const d = day(); if (val) { d.today.done[id] = true
 
 /* ---------- Views ---------- */
 function row(ex, d, i, b) {
-  const ok = !!d.today.done[ex.id];
+  const ok = !!d.today.done[ex.id]; const xtra = (b === 'm' || b === 'a') && isExtra(ex, b, d);
   return `<div class="card mob-row ${ok ? 'ok' : ''}" data-act="go" data-to="#/mob/${ex.id}">
-    <button class="mob-chk ${ok ? 'on' : ''}" data-act="mobChk" data-id="${ex.id}" aria-label="Abhaken">${ok ? '✓' : (ex.eve ? '☾' : ex.fas ? '◎' : ex.rot ? '🔄' : i)}</button>
+    <button class="mob-chk ${ok ? 'on' : ''}" data-act="mobChk" data-id="${ex.id}" aria-label="Abhaken">${ok ? '✓' : (xtra ? '＋' : ex.eve ? '☾' : ex.fas ? '◎' : ex.rot ? '🔄' : i)}</button>
     <div class="mob-thumb"><img class="mob-thumb-img" src="./assets/mob/${im(ex)}.webp" alt="" loading="lazy"></div>
-    <div class="mob-rt"><b>${esc(ex.n)}</b><div class="muted small">${esc(ex.dose)}</div>${isRotToday(ex, b) ? '<div class="mob-rotl">↻ heute im Wechsel</div>' : ''}</div><span class="mob-go">›</span></div>`;
+    <div class="mob-rt"><b>${esc(ex.n)}</b><div class="muted small">${esc(ex.dose)}</div>${xtra ? '<div class="mob-rotl">＋ Zusatz (optional)</div>' : isRotToday(ex, b) ? '<div class="mob-rotl">↻ heute im Wechsel</div>' : ''}</div><span class="mob-go">›</span></div>`;
 }
 function viewList() {
-  const d = day(); const s = stats(); const MT = todayList('m', d), RT = todayList('w', d), ET = todayList('a', d), FT = todayList('f', d);
-  const cnt = l => l.filter(e => d.today.done[e.id]).length; const nDone = cnt(MT), rDone = cnt(RT), eDone = cnt(ET), fDone = cnt(FT);
+  const d = day(); const s = stats(); const MT = blockList('m', d), RT = todayList('w', d), ET = blockList('a', d), FT = todayList('f', d);
+  const mPlan = planCount('m', d), aPlan = planCount('a', d);
+  const cntPlan = (l, planN) => Math.min(planN, l.filter(e => d.today.done[e.id] && !isExtra(e, l === MT ? 'm' : 'a', d)).length);
+  // Erledigt-Zähler nur über Plan (ohne Extras)
+  const nDone = lineup('m', tk()).filter(e => d.today.done[e.id]).length;
+  const rDone = RT.filter(e => d.today.done[e.id]).length;
+  const eDone = lineup('a', tk()).filter(e => d.today.done[e.id]).length;
+  const fDone = FT.filter(e => d.today.done[e.id]).length;
   const nCore = b => BLK[b].pool.filter(e => e.core).length;
-  const st = (n, t) => n >= t ? '<span class="mob-st ok">✓ heute erledigt</span>' : n ? `<span class="mob-st part">${n}/${t} · läuft</span>` : '<span class="mob-st">noch offen</span>';
+  const st = (n, tot) => n >= tot ? '<span class="mob-st ok">✓ heute erledigt</span>' : n ? `<span class="mob-st part">${n}/${tot} · läuft</span>` : '<span class="mob-st">noch offen</span>';
   const hist = [...d.history].reverse().slice(0, 8).map(h => `<div class="mob-h"><span>${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)}</span><span class="muted small">${h.note ? '📝 ' : ''}${h.done.filter(x => EX.some(e => e.id === x)).length}/${planOf(h, 'm').length} Übungen${h.done.some(x => ROT.some(e => e.id === x)) ? ' · 🔄 Abwechslung' : ''}${h.done.some(x => [...EVE, ...RET].some(e => e.id === x)) ? ' · ☾ Abend' : ''}${h.done.some(x => FAS.some(e => e.id === x)) ? ' · ◎ Faszien' : ''}</span><button class="btn btn-ghost btn-sm" style="width:auto;padding:4px 10px;margin-left:6px" data-act="mobExp" data-date="${h.date}">Exportieren</button></div>`).join('') || '<div class="muted small">Noch keine Einheit – heute ist ein guter Tag zum Starten 🙂</div>';
   return {
     html: topbar('Hüft-Beweglichkeit', 'Dehnung & Gesundheit', null) + `
@@ -348,15 +366,17 @@ function viewList() {
       <div class="card"><div class="mob-big">${s.week}</div><div class="muted small">diese Woche</div></div>
     </div>
     <div class="card mob-note">⚠️ <b>Morgens kein langes Vorbeugen</b> (Bandscheibe). Nichts erzwingen – <b>schmerzfrei bleiben</b>. Bei ausstrahlendem Schmerz abbrechen.</div>
-    <div class="mob-prog"><div style="width:${nDone / MT.length * 100}%"></div></div>
+    <div class="mob-prog"><div style="width:${mPlan ? (nDone / mPlan * 100) : 0}%"></div></div>
     <div class="card mob-today"><b>Heute</b> · ${s.todayDone ? '<span class="mob-st ok">✓ Einheit abgeschlossen</span>' : '<span class="mob-st">Einheit noch offen</span>'}
-      <div class="mob-tl"><span>☀️ Morgen-Routine</span>${st(nDone, MT.length)}</div><div class="mob-tl"><span>🔄 Abwechslung</span>${st(rDone, RT.length)}</div><div class="mob-tl"><span>☾ Abend</span>${st(eDone, ET.length)}</div><div class="mob-tl"><span>◎ Faszien</span>${st(fDone, FT.length)}</div></div>
-    <div class="sec-h muted small" style="margin:10px 2px 2px">☀️ MORGEN-ROUTINE · ${nDone}/${MT.length} erledigt</div><div class="mob-when">Morgens nach dem Aufstehen · ${nCore('m')} täglich + ${MT.length - nCore('m')} im Wechsel</div>
+      <div class="mob-tl"><span>☀️ Morgen-Routine</span>${st(nDone, mPlan)}</div><div class="mob-tl"><span>🔄 Abwechslung</span>${st(rDone, RT.length)}</div><div class="mob-tl"><span>☾ Abend</span>${st(eDone, aPlan)}</div><div class="mob-tl"><span>◎ Faszien</span>${st(fDone, FT.length)}</div></div>
+    <div class="sec-h muted small" style="margin:10px 2px 2px">☀️ MORGEN-ROUTINE · ${nDone}/${mPlan} erledigt</div><div class="mob-when">Morgens nach dem Aufstehen · ${nCore('m')} täglich + ${mPlan - nCore('m')} im Wechsel</div>
     ${MT.map((e, i) => row(e, d, i + 1, 'm')).join('')}
+    <button class="btn btn-outline-gold btn-sm" data-act="mobExtra" data-b="m" style="margin:4px 0 8px">＋ Zusatzübung</button>
     <div class="sec-h muted small" style="margin:18px 2px 2px">🔄 ABWECHSLUNG · ${rDone}/${RT.length} erledigt</div><div class="mob-when">Heute (${WD[new Date().getDay()]}) · täglich 3 andere – in ${Math.ceil(ROT.length / 3)} Tagen alle ${ROT.length}</div>
     ${RT.map((e, i) => row(e, d, i + 1, 'w')).join('')}
-    <div class="sec-h muted small" style="margin:18px 2px 2px">☾ ABEND (OPTIONAL) · ${eDone}/${ET.length} erledigt</div><div class="mob-when">Abends vor dem Schlafen · ${nCore('a')} täglich + ${ET.length - nCore('a')} im Wechsel</div>
+    <div class="sec-h muted small" style="margin:18px 2px 2px">☾ ABEND (OPTIONAL) · ${eDone}/${aPlan} erledigt</div><div class="mob-when">Abends vor dem Schlafen · ${nCore('a')} täglich + ${aPlan - nCore('a')} im Wechsel</div>
     ${ET.map((e, i) => row(e, d, i + 1, 'a')).join('')}
+    <button class="btn btn-outline-gold btn-sm" data-act="mobExtra" data-b="a" style="margin:4px 0 8px">＋ Zusatzübung</button>
     <div class="sec-h muted small" style="margin:18px 2px 2px">◎ FASZIEN (OPTIONAL)</div><div class="mob-when">Blackroll · Duoball/Bälle · Shakti-Matte – ideal abends · ${nCore('f')} täglich + ${FT.length - nCore('f')} im Wechsel</div>
     ${FT.map((e, i) => row(e, d, i + 1, 'f')).join('')}
     <div style="height:6px"></div>
@@ -367,7 +387,7 @@ function viewList() {
 }
 function viewDetail(id) {
   const ex = byId(id); if (!ex) { location.hash = '#/mob'; return { html: '' }; }
-  const d = day(); const ok = !!d.today.done[id]; const bk = blockOf(ex); const tl = bk ? todayList(bk, d) : []; const list = tl.includes(ex) ? tl : [ex]; const idx = list.indexOf(ex); const next = list[idx + 1];
+  const d = day(); const ok = !!d.today.done[id]; const bk = blockOf(ex); const tl = bk ? ((bk === 'm' || bk === 'a') ? blockList(bk, d) : todayList(bk, d)) : []; const list = tl.includes(ex) ? tl : [ex]; const idx = list.indexOf(ex); const next = list[idx + 1];
   let tool;
   if (ex.t === 'time') {
     tInit(ex); const C = 2 * Math.PI * 88;
@@ -402,6 +422,31 @@ window.viewMob = a => a ? viewDetail(a) : viewList();
 
 /* ---------- Aktionen ---------- */
 Object.assign(A, {
+  mobExtra: dd => {
+    const b = dd.b; const d = day(); const title = b === 'm' ? 'Morgen – Zusatzübung' : 'Abend – Zusatzübung';
+    const inList = new Set(blockList(b, d).map(e => e.id));
+    const pool = extraPool(b).filter(e => !lineup(b, tk()).some(x => x.id === e.id)); // alles außer dem heutigen Plan
+    const extras = new Set((d.today.extra[b] || []));
+    const rows = pool.map(e => {
+      const on = extras.has(e.id) || inList.has(e.id) && extras.has(e.id);
+      const active = (d.today.extra[b] || []).includes(e.id);
+      return `<div class="pick-row ${active ? 'in' : ''}" style="display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid rgba(255,255,255,.06)">
+        <img src="./assets/mob/${im(e)}.webp" alt="" style="width:44px;height:44px;border-radius:8px;object-fit:cover;background:#fdfbf7" loading="lazy">
+        <div style="flex:1;min-width:0"><b style="font-size:14px">${esc(e.n)}</b><div class="muted small">${esc(e.dose)}</div></div>
+        <button class="pick-btn" data-act="mobExtraToggle" data-b="${b}" data-id="${e.id}" aria-label="${active ? 'Entfernen' : 'Hinzufügen'}">${active ? '✓' : '＋'}</button></div>`;
+    }).join('') || '<div class="muted small">Keine weiteren Übungen im Pool.</div>';
+    openSheet(`<h3>${title}</h3><div class="muted small" style="margin-bottom:10px">＋ fügt eine optionale Zusatzübung hinzu. Sie erscheint in der Liste, zählt aber <b>nicht</b> zum ${b === 'm' ? 'Morgen' : 'Abend'}-Zähler. Abgehakt wird sie trotzdem geloggt.</div>
+      <div style="max-height:55vh;overflow:auto">${rows}</div>
+      <div style="height:12px"></div><button class="btn btn-red" data-act="mobExtraDone">Fertig</button>`);
+  },
+  mobExtraToggle: dd => {
+    const d = day(); const b = dd.b; const ids = d.today.extra[b] || (d.today.extra[b] = []);
+    const i = ids.indexOf(dd.id);
+    if (i >= 0) { ids.splice(i, 1); toast('Zusatz entfernt', 1200); }
+    else { ids.push(dd.id); toast('„' + byId(dd.id).n + '“ als Zusatz ✓', 1400); }
+    sv(d); A.mobExtra({ b });
+  },
+  mobExtraDone: () => { closeSheet(); render(true); },
   mobChk: (dd, el) => { const d = day(); if (d.today.done[dd.id] && !confirm('Heute schon erledigt ✓ – wirklich wieder offen machen?')) return; markDone(dd.id, !d.today.done[dd.id]); render(true); },
   mobSet: dd => { const ex = byId(dd.id); const d = day(); if (d.today.done[dd.id]) { toast('Heute schon erledigt ✓', 1400); return; } const i = +dd.i; const cur = d.today.sets[dd.id] || 0; d.today.sets[dd.id] = i < cur ? i : i + 1; const tot = ex.sets * (ex.ps ? 2 : 1);
     if (d.today.sets[dd.id] >= tot) { d.today.done[dd.id] = true; beep(2, 990); toast('Übung geschafft ✓', 1400); } else try { navigator.vibrate && navigator.vibrate(40); } catch (_) { }
@@ -411,8 +456,8 @@ Object.assign(A, {
   mobFinish: () => { const d = day(); const done = Object.keys(d.today.done);
     if (!done.length && !confirm('Noch keine Übung abgehakt. Trotzdem als Einheit speichern?')) return;
     const old = d.history.find(h => h.date === tk()) || {}; d.history = d.history.filter(h => h.date !== tk());
-    const lineupIds = {}; Object.keys(BLK).forEach(b => { lineupIds[b] = todayList(b, d).map(e => e.id); });
-    d.history.push({ date: tk(), ts: Date.now(), lineup: lineupIds, done, sets: Object.assign({}, d.today.sets), log: JSON.parse(JSON.stringify(d.today.log || {})), note: old.note || '' }); d.history.sort((a, b) => a.date < b.date ? -1 : 1); sv(d);
+    const lineupIds = {}; Object.keys(BLK).forEach(b => { lineupIds[b] = lineup(b, tk()).map(e => e.id); });
+    d.history.push({ date: tk(), ts: Date.now(), lineup: lineupIds, extra: JSON.parse(JSON.stringify(d.today.extra || { m: [], a: [] })), done, sets: Object.assign({}, d.today.sets), log: JSON.parse(JSON.stringify(d.today.log || {})), note: old.note || '' }); d.history.sort((a, b) => a.date < b.date ? -1 : 1); sv(d);
     beep(2, 990); const s = stats(); toast(`Stark, Markus! ${s.streak} ${s.streak === 1 ? 'Tag' : 'Tage'} in Folge 🔥`, 2200); render(true); setTimeout(() => A.mobExp({ date: tk() }), 400); },
   mobExp: dd => { const d = ld(); const h = d.history.find(x => x.date === dd.date); if (!h) return toast('Eintrag nicht gefunden');
     openSheet(`<h3>Einheit exportieren</h3><div class="muted small">${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)} · ${h.done.length} ${h.done.length === 1 ? 'Übung' : 'Übungen'}</div>
