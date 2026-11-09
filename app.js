@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.7.27';
+const APP_VERSION = '1.7.28';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -118,6 +118,7 @@ const FREE_EX = [
 const FREE_PRESET = [['r-revfly', 'Reverse Butterfly (hintere Schulter)'], ['r-facepull', 'Face Pulls (Seil)'], ['s-seitheben-vorgebeugt', 'Vorgebeugtes Seitheben (hintere Schulter)'],
   ['s-seitheben-kabel-einarm', 'Seitheben Kabel einarmig'], ['x11', 'Schulterpresse Maschine'], ['bauch-crunch-maschine', 'Crunchmaschine'],
   ['x19', 'Knieheben am Beinstrecker'], ['x21', 'Seitbeugen'], ['x20', 'Crunch am Seilzug']];
+/* v1.7.28: hipwallstep anatomical (no photoreal likeness); heel-at-wall clear */
 /* v1.7.27: hipwallrot/hipwallstep images fixed (small knee arrow; wall+flat heel+reach). */
 /* v1.7.26: Bilder hipwallrot/step/psoasreset/rollschien/rolle/couch; Abend-Wechsel 3; Zusatzübung-Picker Morgen/Abend → 9/9 */
 /* v1.7.25: hipwallrot korrigiert (Zac Cupples, 3×60 s) + hipwallstep Diagonalschritt Abend-Kern → 11/11; Bilder neu; Safety-Cues Folgetag */
