@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.7.24';
+const APP_VERSION = '1.7.25';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -118,6 +118,7 @@ const FREE_EX = [
 const FREE_PRESET = [['r-revfly', 'Reverse Butterfly (hintere Schulter)'], ['r-facepull', 'Face Pulls (Seil)'], ['s-seitheben-vorgebeugt', 'Vorgebeugtes Seitheben (hintere Schulter)'],
   ['s-seitheben-kabel-einarm', 'Seitheben Kabel einarmig'], ['x11', 'Schulterpresse Maschine'], ['bauch-crunch-maschine', 'Crunchmaschine'],
   ['x19', 'Knieheben am Beinstrecker'], ['x21', 'Seitbeugen'], ['x20', 'Crunch am Seilzug']];
+/* v1.7.25: hipwallrot korrigiert (Zac Cupples, 3×60 s) + hipwallstep Diagonalschritt Abend-Kern → 11/11; Bilder neu; Safety-Cues Folgetag */
 /* v1.7.24: Abend: Hüft-Rotation an der Wand (Seitlage) core in EVE → 10/10 (nach hipflexstand); Bilder hipwallrot.webp + seq_hipwallrot.webp */
 /* v1.7.23: Butterfly Reverse / Seilzug Reverse → Gesamtgewicht (nicht p.S.); Abend: Hüftbeuger-Dehnung im Stehen (Fuß erhöht) core in EVE → 9/9
 /* v1.7.22: Trapez-Rudern Schrägbank Kabel (breit) – im Oberkörper-Plan (Rücken), am Ende des Rücken-Blocks (nach „Latzug mit Seil“), Bild r-row-trapez-schraeg-breit.webp; bestehende Übungen/Reihenfolge/Sätze unverändert, Samstag unverändert */

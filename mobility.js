@@ -1,4 +1,4 @@
-/* Voccola Gym Log – Hüft-Beweglichkeit (v1.7.24). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
+/* Voccola Gym Log – Hüft-Beweglichkeit (v1.7.25). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
 'use strict';
 (function () {
 const KEY = 'vgl-mob';
@@ -108,6 +108,7 @@ const EX = [
     cues: ['Rücken lang, Bauch leicht fest – das Becken bleibt ruhig', 'Langsam heben, langsam zurück', 'Fortgeschritten: Rolle höher stellen', 'Kein Vorbeugen – bleib aufrecht'],
     err: ['Mit Schwung über die Rolle schleudern', 'Oberkörper kippt zur Seite oder nach hinten', 'Rundrücken'] }
 ];
+/* v1.7.25: hipwallrot korrigiert (Zac Cupples) + Diagonalschritt an der Wand (hipwallstep) – Abend-Kern, Zähler 11/11 */
 /* v1.7.24: +Hüft-Rotation an der Wand (Seitlage) – Abend-Kern (core), Zähler 10/10 */
 /* v1.7.23: +Hüftbeuger-Dehnung im Stehen (Fuß erhöht) – Abend-Kern (core), Zähler 9/9 */
 const EVE = [
@@ -152,10 +153,14 @@ const EVE = [
     steps: ['Vorderen Fuß auf eine Erhöhung stellen (Stufe oder Bank), hinteres Bein gestreckt am Boden.', 'Gesäß des hinteren Beins fest anspannen und das Becken leicht nach hinten kippen (Schambein Richtung Bauchnabel).', 'Dann die Hüfte nur ein kleines Stück nach vorn Richtung vorderes Knie schieben, bis es im Hüftbeuger des hinteren Beins zieht.', 'Oberkörper aufrecht, ruhig atmen, 30–45 s halten. Seite wechseln – 2 Sätze pro Seite.'],
     cues: ['Kein Hohlkreuz – Rippen unten, Bauch leicht fest', 'Oberkörper bleibt aufrecht', 'Ruhig atmen, Zug deutlich aber nie stechend', 'Nicht nachfedern'],
     err: ['Ins Hohlkreuz ausweichen', 'Zu weit nach vorn schieben / wippen', 'Stechenden Schmerz ignorieren', 'Oberkörper nach vorn kippen'] },
-  { id: 'hipwallrot', core: 1, eve: 1, n: 'Hüft-Rotation an der Wand (Seitlage)', sub: 'Abend · Hüftrotatoren & seitliches Gesäß, Becken neutral', dose: '2×5 Atemzüge à ~5 s pro Seite', t: 'reps', sets: 2, reps: 5, ps: true,
-    steps: ['Seitlage, Kopf auf dem unteren Arm abgelegt. Unteres Bein leicht gebeugt, oberes Bein gestreckt.', 'Fuß des oberen Beins auf Hüfthöhe an die Wand stellen – nur die Außenkante berührt die Wand.', 'Außenkante des Fußes sanft in die Wand drücken (ca. 30–40 % Kraft), Becken bleibt ruhig und neutral – nicht nach hinten kippen.', 'Ruhig ausatmen beim Drücken, 5 Atemzüge à ca. 5 s. Lösen, 2 Runden pro Seite. Variante im Stehen (Ausfallschritt) möglich.'],
-    cues: ['Becken bleibt ruhig und neutral – nicht nach hinten kippen', 'Leichter Druck, 30–40 % Kraft – kein Schmerz, kein Krampf', 'Ruhig ausatmen beim Drücken', 'Soll sich aktivierend anfühlen', 'Beide Seiten machen'],
-    err: ['Becken nach hinten kippen / rollen', 'Zu stark drücken bis Krampf', 'Stechenden Schmerz ignorieren', 'Atem anhalten'] },
+  { id: 'hipwallrot', core: 1, eve: 1, n: 'Hüft-Rotation an der Wand (Seitlage)', sub: 'Abend · Hüft-Innenrotation, hohe Seite oben · Zac Cupples', dose: '3×60 s · beidseitig (bis hohe Seite geklärt)', t: 'time', sets: 3, secs: 60, ps: true,
+    steps: ['Seitlage, hohe Hüfte oben (vorerst beidseitig, bis fachlich geklärt). Polster unter dem Kopf, unterer Arm unter dem Kopf, oberer Arm locker vor der Brust.', 'Oberes Bein ganz gestreckt, Fuß hinter dir an der Wand – Ferse und Fußballen flach in die Wand drücken. Unteres Knie leicht gebeugt, Außenseite vom unteren Oberschenkel bleibt am Boden.', 'Oberes Knie nach vorne schieben (weg von der Wand) – so dreht der Oberkörper leicht Richtung Boden (Hüft-Innenrotation). Position halten.', 'Lang und langsam durch die Nase einatmen, so voll wie möglich ohne zu pressen; sanft durch den Mund ausatmen. 60 s, 3 Runden pro Seite.'],
+    cues: ['Ferse und Fußballen flach in die Wand', 'Knie nach vorne = Innenrotation, Oberkörper leicht zum Boden', 'Unterer Oberschenkel bleibt am Boden', 'Nase ein, Mund aus – nicht pressen', 'Deutlicher, aber angenehmer Zug; kein Stechen, kein Kribbeln oder Ausstrahlen ins Bein', 'Folgetag: wenn Stehtoleranz oder Ziehen schlechter → zurückfahren', 'Beidseitig, bis die hohe Seite fachlich geklärt ist'],
+    err: ['Einatmen erzwingen / pressen', 'Unteren Oberschenkel abheben', 'Stechen, Kribbeln oder Ausstrahlung ignorieren', 'Fuß nur mit den Zehen an der Wand'] },
+  { id: 'hipwallstep', core: 1, eve: 1, n: 'Diagonalschritt an der Wand (Stand)', sub: 'Abend · Hüft-Rotation stehend · Zac Cupples', dose: '3×60 s · beidseitig (bis hohe Seite geklärt)', t: 'time', sets: 3, secs: 60, ps: true,
+    steps: ['Hintere Ferse an die Wand (hohe Seite; vorerst beidseitig). Vorderer Fuß hüftbreit nach vorn, leicht ausgedreht. Beide Füße flach, beide Knie leicht gebeugt.', 'Wand mit der hinteren Ferse wegschieben, Gewicht auf die vordere Ferse legen, Hüfte der Wandseite sinkt leicht ab.', 'Hand der Wandseite greift Richtung vorderes Knie. Po arbeitet auf der Wandseite, Oberschenkel vorne.', 'Lang durch die Nase einatmen, sanft durch den Mund ausatmen. 60 s halten, 3 Runden pro Seite.'],
+    cues: ['Beide Füße flach – nichts heben oder rollen', 'Wand wegschieben, Gewicht auf vordere Ferse', 'Hüfte der Wandseite sinkt ab', 'Nase ein, Mund aus', 'Deutlicher, aber angenehmer Zug; kein Stechen, kein Kribbeln oder Ausstrahlen ins Bein', 'Folgetag: wenn Stehtoleranz oder Ziehen schlechter → zurückfahren', 'Beidseitig, bis die hohe Seite fachlich geklärt ist'],
+    err: ['Füße heben oder rollen', 'Zu tiefer Ausfallschritt / wippen', 'Stechen, Kribbeln oder Ausstrahlung ignorieren', 'Atem anhalten'] },
 ];
 
 const FAS = [
@@ -256,7 +261,7 @@ const blockOf = e => e.eve ? 'a' : e.fas ? 'f' : e.rot ? 'w' : EX.includes(e) ? 
 function todayList(b, d) { const lu = lineup(b, tk()); return lu.concat(BLK[b].pool.filter(e => !lu.includes(e) && d.today.done[e.id])); }
 // Plan eines gespeicherten Tages: neue Einträge haben h.lineup, ältere (vor v1.7.15) bekommen den damaligen Plan
 function planOf(h, b) { if (h.lineup && h.lineup[b]) return h.lineup[b].map(byId).filter(Boolean);
-  return b === 'm' ? EX.slice() : b === 'w' ? rotForOld(h.date) : b === 'a' ? EVE.filter(e => e.id !== 'psoasreset' && e.id !== 'kniefersenrock' && e.id !== 'hipflexstand' && e.id !== 'hipwallrot') : FAS.slice(); }
+  return b === 'm' ? EX.slice() : b === 'w' ? rotForOld(h.date) : b === 'a' ? EVE.filter(e => e.id !== 'psoasreset' && e.id !== 'kniefersenrock' && e.id !== 'hipflexstand' && e.id !== 'hipwallrot' && e.id !== 'hipwallstep') : FAS.slice(); }
 
 /* ---------- Statistik ---------- */
 function stats() {
