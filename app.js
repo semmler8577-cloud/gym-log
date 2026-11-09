@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.7.22';
+const APP_VERSION = '1.7.23';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -118,6 +118,7 @@ const FREE_EX = [
 const FREE_PRESET = [['r-revfly', 'Reverse Butterfly (hintere Schulter)'], ['r-facepull', 'Face Pulls (Seil)'], ['s-seitheben-vorgebeugt', 'Vorgebeugtes Seitheben (hintere Schulter)'],
   ['s-seitheben-kabel-einarm', 'Seitheben Kabel einarmig'], ['x11', 'Schulterpresse Maschine'], ['bauch-crunch-maschine', 'Crunchmaschine'],
   ['x19', 'Knieheben am Beinstrecker'], ['x21', 'Seitbeugen'], ['x20', 'Crunch am Seilzug']];
+/* v1.7.23: Butterfly Reverse / Seilzug Reverse → Gesamtgewicht (nicht p.S.); Abend: Hüftbeuger-Dehnung im Stehen (Fuß erhöht) core in EVE → 9/9
 /* v1.7.22: Trapez-Rudern Schrägbank Kabel (breit) – im Oberkörper-Plan (Rücken), am Ende des Rücken-Blocks (nach „Latzug mit Seil“), Bild r-row-trapez-schraeg-breit.webp; bestehende Übungen/Reihenfolge/Sätze unverändert, Samstag unverändert */
 const TRAP_ROW = { id: 'r-row-trapez-schraeg-breit', name: 'Trapez-Rudern Schrägbank Kabel (breit)', group: 'Rücken', unit: 'reps', perSide: false, elbow: 'e', target: 12, order: 7.5,
   desc: 'Plan: 3×10–15 Wdh., Gesamtgewicht (Kabel). Fokus: mittlerer, unterer und oberer Trapez, Rhomboiden, hintere Schulter.\n\nSetup: Verstellbare Bank auf Schräge (ca. 30–45°) direkt vor einen tiefen Kabelzug stellen – Blick zum Kabelturm. Kabel ganz unten (untere Rolle). Mit der Brust aufs Polster legen, Füße hinten am Boden. Lange Stange (oder zwei Griffe) breit, außen fassen; das Kabel kommt von unten.\n\nAusführung: Stange Richtung Oberkörper ziehen, Ellenbogen breit nach außen-hinten führen. Schulterblätter zusammen und leicht nach hinten-oben ziehen, oben 1 s halten, dann kontrolliert ablassen, bis die Schulterblätter auseinandergehen.\n• Kein Schwung\n• Nacken lang, Blick neutral\n• Brust bleibt auf dem Polster\n• Griff nicht krampfhaft – Zug aus dem Rücken, nicht aus den Armen',
@@ -275,6 +276,19 @@ async function loadAll() {
     // Nur ergänzen: Trapez-Rudern sichtbar im Oberkörper-Plan (Rücken) – bestehende Übungen/Sätze/Reihenfolge bleiben unverändert
     if (!exById(TRAP_ROW.id) && !S.exercises.some(x => x.name === TRAP_ROW.name)) await save('exercises', { ...TRAP_ROW, photo: null });
     await setMeta('catalogVersion', 12);
+  }
+  if ((S.meta.catalogVersion || 0) < 13) {
+    // Butterfly Reverse / Seilzug Reverse sitzend: Stapelgewicht = Gesamtgewicht, nicht pro Seite.
+    // Bestehende Satz-Zahlen unverändert; nur perSide-Flag aus (Anzeige ohne p.S., keine Wertumrechnung).
+    const re = /reverse\s*butterfly|butterfly\s*reverse|seilzug\s*reverse/i;
+    const targets = S.exercises.filter(e => e.id === 'r-revfly' || re.test(e.name || ''));
+    for (const ex of targets) {
+      if (ex.perSide) { ex.perSide = false; await save('exercises', ex); }
+      for (const st of S.sets.filter(s => s.exerciseId === ex.id && s.perSide)) {
+        st.perSide = false; await save('sets', st);
+      }
+    }
+    await setMeta('catalogVersion', 13);
   }
 }
 

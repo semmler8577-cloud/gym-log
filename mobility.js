@@ -1,4 +1,4 @@
-/* Voccola Gym Log – Hüft-Beweglichkeit (v1.7.21). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
+/* Voccola Gym Log – Hüft-Beweglichkeit (v1.7.23). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
 'use strict';
 (function () {
 const KEY = 'vgl-mob';
@@ -108,6 +108,7 @@ const EX = [
     cues: ['Rücken lang, Bauch leicht fest – das Becken bleibt ruhig', 'Langsam heben, langsam zurück', 'Fortgeschritten: Rolle höher stellen', 'Kein Vorbeugen – bleib aufrecht'],
     err: ['Mit Schwung über die Rolle schleudern', 'Oberkörper kippt zur Seite oder nach hinten', 'Rundrücken'] }
 ];
+/* v1.7.23: +Hüftbeuger-Dehnung im Stehen (Fuß erhöht) – Abend-Kern (core), Zähler 9/9 */
 const EVE = [
   { id: 'tuer', eve: 1, n: 'Seitdehnung im Türrahmen', sub: 'Abend · seitliche Rumpfmuskulatur, Hüftabduktoren, Außenhüfte', dose: '3×60 s links, 2×60 s rechts', t: 'time', sets: 3, setsL: 3, setsR: 2, secs: 60, ps: true,
     steps: ['Aufwärmen: beide Hände seitlich im Türrahmen einspannen, 5–8 langsame Hüftkreise bzw. Pendeln links-rechts.', 'Im Türrahmen stehen, Beine überkreuzen (für die Dehnung der linken Seite: rechtes Bein vor das linke).', 'Linke Hand greift oben an den Türrahmen.', 'Hüfte langsam nach links/außen rausschieben und den Oberkörper zur Gegenseite ziehen, bis Zug in der linken Flanke, im unteren Rücken und an der Außenhüfte entsteht.', 'Ruhig in die Flanke atmen, 60 s halten. Seite wechseln.'],
@@ -145,7 +146,11 @@ const EVE = [
   { id: 'kniefersenrock', core: 1, eve: 1, n: 'Kniestand-Fersensitz-Rock (links betont)', sub: 'Abend · Hüfte, Lenden & Rücken lang ziehen, links betont', dose: '5 Wdh × 20 s halten · links 1–2 mehr', t: 'time', sets: 6, setsL: 6, setsR: 5, secs: 20, ps: true,
     steps: ['Vierfüßlerstand, Zehen aufgestellt bzw. Fußrücken am Boden.', 'Das Gesäß langsam Richtung Fersen nach hinten schieben.', 'Arme lang nach vorn strecken, Rücken lang lassen.', '20 s halten, ruhig ausatmen. 5 Wiederholungen – links 1–2 mehr (6–7), da es links stark zieht und rechts gut geht.'],
     cues: ['Nur bis Ziehen – nie Schmerz', 'Links 1–2 Wiederholungen mehr als rechts', 'Lange, ruhige Ausatmung beim Halten', 'Rücken bleibt lang, nicht rund einsinken'],
-    err: ['Bis in den Schmerz gehen', 'Rücken rundet sich / Arme verkürzt', 'Ruckartig nach hinten schieben', 'Luft anhalten'] }
+    err: ['Bis in den Schmerz gehen', 'Rücken rundet sich / Arme verkürzt', 'Ruckartig nach hinten schieben', 'Luft anhalten'] },
+  { id: 'hipflexstand', core: 1, eve: 1, n: 'Hüftbeuger-Dehnung im Stehen (Fuß erhöht)', sub: 'Abend · Hüftbeuger, hinteres Bein gestreckt', dose: '2×30–45 s pro Seite', t: 'time', sets: 2, secs: 40, ps: true,
+    steps: ['Vorderen Fuß auf eine Erhöhung stellen (Stufe oder Bank), hinteres Bein gestreckt am Boden.', 'Gesäß des hinteren Beins fest anspannen und das Becken leicht nach hinten kippen (Schambein Richtung Bauchnabel).', 'Dann die Hüfte nur ein kleines Stück nach vorn Richtung vorderes Knie schieben, bis es im Hüftbeuger des hinteren Beins zieht.', 'Oberkörper aufrecht, ruhig atmen, 30–45 s halten. Seite wechseln – 2 Sätze pro Seite.'],
+    cues: ['Kein Hohlkreuz – Rippen unten, Bauch leicht fest', 'Oberkörper bleibt aufrecht', 'Ruhig atmen, Zug deutlich aber nie stechend', 'Nicht nachfedern'],
+    err: ['Ins Hohlkreuz ausweichen', 'Zu weit nach vorn schieben / wippen', 'Stechenden Schmerz ignorieren', 'Oberkörper nach vorn kippen'] },
 ];
 
 const FAS = [
@@ -246,7 +251,7 @@ const blockOf = e => e.eve ? 'a' : e.fas ? 'f' : e.rot ? 'w' : EX.includes(e) ? 
 function todayList(b, d) { const lu = lineup(b, tk()); return lu.concat(BLK[b].pool.filter(e => !lu.includes(e) && d.today.done[e.id])); }
 // Plan eines gespeicherten Tages: neue Einträge haben h.lineup, ältere (vor v1.7.15) bekommen den damaligen Plan
 function planOf(h, b) { if (h.lineup && h.lineup[b]) return h.lineup[b].map(byId).filter(Boolean);
-  return b === 'm' ? EX.slice() : b === 'w' ? rotForOld(h.date) : b === 'a' ? EVE.filter(e => e.id !== 'psoasreset' && e.id !== 'kniefersenrock') : FAS.slice(); }
+  return b === 'm' ? EX.slice() : b === 'w' ? rotForOld(h.date) : b === 'a' ? EVE.filter(e => e.id !== 'psoasreset' && e.id !== 'kniefersenrock' && e.id !== 'hipflexstand') : FAS.slice(); }
 
 /* ---------- Statistik ---------- */
 function stats() {
