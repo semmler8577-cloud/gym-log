@@ -415,3 +415,42 @@ details.manual[open] summary{margin-bottom:8px}
 .mob-anat-cap{text-align:center;margin-bottom:8px}
 .mob-thumb-img{width:96px;height:96px;object-fit:cover;border-radius:10px;display:block;background:#fdfbf7}
 .mob-seq{width:100%;display:block;border-radius:12px;background:#fdfbf7;margin-top:8px}
+/* v1.8.0 Ernährung */
+#tabs{padding-left:0;padding-right:0}#tabs a{min-width:0}#tabs a span{font-size:9px;letter-spacing:-.15px;white-space:nowrap}
+.nut-daynav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px}
+.nut-daynav>div{flex:1;text-align:center}.nut-daynav b{display:block;font-size:17px}.nut-daynav span{font-size:12px;color:var(--tx2)}
+.nut-tot .nut-kc,.nut-home .nut-kc{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:8px}
+.nut-big{font-size:34px;font-weight:800;letter-spacing:-.5px}.nut-kc small{color:var(--tx2);font-weight:600}
+.nut-rest{font-size:13px;color:var(--tx2)}.nut-rest b{color:#30d158}.nut-rest.over b{color:#ff6b6b}
+.nut-bar{height:8px;border-radius:5px;background:#1d1d20;overflow:hidden;margin:4px 0 2px}
+.nut-bar i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,#b30000,#ff3b30);transition:width .4s}
+.nut-bar.hit i{background:linear-gradient(90deg,#8a6d1f,#f6e27a)}.nut-bar.over i{background:linear-gradient(90deg,#ff9f0a,#ff6b6b)}
+.nut-mac{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.nut-mac .k{font-size:10px;letter-spacing:.8px;text-transform:uppercase;color:var(--tx2);font-weight:700}
+.nut-mac .v{font-size:17px;font-weight:800}.nut-mac .v small{font-size:11px;color:var(--tx2);font-weight:600}
+a.card.nut-home{display:block;color:inherit}
+.nut-quick{display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:10px -2px 0;padding:2px 2px 6px;scrollbar-width:none}
+.nut-quick::-webkit-scrollbar{display:none}
+.nut-q{flex:none;min-width:118px;max-width:150px;text-align:left;padding:10px 12px;border-radius:16px;background:rgba(16,16,18,.9);border:1px solid rgba(212,175,55,.35);display:flex;flex-direction:column;gap:2px}
+.nut-q span{font-size:20px}.nut-q b{font-size:14px;line-height:1.2}.nut-q small{font-size:12px;color:var(--tx2)}
+.nut-q:active{transform:scale(.96)}.nut-q.add{border-style:dashed;border-color:#3a3a40}
+.nut-ms{font-size:11px;letter-spacing:.3px;text-transform:none;color:var(--gold);font-weight:700;margin-left:6px}
+.nut-meal{padding:6px 10px}
+.nut-row{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:9px 2px;border-bottom:1px solid #1c1c1f;min-height:56px}
+.nut-row:last-of-type{border-bottom:0}
+.nut-th{width:42px;height:42px;flex:none;border-radius:11px;background:#1a1a1d center/cover no-repeat;border:1px solid rgba(212,175,55,.3);display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--gold)}
+.nut-rt{flex:1;min-width:0}.nut-rt b{display:block;font-size:15px;line-height:1.25}.nut-rt>span{display:block;font-size:12.5px;color:var(--tx2);margin-top:2px;line-height:1.35}
+.nut-rt i.est,.nut-row i.est{font-style:normal;color:#ffd60a}
+.nut-kv{text-align:right;flex:none}.nut-kv b{display:block;font-size:17px}.nut-kv small{font-size:11px;color:var(--tx2)}
+.nut-mbtns{display:flex;gap:8px;padding:8px 0 4px}.nut-mbtns .btn{flex:1;min-height:40px;font-size:14px}.nut-mbtns small{font-weight:600;opacity:.8;margin-left:3px}
+.nut-src{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;margin-top:4px;border:1px solid #2e2e33}
+.nut-src.ok{color:#30d158;border-color:rgba(48,209,88,.35)}.nut-src.est{color:#ffd60a;border-color:rgba(255,214,10,.35)}
+.nut-amt{font-size:28px;font-weight:800;text-align:center;min-height:60px}
+.nut-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.nut-chips .pchip{flex:1;justify-content:center;min-width:48px}
+.nut-live{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px;background:#0a0a0b;border:1px solid rgba(212,175,55,.35);border-radius:14px;padding:10px 6px;text-align:center}
+.nut-live b{display:block;font-size:20px;font-weight:800}.nut-live small{font-size:11px;color:var(--tx2)}
+.nut-live.off{display:block;color:var(--tx3);font-size:14px}
+.nut-ph{height:200px;border-radius:14px;background:#111 center/cover no-repeat;border:1px solid var(--line);margin-bottom:8px}
+.nut-ci{background:#0b0b0c;border:1px solid #232327;border-radius:14px;padding:8px;margin-top:8px}.nut-ci .row{margin-top:6px}.nut-ci .field{min-height:42px;padding:8px 12px}
+@media (max-width:389px){#tabs a span{font-size:8.3px;letter-spacing:-.2px}}
+.nut-rt>span.nut-src{display:inline-block;font-size:11px;color:inherit}.nut-rt>span.nut-src.ok{color:#30d158}.nut-rt>span.nut-src.est{color:#ffd60a}

@@ -1,6 +1,6 @@
-/* Voccola Gym Log – Service Worker (v1.7.28: hipwallstep anatomical style) */
-const CACHE = 'vgl-v1.7.29';
-const ASSETS = ['./', './index.html', './styles.css', './app.js', './mobility.js', './manifest.webmanifest',
+/* Voccola Gym Log – Service Worker (v1.8.0: Ernährung) */
+const CACHE = 'vgl-v1.8.0';
+const ASSETS = ['./', './index.html', './styles.css', './app.js', './mobility.js', './nutri-core.js', './nutrition.js', './manifest.webmanifest',
   './icons/icon-192.png', './icons/icon-512.png', './icons/apple-touch-icon.png', './icons/icon-maskable-512.png', './assets/dumbbell.webp', './assets/keepawake.mp4',
   './assets/ex/b-fly-schraeg-kabel.webp', './assets/ex/bauch-crunch-maschine.webp', './assets/ex/r-facepull.webp', './assets/ex/r-revfly.webp', './assets/ex/r-row-incline-kabel.webp', './assets/ex/r-row-trapez-schraeg-breit.webp', './assets/ex/s-presse-kabel-liegend.webp', './assets/ex/s-seitheben-kabel-einarm.webp', './assets/ex/s-seitheben-vorgebeugt.webp', './assets/ex/x1.webp', './assets/ex/x10.webp', './assets/ex/x11.webp', './assets/ex/x12.webp', './assets/ex/x13.webp', './assets/ex/x14.webp', './assets/ex/x15.webp', './assets/ex/x16.webp', './assets/ex/x17.webp', './assets/ex/x18.webp', './assets/ex/x19.webp', './assets/ex/x2.webp', './assets/ex/x20.webp', './assets/ex/x21.webp', './assets/ex/x22.webp', './assets/ex/x23.webp', './assets/ex/x24.webp', './assets/ex/x25.webp', './assets/ex/x26.webp', './assets/ex/x27.webp', './assets/ex/x28.webp', './assets/ex/x3.webp', './assets/ex/x4.webp', './assets/ex/x5.webp', './assets/ex/x6.webp', './assets/ex/x7.webp', './assets/ex/x8.webp', './assets/ex/x9.webp', 
   './assets/mob/catcow.webp', './assets/mob/hamwalk.webp', './assets/mob/hipflex.webp', './assets/mob/wgs.webp', './assets/mob/n9090.webp', './assets/mob/bridge.webp', './assets/mob/birddog.webp', './assets/mob/deadbug.webp', './assets/mob/tuer.webp', './assets/mob/kneel.webp', './assets/mob/pigeon.webp', './assets/mob/turtle.webp', './assets/mob/froll_g.webp', './assets/mob/froll_t.webp', './assets/mob/ballpir.webp', './assets/mob/duoball.webp', './assets/mob/shakti.webp', './assets/mob/pigeonq.webp', './assets/mob/rollbecken.webp', './assets/mob/rollschien.webp', './assets/mob/rollknie.webp',
@@ -13,7 +13,7 @@ self.addEventListener('activate', e => {
   e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
 });
 self.addEventListener('message', e => { if (e.data === 'skipWaiting') self.skipWaiting(); });
-const CORE = /\/(index\.html|app\.js|mobility\.js|styles\.css|sw\.js)?$/;
+const CORE = /\/(index\.html|app\.js|mobility\.js|nutri-core\.js|nutrition\.js|styles\.css|sw\.js)?$/;
 self.addEventListener('fetch', e => {
   const req = e.request; const url = new URL(req.url);
   if (req.method !== 'GET' || url.origin !== location.origin) return;

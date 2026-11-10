@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.7.29';
+const APP_VERSION = '1.8.0';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -118,6 +118,7 @@ const FREE_EX = [
 const FREE_PRESET = [['r-revfly', 'Reverse Butterfly (hintere Schulter)'], ['r-facepull', 'Face Pulls (Seil)'], ['s-seitheben-vorgebeugt', 'Vorgebeugtes Seitheben (hintere Schulter)'],
   ['s-seitheben-kabel-einarm', 'Seitheben Kabel einarmig'], ['x11', 'Schulterpresse Maschine'], ['bauch-crunch-maschine', 'Crunchmaschine'],
   ['x19', 'Knieheben am Beinstrecker'], ['x21', 'Seitbeugen'], ['x20', 'Crunch am Seilzug']];
+/* v1.8.0: Ernährung (nutri-core.js + nutrition.js, eigene IndexedDB vgl-food), Tab „Essen“, Backup inkl. Ernährung + Hüfte */
 /* v1.7.28: hipwallstep anatomical (no photoreal likeness); heel-at-wall clear */
 /* v1.7.27: hipwallrot/hipwallstep images fixed (small knee arrow; wall+flat heel+reach). */
 /* v1.7.26: Bilder hipwallrot/step/psoasreset/rollschien/rolle/couch; Abend-Wechsel 3; Zusatzübung-Picker Morgen/Abend → 9/9 */
@@ -470,6 +471,7 @@ function viewHome() {
     </section>
     <div style="height:18px"></div>
     ${dashboardCard()}
+    ${window.NUT ? NUT.homeCard() : ''}
     ${recent ? `<div class="sec-h"><span>Letztes Training</span><span class="line"></span></div>${sessionCard(recent)}` : `<div class="card"><div class="empty" style="padding:10px">Noch kein Training gespeichert.<br>Tippe oben auf <b style="color:#fff">starten</b> – los geht's! 💪</div></div>`}
     <div class="foot">Daten bleiben nur auf diesem iPhone · offline · v${APP_VERSION}</div>`,
     mount() {
@@ -848,13 +850,14 @@ function viewMore() {
        <div class="stp" style="max-width:220px"><button data-act="goal" data-d="-1">−</button><input readonly value="${S.meta.weekGoal || 6}"><button data-act="goal" data-d="1">+</button></div></div>
       <div class="card" style="padding:4px 14px">
         <a class="list-btn" href="#/exercises"><span class="ic">✎</span><span class="tx">Übungen verwalten<span>Bearbeiten, eigene hinzufügen, Fotos</span></span><span class="chev">›</span></a>
-        <button class="list-btn" data-act="export"><span class="ic">⬇︎</span><span class="tx">Backup exportieren (JSON)<span>${S.sessions.length} Einheiten · ${S.sets.length} Sätze · ${S.measurements.length} Messungen</span></span></button>
+        <button class="list-btn" data-act="export"><span class="ic">⬇︎</span><span class="tx">Backup exportieren (JSON)<span>${S.sessions.length} Einheiten · ${S.sets.length} Sätze · ${S.measurements.length} Messungen${window.NUT ? ' · ' + NUT.count().entries + ' Essens-Einträge' : ''} · Hüfte</span></span></button>
         <button class="list-btn" data-act="import"><span class="ic">⬆︎</span><span class="tx">Backup importieren<span>Ersetzt alle aktuellen Daten</span></span></button>
         <button class="list-btn" data-act="carterLast"><span class="ic">📋</span><span class="tx">Letztes Training für Carter kopieren<span>Kompakte Zusammenfassung als Text</span></span></button>
       </div>
       <div class="card"><b class="gold">Datenschutz</b><div class="hint" style="color:var(--tx2)">Alle Daten liegen ausschließlich auf diesem Gerät. Kein Server, kein Konto, kein Tracking. Mach regelmäßig ein Backup (z. B. in „Dateien“ / iCloud Drive). Achtung: Wenn du die App vom Home-Bildschirm löschst, sind die Daten weg.</div></div>
       <button class="btn btn-danger btn-sm" data-act="wipe">Alle Daten löschen</button>
-      <div class="foot">Voccola Gym Log v${APP_VERSION} · für Markus 💪</div>`
+      <div class="foot">Voccola Gym Log v${APP_VERSION} · für Markus 💪</div>`,
+    mount() { if (window.NUT) NUT.prefetch(); }
   };
 }
 function viewExercises() {
@@ -941,10 +944,12 @@ function render(keepScroll) {
     case 'more': v = viewMore(); break;
     case 'exercises': v = viewExercises(); break;
     case 'mob': v = typeof viewMob === 'function' ? viewMob(a) : viewHome(); break;
+    case 'food': v = typeof viewFood === 'function' ? viewFood(a) : viewHome(); break;
+    case 'foods': v = typeof viewFoods === 'function' ? viewFoods() : viewHome(); break;
     default: v = viewHome();
   }
   document.body.classList.toggle('home', r === 'home' || r === '');
-  const tabOf = { ex: 'train', exercises: 'train', session: 'history' }[r] || r;
+  const tabOf = { ex: 'train', exercises: 'train', session: 'history', foods: 'food' }[r] || r;
   $$('#tabs a').forEach(t => t.classList.toggle('on', t.dataset.tab === tabOf));
   app.innerHTML = `<div class="view" ${keepScroll ? 'style="animation:none"' : ''}>${v.html}</div>`;
   v.mount && v.mount();
@@ -1013,7 +1018,8 @@ const A = {
   delMeasure: async d => { const m = S.measurements.find(x => x.id === d.id); if (!m || !confirm('Wert löschen?')) return; delete m[d.k]; if (METRICS.some(x => m[x.k] != null)) await save('measurements', m); else await remove('measurements', m.id); render(true); },
   goal: async d => { await setMeta('weekGoal', Math.max(1, Math.min(14, (S.meta.weekGoal || 6) + +d.d))); render(true); },
   export: async () => {
-    const data = JSON.stringify({ app: 'voccola-gym-log', version: APP_VERSION, exported: new Date().toISOString(), exercises: S.exercises, sessions: S.sessions, sets: S.sets, measurements: S.measurements, meta: S.meta });
+    let nutrition, mobility; try { nutrition = window.NUT ? (NUT.cached() || await NUT.dump()) : undefined; } catch (e) { } try { mobility = JSON.parse(localStorage.getItem('vgl-mob') || 'null') || undefined; } catch (e) { }
+    const data = JSON.stringify({ app: 'voccola-gym-log', version: APP_VERSION, exported: new Date().toISOString(), exercises: S.exercises, sessions: S.sessions, sets: S.sets, measurements: S.measurements, meta: S.meta, nutrition, mobility });
     const name = `gymlog-backup-${dkey()}.json`; const blob = new Blob([data], { type: 'application/json' });
     try { const file = new File([blob], name, { type: 'application/json' }); if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: 'Gym Log Backup' }); return; } } catch (e) { if (e.name === 'AbortError') return; }
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500); toast('Backup erstellt ✓');
@@ -1029,12 +1035,14 @@ const A = {
         S.exercises = []; S.sessions = []; S.sets = []; S.measurements = []; S.meta = {};
         for (const s of ['exercises', 'sessions', 'sets', 'measurements']) for (const r of j[s] || []) await save(s, r);
         for (const [k, v] of Object.entries(j.meta || {})) await setMeta(k, v);
+        if (j.nutrition && window.NUT) await NUT.restore(j.nutrition); // ältere Backups ohne Ernährung lassen Ernährungsdaten unverändert
+        if (j.mobility) { try { localStorage.setItem('vgl-mob', JSON.stringify(j.mobility)); } catch (e) { } }
         toast('Import erfolgreich ✓'); go('#/home');
       } catch (e) { toast('Import fehlgeschlagen: ' + e.message, 3500); }
     };
     inp.click();
   },
-  wipe: async () => { if (!confirm('Wirklich ALLE Daten löschen? Das kann nicht rückgängig gemacht werden.')) return; if (!confirm('Sicher? Vorher Backup gemacht?')) return; for (const s of STORES) await DB.clear(s); location.hash = '#/home'; location.reload(); },
+  wipe: async () => { if (!confirm('Wirklich ALLE Daten löschen? Das kann nicht rückgängig gemacht werden.')) return; if (!confirm('Sicher? Vorher Backup gemacht?')) return; for (const s of STORES) await DB.clear(s); if (window.NUT) { try { await NUT.restore({ entries: [] }); } catch (e) { } } location.hash = '#/home'; location.reload(); },
   editEx: d => exSheet(d.id),
   exUnit: (d, el) => $$('#ex-unit button').forEach(b => b.classList.toggle('on', b === el)),
   exPs: (d, el) => el.classList.toggle('on'),
@@ -1076,7 +1084,7 @@ window.addEventListener('hashchange', () => { closeSheet(); render(); });
 
 /* ---------- Start ---------- */
 (async function init() {
-  try { await loadAll(); } catch (e) { app.innerHTML = `<div class="card" style="margin-top:40px"><b>Speicher nicht verfügbar</b><div class="hint">${esc(e.message)} – bitte Safari nicht im privaten Modus verwenden.</div></div>`; return; }
+  try { await loadAll(); if (window.NUT) await NUT.ready; } catch (e) { app.innerHTML = `<div class="card" style="margin-top:40px"><b>Speicher nicht verfügbar</b><div class="hint">${esc(e.message)} – bitte Safari nicht im privaten Modus verwenden.</div></div>`; return; }
   S.meta.qIdx = Math.floor(Math.random() * QUOTES.length);
   if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => { });
   render();
