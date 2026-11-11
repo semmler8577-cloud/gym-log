@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.8.0';
+const APP_VERSION = '1.8.1';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -129,6 +129,9 @@ const FREE_PRESET = [['r-revfly', 'Reverse Butterfly (hintere Schulter)'], ['r-f
 const TRAP_ROW = { id: 'r-row-trapez-schraeg-breit', name: 'Trapez-Rudern Schrägbank Kabel (breit)', group: 'Rücken', unit: 'reps', perSide: false, elbow: 'e', target: 12, order: 7.5,
   desc: 'Plan: 3×10–15 Wdh., Gesamtgewicht (Kabel). Fokus: mittlerer, unterer und oberer Trapez, Rhomboiden, hintere Schulter.\n\nSetup: Verstellbare Bank auf Schräge (ca. 30–45°) direkt vor einen tiefen Kabelzug stellen – Blick zum Kabelturm. Kabel ganz unten (untere Rolle). Mit der Brust aufs Polster legen, Füße hinten am Boden. Lange Stange (oder zwei Griffe) breit, außen fassen; das Kabel kommt von unten.\n\nAusführung: Stange Richtung Oberkörper ziehen, Ellenbogen breit nach außen-hinten führen. Schulterblätter zusammen und leicht nach hinten-oben ziehen, oben 1 s halten, dann kontrolliert ablassen, bis die Schulterblätter auseinandergehen.\n• Kein Schwung\n• Nacken lang, Blick neutral\n• Brust bleibt auf dem Polster\n• Griff nicht krampfhaft – Zug aus dem Rücken, nicht aus den Armen',
   elbowNote: 'Tennisarm: Griff locker halten, nicht krampfhaft zupacken; lieber leichter und sauber. Bei stechendem Ellenbogenschmerz Gewicht runter oder Griffe statt Stange.' };
+/* v1.8.1: Guillotine Press – Katalog (Brust), ausgeblendet; bestehender Mo–Fr-Plan und Nutzerdaten unverändert. Bild b-guillotine.webp */
+const GUILLOTINE = { id: 'b-guillotine', name: 'Guillotine Press (Langhantel zum Hals)', group: 'Brust', unit: 'reps', perSide: false, target: 12, order: 600,
+  desc: 'Plan: 3×10–12 Wdh., moderates Gewicht. Fokus: obere und äußere Brust.\n\nSetup: Flachbank, Langhantel mit mittlerem bis etwas weiterem Griff. Schulterblätter fest auf die Bank, Füße fest am Boden.\n\nAusführung: Die Stange kontrolliert zum Hals bzw. oberen Brustbein absenken (nicht zur Brustmitte). Ellenbogen weit nach außen führen (ca. 70–80° zum Oberkörper). Unten die Dehnung spüren, dann kontrolliert nach oben drücken.\n• Kontrolliert absenken, kein Abprallen\n• Schultern fest auf der Bank, nicht nach vorn kippen\n• Moderates Gewicht – keine Maximalversuche\n• Blick gerade, Nacken lang und neutral\n\nSicherheit: Höheres Risiko für Schulter und Nacken als beim klassischen Bankdrücken. Nur mit Safety-Pins/Spotter oder an der Multipresse (Smith Machine) empfohlen. Bei Schulterbeschwerden weglassen.' };
 /* v1.7.21: Halber Frosch + Seitlicher Ausfallschritt im Knien – Abwechslung-Rotationspool (ROT, jetzt 12 Übungen, 3/Tag), Bilder halbfrosch/seitausfall + seq_*; bestehende Übungen/Dosen unverändert */
 /* v1.7.20: Schrägbank-Kabelfly in Bauchlage – Richtung korrigiert: Rücken zu den Kabeltürmen, Kabel von hinten-unten nach vorn-oben (Brust-Übung); Text/Bild neu, Migration v11, gleiche ID. v1.7.19: Bauchlage; v1.7.18: erstmals im Oberkörper-Plan (Brust, nach „Fliegende liegend“), Bild b-fly-schraeg-kabel.webp */
 const INCLINE_FLY = { id: 'b-fly-schraeg-kabel', name: 'Schrägbank-Kabelfly in Bauchlage (obere Brust)', group: 'Brust', unit: 'reps', perSide: false, elbow: 'e', target: 12, order: 4.5,
@@ -295,6 +298,11 @@ async function loadAll() {
       }
     }
     await setMeta('catalogVersion', 13);
+  }
+  if ((S.meta.catalogVersion || 0) < 14) {
+    // Nur ergänzen: Guillotine Press ausgeblendet im Katalog (Brust) – Mo–Fr-Plan, Reihenfolge und bestehende Sätze bleiben unverändert
+    if (!exById(GUILLOTINE.id) && !S.exercises.some(x => x.name === GUILLOTINE.name)) await save('exercises', { ...GUILLOTINE, photo: null, hidden: true, catalog: true });
+    await setMeta('catalogVersion', 14);
   }
 }
 
@@ -600,7 +608,7 @@ function viewEx(id) {
       `<div style="height:6px"></div>` + editorHTML(ex, act)
   };
 }
-const EX_IMG = new Set(["b-fly-schraeg-kabel", "r-row-trapez-schraeg-breit", "bauch-crunch-maschine", "r-facepull", "r-revfly", "r-row-incline-kabel", "s-presse-kabel-liegend", "s-seitheben-kabel-einarm", "s-seitheben-vorgebeugt", "x1", "x10", "x11", "x12", "x13", "x14", "x15", "x16", "x17", "x18", "x19", "x2", "x20", "x21", "x22", "x23", "x24", "x25", "x26", "x27", "x28", "x3", "x4", "x5", "x6", "x7", "x8", "x9"]);
+const EX_IMG = new Set(["b-guillotine", "b-fly-schraeg-kabel", "r-row-trapez-schraeg-breit", "bauch-crunch-maschine", "r-facepull", "r-revfly", "r-row-incline-kabel", "s-presse-kabel-liegend", "s-seitheben-kabel-einarm", "s-seitheben-vorgebeugt", "x1", "x10", "x11", "x12", "x13", "x14", "x15", "x16", "x17", "x18", "x19", "x2", "x20", "x21", "x22", "x23", "x24", "x25", "x26", "x27", "x28", "x3", "x4", "x5", "x6", "x7", "x8", "x9"]);
 const exImg = ex => EX_IMG.has(ex.id) ? `./assets/ex/${ex.id}.webp` : '';
 function setEdField(f, v, raw) {
   if (f === 'note') { ED.note = v; return; }
