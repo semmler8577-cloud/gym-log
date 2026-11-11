@@ -464,35 +464,51 @@ Object.assign(A, {
     d.history.push({ date: tk(), ts: Date.now(), lineup: lineupIds, extra: JSON.parse(JSON.stringify(d.today.extra || { m: [], a: [] })), done, sets: Object.assign({}, d.today.sets), log: JSON.parse(JSON.stringify(d.today.log || {})), note: old.note || '' }); d.history.sort((a, b) => a.date < b.date ? -1 : 1); sv(d);
     beep(2, 990); const s = stats(); toast(`Stark, Markus! ${s.streak} ${s.streak === 1 ? 'Tag' : 'Tage'} in Folge 🔥`, 2200); render(true); setTimeout(() => A.mobExp({ date: tk() }), 400); },
   mobExp: dd => { const d = ld(); const h = d.history.find(x => x.date === dd.date); if (!h) return toast('Eintrag nicht gefunden');
-    openSheet(`<h3>Einheit exportieren</h3><div class="muted small">${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)} · ${h.done.length} ${h.done.length === 1 ? 'Übung' : 'Übungen'}</div>
+    const sent = getSent(h.date); const pv = sent.n ? MOBCORE.diffReport(mobRep(h), sent) : null;
+    const info = !sent.n ? '' : `<div class="card small" id="mob-sendinfo" style="margin:10px 0 0;border:1px solid rgba(212,175,55,.35);background:rgba(212,175,55,.07)">📨 Heute schon ${sent.n}× gemeldet${sent.blocks.length ? ' (' + sent.blocks.map(esc).join(', ') + ')' : ''}.<br>${pv.empty ? '<b>Nichts Neues seit der letzten Meldung</b> – außer du änderst die Notiz.' : 'Gesendet wird nur Neues: <b>' + (pv.newBlocks.map(esc).join(', ') || 'Notiz') + '</b>'}</div>`;
+    openSheet(`<h3>Einheit exportieren</h3><div class="muted small">${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)} · ${h.done.length} ${h.done.length === 1 ? 'Übung' : 'Übungen'}</div>${info}
       <label class="muted small" style="display:block;margin:12px 0 6px">Wie war's? Seitenunterschiede, Gefühl, Steifigkeit 0-10</label>
       <textarea class="field" id="mob-note" style="min-height:120px" placeholder="z. B. links deutlich steifer, Steifigkeit 6/10">${esc(h.note || '')}</textarea>
-      <div style="height:10px"></div><button class="btn btn-gold" data-act="mobExpGo" data-date="${h.date}">📤 Exportieren</button>
+      <div style="height:10px"></div><button class="btn btn-gold" data-act="mobExpGo" data-date="${h.date}">📤 ${sent.n ? 'Neues senden' : 'Exportieren'}</button>
+      ${sent.n ? `<div style="height:6px"></div><button class="btn btn-outline-gold btn-sm" data-act="mobExpGo" data-date="${h.date}" data-full="1">Kompletten Tag senden</button>` : ''}
       <div style="height:6px"></div><button class="btn btn-ghost btn-sm" data-act="mobNoteSave" data-date="${h.date}">Nur Notiz speichern</button>`); },
   mobNoteSave: dd => { saveNote(dd.date); toast('Notiz gespeichert ✓'); closeSheet(); render(true); },
-  mobExpGo: async dd => { const h = saveNote(dd.date); const txt = mobText(h);
-    try { if (navigator.share) { await navigator.share({ title: 'Hüft-Beweglichkeit', text: txt }); closeSheet(); render(true); return; } } catch (e) { if (e.name === 'AbortError') return; }
-    const ok = await copyText(txt); if (ok) { toast('Kopiert ✓ – jetzt einfügen', 2600); closeSheet(); render(true); }
-    else openSheet(`<h3>Export</h3><div class="muted small">Text markieren und kopieren:</div><textarea class="field" style="min-height:300px">${esc(txt)}</textarea>`); }
+  mobExpGo: async dd => { const h = saveNote(dd.date); if (!h) return toast('Eintrag nicht gefunden'); const rep = mobRep(h); const full = dd.full === '1';
+    const res = full ? { text: MOBCORE.fullText(rep), empty: false } : MOBCORE.diffReport(rep, getSent(h.date));
+    if (res.empty) return openSheet(`<h3>Nichts Neues</h3><div class="muted small" style="margin-bottom:12px">Nichts Neues seit der letzten Meldung – alle abgehakten Übungen und die Notiz hast du heute schon geschickt.</div>
+      <button class="btn btn-gold" data-act="mobExpGo" data-date="${h.date}" data-full="1">Trotzdem komplett senden</button>
+      <div style="height:6px"></div><button class="btn btn-ghost btn-sm" data-act="mobExp" data-date="${h.date}">‹ Zurück</button>`);
+    const txt = res.text; const done = () => { putSent(h.date, MOBCORE.markSent(rep, getSent(h.date))); closeSheet(); render(true); };
+    try { if (navigator.share) { await navigator.share({ title: 'Hüft-Beweglichkeit', text: txt }); done(); return; } } catch (e) { if (e.name === 'AbortError') return; }
+    const ok = await copyText(txt); if (ok) { toast('Kopiert ✓ – jetzt einfügen', 2600); done(); }
+    else openSheet(`<h3>Export</h3><div class="muted small">Text markieren und kopieren:</div><textarea class="field" style="min-height:300px">${esc(txt)}</textarea>
+      <div style="height:10px"></div><button class="btn btn-outline-gold btn-sm" data-act="mobMarkSent" data-date="${h.date}">✓ Hab's geschickt – als gemeldet merken</button>`); },
+  mobMarkSent: dd => { const d = ld(); const h = d.history.find(x => x.date === dd.date); if (h) putSent(h.date, MOBCORE.markSent(mobRep(h), getSent(h.date))); toast('Als gemeldet gemerkt ✓', 1600); closeSheet(); render(true); }
 });
 function saveNote(date) { const d = ld(); const h = d.history.find(x => x.date === date); const ta = document.getElementById('mob-note'); if (h && ta) { h.note = ta.value.trim(); sv(d); } return h; }
-function mobText(h) {
+/* Bericht als Struktur (Text baut MOBCORE: komplett oder nur Neues) */
+function mobRep(h) {
   const L = h.log || {}, S2 = h.sets || {};
   // Blöcke: Plan des Tages (h.lineup bzw. alter Plan) + zusätzlich Abgehaktes; Zähler = erledigt / geplant
   const blk = [['☀️ Morgen-Routine', 'm', EX], ['🔄 Abwechslung', 'w', ROT], ['☾ Abend', 'a', [...EVE, ...RET]], ['◎ Faszien', 'f', FAS]].map(([n, b, pool]) => {
     const plan = planOf(h, b); const extra = pool.filter(e => !plan.includes(e) && h.done.includes(e.id));
     return { n, l: [...plan, ...extra], tot: plan.length + extra.filter(e => BLK[b].pool.includes(e)).length, dn: [...plan, ...extra].filter(e => h.done.includes(e.id) && BLK[b].pool.includes(e)).length }; });
-  const out = [`Hüft-Beweglichkeit – ${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)}`];
-  const bd = blk.filter(x => x.l.some(e => h.done.includes(e.id))).map(x => `${x.n} (${x.dn}/${x.tot})`);
-  out.push('Blöcke: ' + (bd.join(', ') || '–'));
-  for (const { n, l } of blk) { const ex = l.filter(e => h.done.includes(e.id) || (L[e.id] || []).length || S2[e.id]); if (!ex.length) continue; out.push('', n);
+  const blocks = [];
+  for (const { n, l, tot, dn } of blk) { const items = []; blocks.push({ n, tot, dn, anyDone: l.some(e => h.done.includes(e.id)), items });
+    const ex = l.filter(e => h.done.includes(e.id) || (L[e.id] || []).length || S2[e.id]); if (!ex.length) continue;
     for (const e of ex) { let det;
       if (e.t === 'time') { const lg = L[e.id] || []; if (lg.length) { const by = {}; lg.forEach(x => (by[x.side || ''] = by[x.side || ''] || []).push(x.secs));
           det = Object.entries(by).map(([sd, a]) => { const pl = sd === 'Links' ? (e.setsL || e.sets) : sd === 'Rechts' ? (e.setsR || e.sets) : e.sets; return `${sd ? sd + ': ' : ''}${a.length}× ${a.map(fmtS).join('/')}${a.length < pl ? ` (${a.length}/${pl} Sätze)` : ''}`; }).join(' · '); }
         else det = 'abgehakt (' + e.dose + ')'; }
       else { const n2 = S2[e.id] || 0; const segs = e.sets * (e.ps ? 2 : 1); det = n2 ? (e.ps ? `${Math.ceil(n2 / 2)}×${e.reps} pro Seite` : `${n2}×${e.reps}`) + (n2 < segs ? ` (${n2}/${segs})` : '') : 'abgehakt (' + e.dose + ')'; }
-      out.push(`${h.done.includes(e.id) ? '✓' : '◐'} ${e.n}: ${det}`); } }
-  out.push('', 'Notiz: ' + (h.note || '–')); return out.join('\n'); }
+      items.push({ id: e.id, line: `${h.done.includes(e.id) ? '✓' : '◐'} ${e.n}: ${det}` }); } }
+  return { head: `Hüft-Beweglichkeit – ${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)}`, blocks, note: h.note || '' }; }
+function mobText(h) { return MOBCORE.fullText(mobRep(h)); }
+/* Gemeldet-Stand pro Tag – eigener Schlüssel, Übungsdaten 'vgl-mob' bleiben unberührt */
+const SKEY = 'vgl-mob-sent';
+function getSent(date) { try { const a = JSON.parse(localStorage.getItem(SKEY) || '{}'); const x = a[date] || {}; return { n: x.n || 0, ex: x.ex || {}, blocks: x.blocks || [], note: x.note || '' }; } catch (_) { return { n: 0, ex: {}, blocks: [], note: '' }; } }
+function putSent(date, s) { try { const a = JSON.parse(localStorage.getItem(SKEY) || '{}'); a[date] = s; localStorage.setItem(SKEY, JSON.stringify(MOBCORE.prune(a))); } catch (_) { } }
+
 function fmtS(x) { return x >= 60 && x % 60 === 0 ? (x / 60) + ' min' : x >= 60 ? Math.floor(x / 60) + ':' + pad(x % 60) + ' min' : x + ' s'; }
-window.mobText = mobText;
+window.mobText = mobText; window.mobRep = mobRep;
 })();
