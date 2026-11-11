@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.8.2';
+const APP_VERSION = '1.8.3';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -119,6 +119,7 @@ const FREE_PRESET = [['r-revfly', 'Reverse Butterfly (hintere Schulter)'], ['r-f
   ['s-seitheben-kabel-einarm', 'Seitheben Kabel einarmig'], ['x11', 'Schulterpresse Maschine'], ['bauch-crunch-maschine', 'Crunchmaschine'],
   ['x19', 'Knieheben am Beinstrecker'], ['x21', 'Seitbeugen'], ['x20', 'Crunch am Seilzug']];
 /* v1.8.0: Ernährung (nutri-core.js + nutrition.js, eigene IndexedDB vgl-food), Tab „Essen“, Backup inkl. Ernährung + Hüfte */
+/* v1.8.3: hipwallrot/hipwallstep: Texte nach Zac-Video, 4 Schritt-Bilder je Übung (ex.pics); Kombi FRoSTA + Skyr-Sauce + 2 Brötchen (SEED 3) */
 /* v1.7.28: hipwallstep anatomical (no photoreal likeness); heel-at-wall clear */
 /* v1.7.27: hipwallrot/hipwallstep images fixed (small knee arrow; wall+flat heel+reach). */
 /* v1.7.26: Bilder hipwallrot/step/psoasreset/rollschien/rolle/couch; Abend-Wechsel 3; Zusatzübung-Picker Morgen/Abend → 9/9 */

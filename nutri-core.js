@@ -137,10 +137,11 @@
     { id: 'std-fruehstueck', name: 'Standard-Frühstück', icon: '☀️', items: [{ foodId: 'milch-15', mode: 'g', amount: 300 }, { foodId: 'peak-hybrid', mode: 'p', pi: 0, amount: 1 },
       { foodId: 'edeka-pb', mode: 'p', pi: 0, amount: 2 }, { foodId: 'leerdammer-pro', mode: 'p', pi: 0, amount: 4 }] },
     { id: 'reispudding', name: 'Reispudding', icon: '🍚', items: [{ foodId: 'milch-15', mode: 'g', amount: 280 }, { foodId: 'peak-hybrid', mode: 'p', pi: 0, amount: 1 }, { foodId: 'peak-ricepudding', mode: 'g', amount: 60 }] },
-    { id: 'frosta-teriyaki-sauce', name: 'FRoSTA Teriyaki + Skyr-Sauce', icon: '🍛', items: [{ foodId: 'frosta-teriyaki', mode: 'p', pi: 0, amount: 1 }, { foodId: 'skyr-sauce', mode: 'p', pi: 0, amount: 1 }] }
+    { id: 'frosta-teriyaki-sauce', name: 'FRoSTA Teriyaki + Skyr-Sauce', icon: '🍛', items: [{ foodId: 'frosta-teriyaki', mode: 'p', pi: 0, amount: 1 }, { foodId: 'skyr-sauce', mode: 'p', pi: 0, amount: 1 }] },
+    { id: 'frosta-sauce-2pb', name: 'FRoSTA + Skyr-Sauce + 2 Brötchen', icon: '🍛', items: [{ foodId: 'frosta-teriyaki', mode: 'p', pi: 0, amount: 1 }, { foodId: 'skyr-sauce', mode: 'p', pi: 0, amount: 1 }, { foodId: 'edeka-pb', mode: 'p', pi: 0, amount: 2 }] }
   ];
-  /* Start-Datenbank-Version: bei Erhöhung werden nur FEHLENDE Start-Produkte/Kombis ergänzt (2 = v1.8.2 FRoSTA + Skyr-Sauce) */
-  const SEED_VERSION = 2;
+  /* Start-Datenbank-Version: bei Erhöhung werden nur FEHLENDE Start-Produkte/Kombis ergänzt (2 = v1.8.2 FRoSTA + Skyr-Sauce, 3 = v1.8.3 Kombi FRoSTA + Skyr-Sauce + 2 Brötchen) */
+  const SEED_VERSION = 3;
 
   /* ---------- Barcode / Open Food Facts ---------- */
   const digits = s => String(s == null ? '' : s).replace(/\D+/g, '');
