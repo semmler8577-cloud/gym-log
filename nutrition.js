@@ -1,4 +1,4 @@
-/* Voccola Gym Log – Ernährung (v1.8.0). Eigene IndexedDB 'vgl-food', berührt Trainings- und Hüftdaten nicht.
+/* Voccola Gym Log – Ernährung (v1.8.2: Barcode-Scanner + Open Food Facts). Eigene IndexedDB 'vgl-food', berührt Trainings- und Hüftdaten nicht.
    Keine automatische Foto-Erkennung: Fotos sind Erinnerung/Beleg, Werte kommen aus der Datenbank bzw. vom Etikett. */
 'use strict';
 (function () {
@@ -28,7 +28,10 @@ async function load() {
   for (const s of ['foods', 'combos', 'entries', 'meta']) { const rows = await FDB.all(s); if (s === 'meta') rows.forEach(r => N.meta[r.id] = r.value); else N[s] = rows; }
   if ((N.meta.seedVersion || 0) < C.SEED_VERSION) {
     // Nur fehlende Start-Produkte/Kombis ergänzen – eigene Änderungen bleiben unangetastet
-    for (const f of C.FOODS) if (!fById(f.id)) await put('foods', Object.assign(JSON.parse(JSON.stringify(f)), { builtin: true, updated: Date.now() }));
+    const skyr = N.foods.find(f => /skyr/i.test(f.name) && !/sauce|mortadella/i.test(f.name) && f.per100 && f.per100.kcal > 0);
+    for (const f of C.FOODS) if (!fById(f.id)) { const nf = Object.assign(JSON.parse(JSON.stringify(f)), { builtin: true, updated: Date.now() });
+      if (nf.id === 'skyr-sauce' && skyr) { nf.portions[0].v = C.skyrSauce(skyr.per100); nf.note += ' Berechnet mit „' + skyr.name + '“ (100 g).'; }
+      await put('foods', nf); }
     for (const c of C.COMBOS) if (!cById(c.id)) await put('combos', Object.assign(JSON.parse(JSON.stringify(c)), { builtin: true }));
     await setM('seedVersion', C.SEED_VERSION);
   }
@@ -97,7 +100,7 @@ function viewFood(a) {
         <a class="list-btn" href="#/foods"><span class="ic">🗂</span><span class="tx">Lebensmittel & Kombis<span>${N.foods.length} Produkte · ${N.combos.length} Kombis · neu, ändern, löschen</span></span><span class="chev">›</span></a>
         <button class="list-btn" data-act="nutCopyDay"><span class="ic">📋</span><span class="tx">Tag für Carter kopieren<span>Kompakte Zusammenfassung als Text</span></span></button>
       </div>${avg}
-      <div class="hint">📷 Fotos werden nur gespeichert, nicht automatisch erkannt. Die Werte kommen immer aus deiner Datenbank (Etikett). ≈ = Schätzung/Standardwert, ◐ = teils ergänzt.</div>`
+      <div class="hint">▥ Neues Produkt? Unter „＋ Essen eintragen“ → „Barcode scannen“ – Werte kommen aus Open Food Facts, kurz mit dem Etikett prüfen. 📷 Essensfotos werden nur gespeichert, nicht erkannt. ≈ = Schätzung/Standardwert, ◐ = teils ergänzt.</div>`
   };
 }
 
@@ -130,6 +133,7 @@ function addList() {
 function addSheet(meal) {
   ADD = { meal: meal || C.defaultMeal(new Date().getHours()), q: '' };
   openSheet(`<h3>Eintragen · ${mealName(ADD.meal)}</h3><div class="muted small">${dayLabel(curDate || dkey())}, ${dateDE(curDate || dkey())}</div>
+    <button class="btn btn-outline-gold scan-btn" data-act="scanOpen" style="margin-top:10px">▥ Barcode scannen</button>
     <input class="field" id="nut-q" type="search" placeholder="🔍 Produkt oder Kombi suchen …" autocomplete="off" style="margin-top:10px">
     <div class="row" style="margin-top:10px"><button class="btn btn-ghost btn-sm" data-act="nutFree">✎ Freie Eingabe / Foto</button><button class="btn btn-ghost btn-sm" data-act="nutFoodEdit" data-id="">＋ Neues Produkt</button></div>
     <div id="nut-list" style="margin-top:6px">${addList()}</div>`);
@@ -220,7 +224,7 @@ function foodsList() {
 function viewFoods() {
   const cs = N.combos.map(c => { const v = C.calcCombo(c, foodMap(), 1); return `<button class="nut-row" data-act="nutComboEdit" data-id="${c.id}"><span class="nut-th">${esc(c.icon || '🍽')}</span><span class="nut-rt"><b>${esc(c.name)}</b><span>${K(v.kcal)} kcal · ${M(v.p)} P · ${M(v.c)} KH · ${M(v.f)} F${v.ok ? '' : ' · <i class="est">Produkt fehlt!</i>'}</span></span><span class="chev">›</span></button>`; }).join('');
   return { html: topbar('Lebensmittel', 'Datenbank & Kombis', '#/food') +
-    `<div class="row"><button class="btn btn-red btn-sm" data-act="nutFoodEdit" data-id="">＋ Neues Produkt</button><button class="btn btn-outline-gold btn-sm" data-act="nutComboEdit" data-id="">＋ Neue Kombi</button></div>
+    `<button class="btn btn-outline-gold scan-btn" data-act="scanOpen" style="margin-bottom:10px">▥ Barcode scannen</button><div class="row"><button class="btn btn-red btn-sm" data-act="nutFoodEdit" data-id="">＋ Neues Produkt</button><button class="btn btn-outline-gold btn-sm" data-act="nutComboEdit" data-id="">＋ Neue Kombi</button></div>
     <div class="sec-h"><span>Kombis (ein Tipp)</span><span class="line"></span></div><div class="card nut-meal">${cs || '<div class="empty">Noch keine Kombi.</div>'}</div>
     <div class="sec-h"><span>Produkte (${N.foods.length})</span><span class="line"></span></div>
     <input class="field" id="nut-fq" type="search" placeholder="🔍 Suchen …" value="${esc(FQ)}" autocomplete="off" style="margin-bottom:10px">
@@ -228,13 +232,15 @@ function viewFoods() {
     <div class="hint">Quellen: 📷 Packungsfoto · 🏷 Hersteller-Etikett · 🗂 Datenbank · ◐ Etikett + ergänzt · ≈ Standardwert/Schätzung. kcal immer vom Etikett übernehmen – nicht aus den Makros rechnen.</div>` };
 }
 let FE = null;
-function foodSheet(id, preName) {
-  const f = fById(id) || { id: '', name: preName || '', unit: 'g', per100: { kcal: null, p: null, c: null, f: null }, portions: [], src: 'foto', note: '', fav: false };
+function foodSheet(id, preName, pre) {
+  const f = fById(id) || Object.assign({ id: '', name: preName || '', unit: 'g', per100: { kcal: null, p: null, c: null, f: null }, portions: [], src: 'foto', note: '', fav: false }, pre ? pre.food : {});
   const open = document.body.classList.contains('sheet-open');
-  FE = { id: f.id, photoId: f.photoId, thumb: f.thumb, big: null, fav: !!f.fav, unit: f.unit, ret: open && $('#nut-amt') && AM ? 'amount' : open && $('#nut-q') ? 'add' : 'list' };
+  FE = { id: f.id, photoId: f.photoId, thumb: f.thumb, big: null, fav: !!f.fav, unit: f.unit, ret: pre ? 'scan' : open && $('#nut-amt') && AM ? 'amount' : open && $('#nut-q') ? 'add' : 'list', keep: pre ? pre.keep : null };
   const p100 = f.per100 || {}; const p0 = f.portions[0] || {}, p1 = f.portions[1] || {};
   const inp = (id2, l, v, ph) => `<div><label class="lbl">${l}</label><input class="field" id="${id2}" inputmode="decimal" value="${v != null ? fmtIn(v) : ''}" placeholder="${ph || ''}"></div>`;
-  openSheet(`<h3>${f.id ? 'Produkt bearbeiten' : 'Neues Produkt'}</h3><div class="muted small">Werte 1:1 vom Etikett abschreiben (Spalte „pro 100 g“).</div>
+  openSheet(`<h3>${f.id ? 'Produkt bearbeiten' : 'Neues Produkt'}</h3>${pre && pre.msg ? `<div class="hint" style="color:#ffd60a;margin-bottom:6px">${esc(pre.msg)}</div>` : ''}<div class="muted small">Werte 1:1 vom Etikett abschreiben (Spalte „pro 100 g“).</div>
+    ${!f.id && !(pre && pre.food && pre.food.barcode) ? '<button class="btn btn-outline-gold scan-btn" data-act="scanOpen" style="margin-top:10px">▥ Barcode scannen (füllt automatisch aus)</button>' : ''}
+    ${pre && pre.notFound ? '<div class="row" style="margin-top:10px"><button class="btn btn-ghost btn-sm" data-act="nutFePhoto" data-cam="1">📷 Etikett fotografieren</button></div>' : ''}
     <label class="lbl">Name</label><input class="field" id="fe-name" value="${esc(f.name)}" placeholder="z. B. Lidl Skyr Natur">
     <label class="lbl">Einheit</label><div class="seg sm" id="fe-unit"><button class="${f.unit !== 'ml' ? 'on' : ''}" data-act="nutFeUnit" data-u="g">pro 100 g</button><button class="${f.unit === 'ml' ? 'on' : ''}" data-act="nutFeUnit" data-u="ml">pro 100 ml</button></div>
     <div class="mform">${inp('fe-kcal', 'kcal *', p100.kcal, 'z. B. 275')}${inp('fe-p', 'Eiweiß (g)', p100.p)}${inp('fe-c', 'Kohlenhydrate (g)', p100.c)}${inp('fe-f', 'Fett (g)', p100.f)}</div>
@@ -244,6 +250,7 @@ function foodSheet(id, preName) {
     <div class="hint" style="margin-top:4px">Nur wenn das Etikett eigene Werte pro Portion nennt (z. B. „1 Brötchen = 209 kcal“). Sonst leer lassen – dann wird aus 100 g gerechnet.</div>
     <label class="lbl">Portion 2 (optional)</label><div class="row"><input class="field" id="fe-pn1" value="${esc(p1.n || '')}" placeholder="z. B. Scheibe"><input class="field" id="fe-pg1" inputmode="decimal" value="${p1.g ? fmtIn(p1.g) : ''}" placeholder="g / ml" style="max-width:110px"></div>
     <label class="lbl">Quelle der Werte</label><select class="field" id="fe-src">${Object.entries(C.SRC).filter(([k]) => k !== 'frei').map(([k, s]) => `<option value="${k}" ${k === f.src ? 'selected' : ''}>${s.ic} ${s.l}</option>`).join('')}</select>
+    <label class="lbl">Barcode (optional)</label><input class="field" id="fe-bc" inputmode="numeric" value="${esc(f.barcode || '')}" placeholder="EAN – beim nächsten Scan sofort Gramm-Eingabe">
     <label class="lbl">Notiz</label><input class="field" id="fe-note" value="${esc(f.note || '')}" placeholder="z. B. Packungsfoto 10.11.">
     <div class="toggles" style="margin-top:12px"><button class="tgl ${FE.fav ? 'on' : ''}" id="fe-fav" data-act="nutFeFav">★ Favorit (oben in der Liste)</button></div>
     <label class="lbl">Etikett-Foto</label><div id="fe-ph" class="nut-ph" style="${f.photoId ? `background-image:url('${f.thumb}')` : 'display:none'}"></div>
@@ -298,6 +305,104 @@ function dayText(k) {
   return out.join('\n');
 }
 
+/* ---------- Barcode-Scanner (Kamera → EAN → Open Food Facts) ----------
+   Native BarcodeDetector (Chrome/Android) oder lokal mitgelieferte ZXing-Bibliothek (iPhone Safari). Nichts wird automatisch
+   gespeichert: Bestätigungsseite mit editierbaren Werten, dann ein Tipp „Speichern & Gramm eingeben“. */
+const SC = { stream: null, t: 0, on: false, detect: null, native: false };
+function loadZX() { if (window.ZXing) return Promise.resolve(); return new Promise((res, rej) => { const s = document.createElement('script'); s.src = 'assets/vendor/zxing.min.js'; s.onload = () => window.ZXing ? res() : rej(new Error('ZXing fehlt')); s.onerror = () => rej(new Error('Decoder nicht geladen')); document.head.appendChild(s); }); }
+async function makeDetector() {
+  if ('BarcodeDetector' in window) { try { const have = await window.BarcodeDetector.getSupportedFormats(); const fm = ['ean_13', 'ean_8', 'upc_a', 'upc_e'].filter(x => have.includes(x));
+    if (fm.length) { const d = new window.BarcodeDetector({ formats: fm }); SC.native = true; return async v => { const r = await d.detect(v); return r && r[0] ? r[0].rawValue : null; }; } } catch (_) { } }
+  await loadZX(); const Z = window.ZXing; SC.native = false;
+  const hints = new Map(); hints.set(Z.DecodeHintType.POSSIBLE_FORMATS, [Z.BarcodeFormat.EAN_13, Z.BarcodeFormat.EAN_8, Z.BarcodeFormat.UPC_A, Z.BarcodeFormat.UPC_E]); hints.set(Z.DecodeHintType.TRY_HARDER, true);
+  const rd = new Z.MultiFormatReader(); rd.setHints(hints);
+  const cv = document.createElement('canvas'); const cx = cv.getContext('2d', { willReadFrequently: true });
+  return async v => { const vw = v.videoWidth, vh = v.videoHeight; if (!vw || !vh) return null;
+    const sw = vw, sh = Math.round(vh * 0.5), w = Math.min(sw, 900), h = Math.round(sh * w / sw); cv.width = w; cv.height = h; // mittleres Band (Rahmen)
+    cx.drawImage(v, 0, Math.round(vh * 0.25), sw, sh, 0, 0, w, h);
+    try { return rd.decodeWithState(new Z.BinaryBitmap(new Z.HybridBinarizer(new Z.HTMLCanvasElementLuminanceSource(cv)))).getText(); } catch (_) { return null; } finally { try { rd.reset(); } catch (_) { } } };
+}
+function scanMsg(t, err) { const m = $('#scan-msg'); if (m) { m.textContent = t; m.classList.toggle('err', !!err); } }
+function stopScan() { SC.on = false; clearTimeout(SC.t); if (SC.stream) { SC.stream.getTracks().forEach(t => t.stop()); SC.stream = null; } const o = $('#scan'); if (o) o.remove(); document.body.classList.remove('scan-open'); }
+async function openScanner() {
+  stopScan(); if (!ADD.meal) ADD.meal = C.defaultMeal(new Date().getHours());
+  const o = document.createElement('div'); o.id = 'scan';
+  o.innerHTML = `<video id="scan-v" playsinline muted autoplay></video><div class="scan-frame"><i></i></div>
+    <div class="scan-top"><button class="icon-btn" data-act="scanClose" aria-label="Schließen">✕</button><b>Barcode scannen</b><span style="width:40px"></span></div>
+    <div class="scan-bot"><div id="scan-msg">Kamera startet …</div>
+    <div class="row"><input class="field" id="scan-code" inputmode="numeric" enterkeyhint="go" placeholder="oder Nummer eintippen" autocomplete="off"><button class="btn btn-red btn-sm" data-act="scanManual" style="flex:.35">OK</button></div></div>`;
+  document.body.appendChild(o); document.body.classList.add('scan-open'); SC.on = true;
+  const v = $('#scan-v');
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return scanMsg('Kamera hier nicht verfügbar – bitte Barcode-Nummer unten eintippen.', true);
+  try {
+    // Kamera zuerst anfordern (zählt noch als Tipp des Nutzers), Decoder parallel laden
+    const camP = navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } } });
+    const detP = makeDetector();
+    SC.stream = await camP; if (!SC.on) { SC.stream.getTracks().forEach(t => t.stop()); return; }
+    v.srcObject = SC.stream; try { await v.play(); } catch (_) { }
+    try { const tr = SC.stream.getVideoTracks()[0]; const cap = tr.getCapabilities ? tr.getCapabilities() : {}; if (cap.focusMode && cap.focusMode.includes('continuous')) tr.applyConstraints({ advanced: [{ focusMode: 'continuous' }] }).catch(() => { }); } catch (_) { }
+    scanMsg('Barcode in den Rahmen halten – wird automatisch erkannt');
+    try { SC.detect = await detP; } catch (e) { return scanMsg('Barcode-Erkennung nicht geladen (offline?) – Nummer unten eintippen.', true); }
+    tick();
+  } catch (e) {
+    const n = e && e.name;
+    scanMsg(n === 'NotAllowedError' || n === 'SecurityError' ? 'Kamera-Zugriff verweigert. iPhone: Einstellungen › Apps › Safari › Kamera › „Erlauben“ (bzw. beim nächsten Mal „Erlauben“ tippen). Oder Nummer unten eintippen.'
+      : n === 'NotFoundError' || n === 'OverconstrainedError' ? 'Keine Kamera gefunden – Nummer unten eintippen.' : 'Kamera konnte nicht starten (' + (e && e.message || n) + ') – Nummer unten eintippen.', true);
+  }
+}
+async function tick() {
+  if (!SC.on) return; const v = $('#scan-v');
+  if (v && v.readyState >= 2 && SC.detect) { let code = null; try { code = await SC.detect(v); } catch (_) { }
+    if (!SC.on) return;
+    if (code && C.validCode(code)) { vibe(); stopScan(); return handleCode(code); } }
+  SC.t = setTimeout(tick, SC.native ? 80 : 60);
+}
+function scanAmount(f) { // direkt Gramm-Eingabe, Feld fokussiert
+  closeSheet(); const g = !!f.per100; amountSheet({ kind: 'f', id: f.id, meal: ADD.meal || C.defaultMeal(new Date().getHours()), mode: g ? 'g' : 'p', pi: 0, amount: g ? 100 : 1 });
+}
+let SCP = null;
+async function handleCode(raw) {
+  const code = C.normCode(raw);
+  const known = C.findByCode(N.foods, code);
+  if (known) { toast('✓ ' + known.name, 1500); return scanAmount(known); }
+  const manual = msg => foodSheet('', '', { food: { barcode: code, src: 'foto', note: 'Barcode ' + code }, msg, notFound: true });
+  if (navigator.onLine === false) return manual('Offline – Produktdaten nicht abrufbar. Bitte Werte vom Etikett abtippen (oder Etikett fotografieren und später eintragen).');
+  openSheet(`<h3>Suche Produkt …</h3><div class="muted small">Barcode ${esc(code)} · Open Food Facts</div><div class="scan-spin"></div>`);
+  let json = null, err = null;
+  try { const ac = new AbortController(); const to = setTimeout(() => ac.abort(), 9000);
+    const r = await fetch(C.offUrl(code), { signal: ac.signal, headers: { Accept: 'application/json' } }); clearTimeout(to);
+    if (r.status === 404) json = { status: 0 }; else if (!r.ok) err = 'Server antwortet nicht (' + r.status + ')'; else json = await r.json();
+  } catch (e) { err = e && e.name === 'AbortError' ? 'Zeitüberschreitung' : 'Keine Verbindung'; }
+  if (err) return manual(err + ' – bitte Werte vom Etikett abtippen.');
+  const P = C.offToFood(json, code);
+  if (!P.found) return manual('Barcode ' + code + ' nicht in Open Food Facts gefunden. Bitte Werte vom Etikett abtippen – Etikett-Foto als Beleg möglich.');
+  confirmSheet(P);
+}
+function confirmSheet(P) {
+  SCP = P; const u = P.unit === 'ml' ? 'ml' : 'g';
+  const inp = (id, l, v) => `<div><label class="lbl">${l}</label><input class="field${v == null ? ' miss' : ''}" id="${id}" inputmode="decimal" value="${v != null ? fmtIn(v) : ''}" placeholder="${v == null ? 'fehlt – vom Etikett' : ''}"></div>`;
+  openSheet(`<h3>Produkt gefunden ✓</h3>
+    <div class="scan-prod">${P.img ? `<span class="img" style="background-image:url('${esc(P.img)}')"></span>` : '<span class="img">▥</span>'}<div><b>${esc(P.name || 'Unbenannt')}</b><small>${esc([P.quantity, 'Barcode ' + P.code].filter(Boolean).join(' · '))}</small></div></div>
+    <div class="scan-check">🏷 Bitte mit Etikett kurz prüfen</div>
+    <label class="lbl">Name</label><input class="field" id="sc-name" value="${esc(P.name || '')}" placeholder="Produktname">
+    <div class="muted small" style="margin-top:10px">Pro 100 ${u}${P.fromKJ ? ' · kcal aus kJ umgerechnet' : ''}</div>
+    <div class="mform">${inp('sc-kcal', 'kcal *', P.per100.kcal)}${inp('sc-p', 'Eiweiß (g)', P.per100.p)}${inp('sc-c', 'Kohlenhydrate (g)', P.per100.c)}${inp('sc-f', 'Fett (g)', P.per100.f)}</div>
+    ${P.missing.length ? '<div class="hint" style="color:#ffd60a">◐ Open Food Facts hat nicht alle Werte – fehlende bitte vom Etikett ergänzen.</div>' : ''}
+    <div id="sc-chk"></div>
+    <div style="height:12px"></div><button class="btn btn-red scan-save" data-act="scanSave">Speichern & Gramm eingeben</button>
+    <div style="height:8px"></div><button class="btn btn-ghost btn-sm" data-act="scanMore">Mehr Details (Portion, Foto, Favorit) …</button>
+    <div class="hint">Quelle: Open Food Facts (Barcode ${esc(P.code)}). Beim nächsten Scan dieses Produkts geht es direkt zur Gramm-Eingabe.</div>`);
+  scCheck();
+}
+function scVals() { const g = id => num(($('#' + id) || {}).value); return { kcal: g('sc-kcal'), p: g('sc-p'), c: g('sc-c'), f: g('sc-f') }; }
+function scCheck() { const el = $('#sc-chk'); if (!el) return; const v = scVals(); const ch = C.labelCheck(v);
+  el.innerHTML = v.kcal > 0 && v.p != null && v.c != null && v.f != null && !ch.ok ? `<div class="hint" style="color:#ffd60a">⚠️ kcal passen nicht zu den Makros (≈ ${fmt(ch.est, 0)} kcal) – bitte Etikett vergleichen.</div>` : ''; }
+function scFood() {
+  const P = SCP; const v = scVals(); const name = (($('#sc-name') || {}).value || '').trim() || P.name || 'Produkt ' + P.code;
+  return { id: 'u-' + uid(), name, brand: P.brand || '', unit: P.unit === 'ml' ? 'ml' : 'g', per100: v.kcal != null ? { kcal: v.kcal, p: v.p ?? 0, c: v.c ?? 0, f: v.f ?? 0 } : null,
+    portions: (P.portions || []).map(x => Object.assign({}, x)), src: 'off', note: P.note, barcode: P.code, offImg: P.img || null, fav: false, updated: Date.now() };
+}
+
 /* ---------- Aktionen ---------- */
 async function logCombo(id, meal, factor) {
   const c = cById(id); const v = C.calcCombo(c, foodMap(), factor || 1); if (!v.items.length) return toast('Kombi ist leer oder ein Produkt fehlt');
@@ -305,6 +410,13 @@ async function logCombo(id, meal, factor) {
   await put('entries', e); vibe(); return e;
 }
 Object.assign(A, {
+  scanOpen: () => { closeSheet(); openScanner(); },
+  scanClose: () => stopScan(),
+  scanManual: () => { const c = C.normCode(($('#scan-code') || {}).value || ''); if (!c) return toast('Bitte Barcode-Nummer eintippen');
+    if (!C.validCode(c) && !confirm('Prüfziffer stimmt nicht – Nummer trotzdem verwenden?')) return; stopScan(); handleCode(c); },
+  scanSave: async () => { if (!SCP) return; const f = scFood(); if (!f.per100 || !(f.per100.kcal >= 0)) return toast('Bitte kcal pro 100 g vom Etikett eintragen');
+    SCP = null; const pr = put('foods', f); scanAmount(f); await pr; toast('✓ Gespeichert – jetzt Gramm eingeben', 1600); },
+  scanMore: () => { if (!SCP) return; const f = scFood(); const keep = { brand: f.brand, offImg: f.offImg }; delete f.id; SCP = null; foodSheet('', '', { food: f, keep }); },
   nutAdd: d => addSheet(d.meal),
   nutPick: d => { const o = { kind: d.k, id: d.id, meal: ADD.meal }; if (d.amt) o.amount = +d.amt; if (d.mode) { o.mode = d.mode; o.pi = +d.pi || 0; } amountSheet(o); },
   nutMode: d => { const f = fById(AM.id); const was = AM.mode; const g = C.gramsOf(f, AM.mode, AM.amount, AM.pi);
@@ -359,10 +471,14 @@ Object.assign(A, {
       for (const k of ['p', 'c', 'f']) if (p.v[k] == null && v[k] != null) p.v[k] = C.r2(v[k] * p.g / 100); }
     if (portions.some(p => !p.v && !p.g)) return toast('Portion braucht ein Gewicht (g/ml)');
     if (v.kcal == null && portions.some(p => !p.v)) return toast('Ohne 100-g-Werte braucht jede Portion eigene kcal');
-    const old = fById(FE.id) || {};
-    const f = Object.assign({}, old, { id: FE.id || 'u-' + uid(), name, unit: FE.unit === 'ml' ? 'ml' : 'g', per100: v.kcal != null ? { kcal: v.kcal, p: v.p ?? 0, c: v.c ?? 0, f: v.f ?? 0 } : null, portions, src: $('#fe-src').value, note: $('#fe-note').value.trim(), fav: FE.fav, updated: Date.now() });
+    const bc = C.normCode(($('#fe-bc') || {}).value || ''); if (bc && !C.validCode(bc) && !confirm('Barcode-Prüfziffer stimmt nicht. Trotzdem speichern?')) return;
+    const dup = bc && C.findByCode(N.foods.filter(x => x.id !== FE.id), bc); if (dup && !confirm(`Barcode ist schon bei „${dup.name}“ gespeichert. Trotzdem auch hier speichern?`)) return;
+    const old = Object.assign({}, FE.keep || {}, fById(FE.id) || {});
+    const f = Object.assign({}, old, { barcode: bc || null, id: FE.id || 'u-' + uid(), name, unit: FE.unit === 'ml' ? 'ml' : 'g', per100: v.kcal != null ? { kcal: v.kcal, p: v.p ?? 0, c: v.c ?? 0, f: v.f ?? 0 } : null, portions, src: $('#fe-src').value, note: $('#fe-note').value.trim(), fav: FE.fav, updated: Date.now() });
     if (FE.big) { const pid = f.photoId || 'lab-' + uid(); await put('photos', { id: pid, data: FE.big }); f.photoId = pid; f.thumb = FE.thumb; }
-    const ret = FE.ret; await put('foods', f); toast('Produkt gespeichert ✓'); FE = null;
+    const ret = FE.ret; FE = null;
+    if (ret === 'scan') { const pr = put('foods', f); scanAmount(f); await pr; toast('Produkt gespeichert ✓'); return; }
+    await put('foods', f); toast('Produkt gespeichert ✓');
     if (ret === 'amount' && AM && AM.kind === 'f' && AM.id === f.id) { amountSheet({ kind: 'f', id: f.id, meal: AM.meal, editId: AM.editId, thumb: AM.thumb, newPhoto: AM.newPhoto, big: AM.big, noFocus: true }); }
     else if (ret === 'add' || ret === 'amount') { amountSheet({ kind: 'f', id: f.id, meal: ADD.meal }); }
     else { closeSheet(); render(true); }
@@ -387,9 +503,11 @@ document.addEventListener('input', e => { const el = e.target;
   else if (el.id === 'nut-amt' && AM) { AM.amount = num(el.value); refreshLive(); }
   else if (el.id === 'nut-fq') { FQ = el.value; const l = $('#nut-flist'); if (l) l.innerHTML = foodsList(); }
   else if (el.id && el.id.startsWith('fe-')) feCheck();
+  else if (el.id && el.id.startsWith('sc-')) scCheck();
   else if (el.dataset && el.dataset.cf === 'amount' && CE) { ceRead(); ceLive(); } });
 document.addEventListener('change', e => { const el = e.target; if (el.dataset && (el.dataset.cf === 'food' || el.dataset.cf === 'mode') && CE) { ceRead(); comboSheet(); } });
-document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'nut-amt') { e.preventDefault(); A.nutSave(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'nut-amt') { e.preventDefault(); A.nutSave(); } else if (e.key === 'Enter' && e.target.id === 'scan-code') { e.preventDefault(); A.scanManual(); } });
+document.addEventListener('visibilitychange', () => { if (document.hidden && SC.on) stopScan(); });
 
 /* ---------- Schnittstellen für app.js ---------- */
 window.viewFood = viewFood; window.viewFoods = viewFoods;
@@ -403,6 +521,6 @@ window.NUT = {
   async restore(d) { if (!d || !Array.isArray(d.entries)) return false; for (const s of ST) { await FDB.clear(s); for (const r of d[s] || []) await FDB.put(s, r); }
     N.foods = []; N.combos = []; N.entries = []; N.meta = {}; await load(); return true; },
   count: () => ({ entries: N.entries.length, foods: N.foods.length }),
-  _N: N, dayText
+  _N: N, dayText, _scan: { handleCode, confirmSheet, openScanner, stopScan }
 };
 })();

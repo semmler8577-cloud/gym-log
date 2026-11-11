@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.8.1';
+const APP_VERSION = '1.8.2';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);

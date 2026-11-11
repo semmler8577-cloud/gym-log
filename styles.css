@@ -454,3 +454,24 @@ a.card.nut-home{display:block;color:inherit}
 .nut-ci{background:#0b0b0c;border:1px solid #232327;border-radius:14px;padding:8px;margin-top:8px}.nut-ci .row{margin-top:6px}.nut-ci .field{min-height:42px;padding:8px 12px}
 @media (max-width:389px){#tabs a span{font-size:8.3px;letter-spacing:-.2px}}
 .nut-rt>span.nut-src{display:inline-block;font-size:11px;color:inherit}.nut-rt>span.nut-src.ok{color:#30d158}.nut-rt>span.nut-src.est{color:#ffd60a}
+/* v1.8.2 Barcode-Scanner */
+.scan-btn{font-size:16px;font-weight:800;min-height:52px}
+#scan{position:fixed;inset:0;z-index:80;background:#000;display:flex;flex-direction:column}
+#scan video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#scan .scan-frame{position:absolute;left:8%;right:8%;top:50%;height:26%;transform:translateY(-50%);border:3px solid #d4af37;border-radius:18px;box-shadow:0 0 0 100vmax rgba(0,0,0,.45);pointer-events:none}
+#scan .scan-frame i{position:absolute;left:6%;right:6%;top:50%;height:2px;background:#ff3b30;box-shadow:0 0 10px #ff3b30;animation:scanl 1.6s ease-in-out infinite}
+@keyframes scanl{0%,100%{transform:translateY(-38px)}50%{transform:translateY(38px)}}
+#scan .scan-top{position:relative;display:flex;align-items:center;justify-content:space-between;padding:calc(var(--sat,0px) + 12px) 14px 10px;background:linear-gradient(#000c,#0000)}
+#scan .scan-top b{font-size:18px;color:#fff}
+#scan .scan-bot{position:absolute;left:0;right:0;bottom:0;padding:16px 16px calc(var(--sab,0px) + 18px);background:linear-gradient(#0000,#000e 30%)}
+#scan-msg{color:#fff;font-weight:700;text-align:center;margin-bottom:12px;font-size:15px;line-height:1.35}
+#scan-msg.err{color:#ffd60a}
+body.scan-open #tabs{visibility:hidden}
+.scan-prod{display:flex;gap:12px;align-items:center;margin:8px 0 4px}
+.scan-prod .img{flex:none;width:64px;height:64px;border-radius:12px;background:#fff center/contain no-repeat;display:flex;align-items:center;justify-content:center;font-size:28px;color:#000}
+.scan-prod b{display:block;font-size:16px}.scan-prod small{color:var(--tx3)}
+.scan-check{margin:10px 0 2px;padding:10px 12px;border-radius:12px;background:rgba(255,214,10,.12);border:1px solid rgba(255,214,10,.5);color:#ffd60a;font-weight:800;text-align:center}
+.field.miss{border-color:#ffd60a}
+.scan-save{min-height:58px;font-size:18px;font-weight:900}
+.scan-spin{width:42px;height:42px;margin:26px auto;border-radius:50%;border:4px solid #333;border-top-color:#d4af37;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
