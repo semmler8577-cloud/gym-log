@@ -480,3 +480,20 @@ body.scan-open #tabs{visibility:hidden}
 .mob-pic{margin:0}
 .mob-pic img{width:100%;display:block;border-radius:12px;background:#fff}
 .mob-pic figcaption{text-align:center;margin-top:4px}
+/* v1.8.5 Mindset */
+.mind-day{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px}
+.mind-date{display:flex;flex-direction:column;align-items:center;text-align:center}.mind-date b{font-size:17px}
+.mind-row{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:14px;color:inherit}
+.mind-row.ok{border-color:rgba(212,175,55,.55)}
+.mind-row .mob-chk{display:flex;align-items:center;justify-content:center}
+.mind-rt{display:flex;flex-direction:column;gap:2px;min-width:0}.mind-rt b{font-size:16px}
+.mind-note{width:100%;margin:2px 0 12px;font-size:16px}
+.mind-wk{padding:12px 10px}
+.mind-dots{display:flex;justify-content:space-between}
+.mind-dot{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;color:var(--tx3);background:none}
+.mind-dot i{width:18px;height:18px;border-radius:50%;border:1.5px solid rgba(212,175,55,.45);display:block}
+.mind-dot i.lv1{background:linear-gradient(90deg,var(--gold) 50%,transparent 50%)}
+.mind-dot i.lv2{background:var(--goldG);border-color:transparent}
+.mind-dot i.sel{box-shadow:0 0 0 2px #000,0 0 0 3.5px var(--red2)}
+.mind-st{text-align:center;margin-top:10px}
+#tabs a{flex:1 1 auto}/* 9 Tabs: lange Beschriftungen (Fortschritt, Messungen) bekommen etwas mehr Breite */

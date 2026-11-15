@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.8.4';
+const APP_VERSION = '1.8.5';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -859,7 +859,7 @@ function viewMore() {
        <div class="stp" style="max-width:220px"><button data-act="goal" data-d="-1">−</button><input readonly value="${S.meta.weekGoal || 6}"><button data-act="goal" data-d="1">+</button></div></div>
       <div class="card" style="padding:4px 14px">
         <a class="list-btn" href="#/exercises"><span class="ic">✎</span><span class="tx">Übungen verwalten<span>Bearbeiten, eigene hinzufügen, Fotos</span></span><span class="chev">›</span></a>
-        <button class="list-btn" data-act="export"><span class="ic">⬇︎</span><span class="tx">Backup exportieren (JSON)<span>${S.sessions.length} Einheiten · ${S.sets.length} Sätze · ${S.measurements.length} Messungen${window.NUT ? ' · ' + NUT.count().entries + ' Essens-Einträge' : ''} · Hüfte</span></span></button>
+        <button class="list-btn" data-act="export"><span class="ic">⬇︎</span><span class="tx">Backup exportieren (JSON)<span>${S.sessions.length} Einheiten · ${S.sets.length} Sätze · ${S.measurements.length} Messungen${window.NUT ? ' · ' + NUT.count().entries + ' Essens-Einträge' : ''} · Hüfte · Mindset</span></span></button>
         <button class="list-btn" data-act="import"><span class="ic">⬆︎</span><span class="tx">Backup importieren<span>Ersetzt alle aktuellen Daten</span></span></button>
         <button class="list-btn" data-act="carterLast"><span class="ic">📋</span><span class="tx">Letztes Training für Carter kopieren<span>Kompakte Zusammenfassung als Text</span></span></button>
       </div>
@@ -954,6 +954,7 @@ function render(keepScroll) {
     case 'exercises': v = viewExercises(); break;
     case 'mob': v = typeof viewMob === 'function' ? viewMob(a) : viewHome(); break;
     case 'food': v = typeof viewFood === 'function' ? viewFood(a) : viewHome(); break;
+    case 'mind': v = typeof viewMind === 'function' ? viewMind(a) : viewHome(); break;
     case 'foods': v = typeof viewFoods === 'function' ? viewFoods() : viewHome(); break;
     default: v = viewHome();
   }
@@ -1027,8 +1028,8 @@ const A = {
   delMeasure: async d => { const m = S.measurements.find(x => x.id === d.id); if (!m || !confirm('Wert löschen?')) return; delete m[d.k]; if (METRICS.some(x => m[x.k] != null)) await save('measurements', m); else await remove('measurements', m.id); render(true); },
   goal: async d => { await setMeta('weekGoal', Math.max(1, Math.min(14, (S.meta.weekGoal || 6) + +d.d))); render(true); },
   export: async () => {
-    let nutrition, mobility; try { nutrition = window.NUT ? (NUT.cached() || await NUT.dump()) : undefined; } catch (e) { } try { mobility = JSON.parse(localStorage.getItem('vgl-mob') || 'null') || undefined; } catch (e) { }
-    const data = JSON.stringify({ app: 'voccola-gym-log', version: APP_VERSION, exported: new Date().toISOString(), exercises: S.exercises, sessions: S.sessions, sets: S.sets, measurements: S.measurements, meta: S.meta, nutrition, mobility });
+    let nutrition, mobility, mindset; try { nutrition = window.NUT ? (NUT.cached() || await NUT.dump()) : undefined; } catch (e) { } try { mobility = JSON.parse(localStorage.getItem('vgl-mob') || 'null') || undefined; } catch (e) { } try { mindset = JSON.parse(localStorage.getItem('vgl-mind') || 'null') || undefined; } catch (e) { }
+    const data = JSON.stringify({ app: 'voccola-gym-log', version: APP_VERSION, exported: new Date().toISOString(), exercises: S.exercises, sessions: S.sessions, sets: S.sets, measurements: S.measurements, meta: S.meta, nutrition, mobility, mindset });
     const name = `gymlog-backup-${dkey()}.json`; const blob = new Blob([data], { type: 'application/json' });
     try { const file = new File([blob], name, { type: 'application/json' }); if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: 'Gym Log Backup' }); return; } } catch (e) { if (e.name === 'AbortError') return; }
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500); toast('Backup erstellt ✓');
@@ -1046,6 +1047,7 @@ const A = {
         for (const [k, v] of Object.entries(j.meta || {})) await setMeta(k, v);
         if (j.nutrition && window.NUT) await NUT.restore(j.nutrition); // ältere Backups ohne Ernährung lassen Ernährungsdaten unverändert
         if (j.mobility) { try { localStorage.setItem('vgl-mob', JSON.stringify(j.mobility)); } catch (e) { } }
+        if (j.mindset) { try { localStorage.setItem('vgl-mind', JSON.stringify(j.mindset)); } catch (e) { } } // ältere Backups ohne Mindset lassen Mindset-Daten unverändert
         toast('Import erfolgreich ✓'); go('#/home');
       } catch (e) { toast('Import fehlgeschlagen: ' + e.message, 3500); }
     };
