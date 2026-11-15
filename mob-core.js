@@ -1,4 +1,4 @@
-/* Voccola Gym Log – Hüft-Beweglichkeit: Export-Text + "nur Neues senden" (v1.8.4) + Tagesplan/Hexenschuss-Pause (v1.8.6). Reine Logik, getestet in tests/mob.test.js.
+/* Voccola Gym Log – Hüft-Beweglichkeit: Export-Text + "nur Neues senden" (v1.8.4) + Tagesplan/Hexenschuss-Pause (v1.8.6, v1.8.7 +rumpfrot). Reine Logik, getestet in tests/mob.test.js.
    rep = { head, blocks: [{ n, dn, tot, anyDone, items: [{ id, line }] }], note }
    sent (pro Tag) = { n: Anzahl Meldungen, ex: { id: gesendete Zeile }, blocks: [Blocknamen], note } */
 (function (root, factory) {
@@ -47,7 +47,7 @@
 
   /* v1.8.6: Tagesplan + datumsbasierte Pausen (Hexenschuss). Schlüssel 'YYYY-MM-DD', bis einschließlich `until` pausiert. */
   const PAUSES = [{ until: '2026-11-17', why: 'Hexenschuss', label: 'pausiert bis nach Di 17.11. (Hexenschuss)',
-    ids: ['wgs', 'rolle', 'sphinx', 'sphinxrot', 'halfhero', 'turtle', 'rollbecken', 'couch', 'duoball'] }];
+    ids: ['wgs', 'rolle', 'sphinx', 'sphinxrot', 'halfhero', 'turtle', 'rollbecken', 'couch', 'duoball', 'rumpfrot'] }];
   function pausedIds(key) { const o = new Set(); PAUSES.forEach(p => { if (key <= p.until) p.ids.forEach(i => o.add(i)); }); return o; }
   function pauseInfo(id, key) { return PAUSES.find(p => key <= p.until && p.ids.includes(id)) || null; }
   const dayNum = key => { const [y, m, d] = key.split('-').map(Number); return Math.floor(Date.UTC(y, m - 1, d) / 864e5); };

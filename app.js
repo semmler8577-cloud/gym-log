@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.8.6';
+const APP_VERSION = '1.8.7';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -140,6 +140,7 @@ const INCLINE_FLY = { id: 'b-fly-schraeg-kabel', name: 'Schrägbank-Kabelfly in 
   elbowNote: 'Tennisarm: Ellenbogen weich halten, keine schweren Gewichte – lieber leichter, sauber und kontrolliert.' };
 /* v1.7.17: Arm-Bein-Wischübung in Bauchlage (diagonal) – Abwechslung-Rotationspool (ROT, jetzt 10 Übungen, 3/Tag), Bilder armbeinwisch.webp + seq_armbeinwisch.webp; alte Verläufe unverändert (rotForOld nutzt nur die ersten 9, am Ende angehängt) */
 /* v1.8.6: Morgen-Routine neu (Aufwärmen, Hamstring-Floss statt Hamstring-Walk, Seitstütz Knie), Hexenschuss-Pause bis 17.11., +Seitliches Beinheben, +Wadenheben – mobility.js/mob-core.js */
+/* v1.8.7: Abend +Figure-4-Dehnung (Kern, auch im Hexenschuss), +Liegende Rumpfrotation im Wechsel (Pause bis 17.11.) */
 /* v1.7.16: Kniestand-Fersensitz-Rock (links betont, Abend täglich, mobility.js) – Bilder kniefersenrock.webp + seq_kniefersenrock.webp */
 /* v1.7.15: Tages-Rotation der Hüft-Übungen (Kern täglich + Wechsel nach Datum) + Psoas-Reset an der Wand (Abend) – mobility.js */
 /* v1.7.14: Becken-Reset (Shotgun) – Übungsbilder beckenreset.webp + seq_beckenreset.webp (Abend-Block, mobility.js) */

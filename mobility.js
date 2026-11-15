@@ -1,4 +1,4 @@
-/* Voccola Gym Log – Hüft-Beweglichkeit (v1.8.6: Morgen-Routine nach Physio/Doc neu sortiert, Hexenschuss-Pause bis 17.11.). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
+/* Voccola Gym Log – Hüft-Beweglichkeit (v1.8.7: Abend +Figure-4-Dehnung (Kern, auch im Hexenschuss), +Liegende Rumpfrotation im Wechsel ab 18.11.). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
 'use strict';
 (function () {
 const KEY = 'vgl-mob';
@@ -155,6 +155,11 @@ const EVE = [
     steps: ['Rückenlage, Knie gebeugt, Füße am Boden, Arme seitlich ausgebreitet.', 'Blackroll senkrecht zwischen bzw. an Knie und Fuß eines Beins klemmen.', 'Knie langsam und sanft zu einer Seite sinken lassen – Rotation in LWS und Hüfte. Schultern bleiben am Boden.', '30–40 s ruhig atmen, langsam zur Mitte zurück, Seite wechseln.'],
     cues: ['Nur so weit sinken lassen, wie es angenehm ist – kein Ziehen ins Bein', 'Lange Ausatmung, Flanke und Gesäß loslassen', 'Kribbeln/ausstrahlender Schmerz → weniger tief oder abbrechen'],
     err: ['Knie fallen lassen / ruckartig drehen', 'Schulter hebt ab', 'Druck im unteren Rücken ignorieren'] },
+  // v1.8.7: optionale Abend-Übung im Wechsel; Hexenschuss-Pause bis 17.11. (LWS-Rotation)
+  { id: 'rumpfrot', eve: 1, n: 'Liegende Rumpfrotation (Knie zur Seite)', sub: 'Abend · im Wechsel · sanfte LWS-Rotation, kleiner Umfang', dose: '2×30 s pro Seite', t: 'time', sets: 2, secs: 30, ps: true,
+    steps: ['Rückenlage, Arme seitlich ausgebreitet, Schultern fest am Boden. Knie angewinkelt, Füße flach oder leicht angehoben, Knie und Füße bleiben zusammen.', 'Beide Knie langsam und kontrolliert zu einer Seite sinken lassen – nur ein kleiner Bewegungsumfang, nicht bis zum Boden.', 'Schultern und Schulterblätter bleiben die ganze Zeit am Boden. 30 s ruhig atmen.', 'Langsam zur Mitte zurück, Seite wechseln. 2 Runden pro Seite.'],
+    cues: ['Bis einschließlich Di 17.11. pausiert (Hexenschuss)', 'Kleiner Bewegungsumfang – Knie nicht auf den Boden zwingen', 'Schultern bleiben am Boden, die Drehung ist klein und ruhig', 'Kein Ziehen ins Bein, kein Druck im unteren Rücken', 'Kribbeln, Ausstrahlung ins Bein oder einschießender Schmerz → abbrechen'],
+    err: ['Knie fallen lassen / zu weit drehen', 'Schulter hebt vom Boden ab', 'Ruckartig oder mit Schwung drehen', 'Ausstrahlung oder Kribbeln ignorieren'] },
   { id: 'beckenreset', core: 1, eve: 1, n: 'Becken-Reset (Shotgun)', sub: 'Abend · ISG/Becken ausgleichen, sanfte Muskelspannung', dose: '3 Teile à 3×5 s', t: 'reps', sets: 3, reps: 3,
     steps: ['Rückenlage, Knie gebeugt, Füße hüftbreit am Boden.', 'Teil 1 – Knie auseinander: Gürtel um die Knie oder Hände außen an die Knie. 5 s mit ca. halber Kraft nach außen drücken, lösen. 3×.', 'Teil 2 – Knie zusammen: Ball oder gefaltetes Kissen zwischen die Knie. 3× kurz und kräftig zusammendrücken, je ca. 5 s. Ein leises Klacken ist okay.', 'Teil 3 – Gegeneinander: Linkes Knie zur Brust ziehen und gegen die Hand drücken, gleichzeitig rechtes Bein gestreckt in den Boden drücken. 5 s halten, 3×, dann Seiten tauschen.', 'Danach vor dem Spiegel oder in der Badewanne die Beinlänge vergleichen. Auch vor langem Stehen gut.'],
     cues: ['Nur Spannung, kein Ruck und kein Knacken erzwingen', 'Ruhig weiteratmen, nicht pressen', 'Halbe Kraft reicht'],
@@ -163,6 +168,11 @@ const EVE = [
     steps: ['Rückenlage, Füße flach an der Wand, Hüfte und Knie je 90°. Faszienrolle zwischen die Oberschenkel klemmen, Kinn locker zur Decke.', 'Fersen an der Wand nach unten ziehen, ohne zu rutschen – der untere Rücken wird flach, die hinteren Oberschenkel spannen.', 'Spannung halten, linkes Knie sanft nach unten, rechtes Knie nach oben bewegen – die Rolle bleibt dabei eingeklemmt (aktiviert linke Hamstrings + Adduktoren, dreht das Becken links zurück).', '5–10 langsame Bauchatmungen, dabei Spannung und Knieposition halten. Danach lösen und Beine ablegen.'],
     cues: ['Unterer Rücken bleibt flach am Boden', 'Spannung kommt aus den hinteren Oberschenkeln und der Innenseite – kein Ruck', 'Rolle die ganze Zeit eingeklemmt halten', 'Lange, ruhige Bauchatmung – nicht pressen'],
     err: ['Fersen rutschen an der Wand ab', 'Hohlkreuz statt flachem Rücken', 'Rolle fällt raus / wird nicht gehalten', 'Luft anhalten oder Schultern hochziehen'] },
+  // v1.8.7: feste Abend-Übung, auch im Hexenschuss (rückenschonende Gesäßdehnung)
+  { id: 'fig4', core: 1, eve: 1, n: 'Figure-4-Dehnung (Rückenlage)', sub: 'Abend · Gesäß/Piriformis, rückenschonend', dose: '2×30 s pro Seite', t: 'time', sets: 2, secs: 30, ps: true,
+    steps: ['Rückenlage, Kopf und gesamter Rücken bleiben flach am Boden, Arme entspannt.', 'Den einen Knöchel auf das gegenüberliegende Knie legen (Figur 4), Fuß aktiv angezogen.', 'Mit beiden Händen hinter den Oberschenkel des unteren Beins greifen und beide Beine sanft Richtung Brust ziehen – nur so weit, dass es im Gesäß der oberen Seite dehnt.', '30 s ruhig atmen, langsam ablegen, Seite wechseln. 2 Runden pro Seite.'],
+    cues: ['Kein Ziehen im Rücken – nur Dehnung im Gesäß', 'Kopf und Rücken bleiben am Boden, nicht einrollen', 'Ruhig atmen, mit der Ausatmung etwas tiefer loslassen', 'Bei Kribbeln oder ausstrahlendem Schmerz abbrechen'],
+    err: ['Kopf oder Schultern anheben / Rücken einrollen', 'Am Knie statt am Oberschenkel ziehen', 'In den Schmerz oder ins Ziehen im Rücken gehen', 'Kribbeln oder Ausstrahlung ignorieren'] },
   { id: 'kniefersenrock', core: 1, eve: 1, n: 'Kniestand-Fersensitz-Rock (links betont)', sub: 'Abend · Hüfte, Lenden & Rücken lang ziehen, links betont', dose: '5 Wdh × 20 s halten · links 1–2 mehr', t: 'time', sets: 6, setsL: 6, setsR: 5, secs: 20, ps: true,
     steps: ['Vierfüßlerstand, Zehen aufgestellt bzw. Fußrücken am Boden.', 'Das Gesäß langsam Richtung Fersen nach hinten schieben.', 'Arme lang nach vorn strecken, Rücken lang lassen.', '20 s halten, ruhig ausatmen. 5 Wiederholungen – links 1–2 mehr (6–7), da es links stark zieht und rechts gut geht.'],
     cues: ['Nur bis Ziehen – nie Schmerz', 'Wird es im Rücken stärker statt lockerer: weniger weit nach hinten', 'Links 1–2 Wiederholungen mehr als rechts', 'Lange, ruhige Ausatmung beim Halten', 'Rücken bleibt lang, nicht rund einsinken'],
@@ -303,7 +313,7 @@ function isExtra(ex, b, d) { return !!(d.today.extra && (d.today.extra[b] || [])
 
 // Plan eines gespeicherten Tages: neue Einträge haben h.lineup, ältere (vor v1.7.15) bekommen den damaligen Plan
 function planOf(h, b) { if (h.lineup && h.lineup[b]) return h.lineup[b].map(byId).filter(Boolean);
-  return b === 'm' ? EX_OLD.map(byId) : b === 'w' ? rotForOld(h.date) : b === 'a' ? EVE.filter(e => e.id !== 'psoasreset' && e.id !== 'kniefersenrock' && e.id !== 'hipflexstand' && e.id !== 'hipwallrot' && e.id !== 'hipwallstep') : FAS.slice(); }
+  return b === 'm' ? EX_OLD.map(byId) : b === 'w' ? rotForOld(h.date) : b === 'a' ? EVE.filter(e => e.id !== 'psoasreset' && e.id !== 'kniefersenrock' && e.id !== 'hipflexstand' && e.id !== 'hipwallrot' && e.id !== 'hipwallstep' && e.id !== 'fig4' && e.id !== 'rumpfrot') : FAS.slice(); }
 
 /* ---------- Statistik ---------- */
 function stats() {
