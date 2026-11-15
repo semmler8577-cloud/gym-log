@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.8.5';
+const APP_VERSION = '1.8.6';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -139,6 +139,7 @@ const INCLINE_FLY = { id: 'b-fly-schraeg-kabel', name: 'Schrägbank-Kabelfly in 
   desc: 'Plan: 3–4×12–15 Wdh., moderates Gewicht. Fokus: Squeeze oben und Dehnung unten, saubere Kontrolle.\n\nSetup: Verstellbare Bank auf Schräge (ca. 30–45°) mit dem Rücken zu den Kabeltürmen aufstellen – die Türme stehen hinter dir. Kabel ganz unten (untere Rollen). Bauchlage: mit der Brust aufs Polster legen, Blick weg vom Kabelturm, Zehen am Boden. Je einen Griff greifen, die Arme hängen leicht gebeugt nach hinten-unten, die Kabel laufen von hinten an deinem Körper vorbei.\n\nAusführung: Griffe von hinten-unten seitlich am Körper vorbei im Bogen nach vorn-oben führen (Low-to-High) und vor der Brust bis etwa Augenhöhe zusammenführen – eine Brust-Übung, kein Schulter-Rudern.\n• Brust bleibt auf dem Polster\n• Schultern tief, nicht hochziehen\n• Ellenbogen leicht gebeugt und weich\n• Oben 1 s squeezen\n• 2–3 s langsam zurück in die Dehnung\n• Kein Schwung',
   elbowNote: 'Tennisarm: Ellenbogen weich halten, keine schweren Gewichte – lieber leichter, sauber und kontrolliert.' };
 /* v1.7.17: Arm-Bein-Wischübung in Bauchlage (diagonal) – Abwechslung-Rotationspool (ROT, jetzt 10 Übungen, 3/Tag), Bilder armbeinwisch.webp + seq_armbeinwisch.webp; alte Verläufe unverändert (rotForOld nutzt nur die ersten 9, am Ende angehängt) */
+/* v1.8.6: Morgen-Routine neu (Aufwärmen, Hamstring-Floss statt Hamstring-Walk, Seitstütz Knie), Hexenschuss-Pause bis 17.11., +Seitliches Beinheben, +Wadenheben – mobility.js/mob-core.js */
 /* v1.7.16: Kniestand-Fersensitz-Rock (links betont, Abend täglich, mobility.js) – Bilder kniefersenrock.webp + seq_kniefersenrock.webp */
 /* v1.7.15: Tages-Rotation der Hüft-Übungen (Kern täglich + Wechsel nach Datum) + Psoas-Reset an der Wand (Abend) – mobility.js */
 /* v1.7.14: Becken-Reset (Shotgun) – Übungsbilder beckenreset.webp + seq_beckenreset.webp (Abend-Block, mobility.js) */

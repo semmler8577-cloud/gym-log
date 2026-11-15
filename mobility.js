@@ -1,4 +1,4 @@
-/* Voccola Gym Log – Hüft-Beweglichkeit (v1.7.28). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
+/* Voccola Gym Log – Hüft-Beweglichkeit (v1.8.6: Morgen-Routine nach Physio/Doc neu sortiert, Hexenschuss-Pause bis 17.11.). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
 'use strict';
 (function () {
 const KEY = 'vgl-mob';
@@ -71,43 +71,59 @@ const ILL = {
 
 /* ---------- Übungen ---------- */
 const EX = [
+  { id: 'warmwalk', core: 1, n: 'Aufwärmen: locker gehen (Balkon)', sub: 'Kreislauf & Gewebe anwärmen · frische Luft', dose: '2–5 Min locker gehen', t: 'time', sets: 1, secs: 180,
+    steps: ['Direkt nach dem Aufstehen: Jacke oder Pulli an und raus auf den Balkon (oder durch die Wohnung gehen).', 'Locker im normalen Tempo gehen, aufrecht, Arme schwingen entspannt mit.', 'Ruhig durch die Nase ein- und durch den Mund ausatmen, Schultern locker.', '2–5 Minuten (Timer 3 Min), dann direkt mit Katze-Kuh weitermachen.'],
+    cues: ['Frische Luft macht wach – aber Jacke an, nicht durchfrieren (kalte Muskeln verspannen eher)', 'Normales, lockeres Tempo – kein Sport', 'Aufrecht gehen, Blick nach vorn', 'Kribbeln, Ausstrahlung ins Bein oder einschießender Schmerz → stoppen'],
+    err: ['Im T-Shirt in der Kälte stehen und auskühlen', 'Gleich schnell oder mit großen Schritten loslegen', 'Direkt kalt ins Dehnen starten'] },
   { id: 'catcow', core: 1, n: 'Katze-Kuh', sub: 'Vierfüßlerstand', dose: '10 langsame Wdh.', t: 'reps', sets: 1, reps: 10,
-    steps: ['Vierfüßlerstand: Hände unter den Schultern, Knie unter den Hüften.', 'Ausatmen: Rücken wie eine Katze rund nach oben schieben, Kinn Richtung Brust, Bauchnabel einziehen.', 'Einatmen: Langsam in die Kuh – Becken kippt nach vorn, Brustbein nach vorn, Blick leicht nach vorn.', 'Wirbel für Wirbel bewegen, ca. 3–4 s pro Richtung.'],
-    cues: ['Bewegung startet aus dem Becken', 'Ruhig mit dem Atem koppeln', 'Arme bleiben gestreckt, Schultern weg von den Ohren'],
-    err: ['Zu schnell / ruckartig', 'Nur den Nacken bewegen statt die ganze Wirbelsäule', 'In der Kuh ins Hohlkreuz „fallen“ – kontrolliert bleiben'] },
-  { id: 'hamwalk', n: 'Hamstring-Walk (Vorbeuge, Knie wechseln)', sub: 'Beinrückseite · Knie abwechselnd beugen/strecken', dose: '8–10 Wechsel, langsam', t: 'reps', sets: 1, reps: 10,
-    steps: ['Hüftbreit stehen, Knie zunächst leicht gebeugt.', 'Mit langem Rücken aus der Hüfte nach vorn neigen, Hände auf die Schienbeine oder auf einen Block legen – der Boden muss nicht erreicht werden.', 'Ein Knie beugen, das andere sanft strecken, bis hinten am Oberschenkel/in der Wade ein leichtes Ziehen kommt.', 'Langsam wechseln, wie auf der Stelle gehen. Ruhig atmen, ca. 2–3 s pro Wechsel. Zum Schluss mit gebeugten Knien und Händen auf den Oberschenkeln langsam aufrichten.'],
-    cues: ['Markus, Bandscheibe zuerst: Knie anfangs ruhig etwas mehr beugen, Rücken lang statt rund', 'Hände stützen auf Schienbeinen oder Block – nicht zum Boden zwingen', 'Langsam ein- und ausatmen, Dehnung nur sanft (max. 3–4/10)', 'Kribbeln in den Zehen oder Ziehen ins Bein → sofort lockerer lassen bzw. abbrechen'],
-    err: ['Mit rundem Rücken tief „hängen“ statt aus der Hüfte zu beugen', 'Knie durchdrücken oder federn', 'Luft anhalten', 'Weitermachen trotz Kribbeln/Ausstrahlen ins Bein'] },
-  { id: 'hipflex', core: 1, n: 'Aktiver Hüftbeuger-Stretch im Ausfallschritt', sub: 'Becken nach vorn schieben & lösen · Gesäß aktiv', dose: '20 Wdh. pro Seite', t: 'reps', sets: 1, reps: 20, ps: true,
-    steps: ['Großer Ausfallschritt: hinteres Knie auf einer weichen Unterlage (oder Bein lang), vorderer Fuß flach, Oberkörper aufrecht, Hände an die Hüfte.', 'Gesäß der hinteren Seite fest anspannen und das Becken leicht nach hinten kippen (Schambein Richtung Bauchnabel).', 'Becken ruhig nach vorn schieben, bis vorne in der Hüfte/Leiste ein Ziehen kommt – dann wieder lösen (zurücknehmen).', '20 langsame Wiederholungen, dann Seite wechseln.'],
-    cues: ['Dehnung vorne an der Hüfte/Leiste des hinteren Beins', 'Rippen unten, Bauch leicht fest – nur die Hüfte bewegt sich', 'Kleine, fließende Bewegung ohne Schwung', 'Vorderes Knie über dem Fuß'],
-    err: ['Ins Hohlkreuz ausweichen statt Becken zu kippen', 'Zu weit nach vorn schieben – weniger ist mehr', 'Gesäß locker lassen', 'Wippen mit Schwung'] },
-  { id: 'wgs', n: "World's Greatest Stretch", sub: 'Ausfallschritt + Rotation', dose: '5 pro Seite', t: 'reps', sets: 1, reps: 5, ps: true,
-    steps: ['Großer Ausfallschritt nach vorn, hinteres Bein lang, Hände innen neben dem vorderen Fuß aufsetzen.', 'Hüfte sanft Richtung Boden sinken lassen.', 'Den Arm auf der Seite des vorderen Beins zur Decke aufdrehen, Blick folgt der Hand.', 'Langsam zurück, Hand absetzen. 5× wiederholen, dann Seite wechseln.'],
-    cues: ['Rotation kommt aus der Brustwirbelsäule', 'Hinteres Bein aktiv lang', 'Bewegung ruhig, 2 s oben halten'],
-    err: ['Vorderes Knie fällt nach innen', 'Rund im unteren Rücken hängen', 'Mit Schwung aufdrehen'] },
+    steps: ['Vierfüßlerstand: Hände unter den Schultern, Knie unter den Hüften.', 'Ausatmen: Rücken wie eine Katze rund nach oben schieben, Kinn Richtung Brust, Bauchnabel einziehen.', 'Einatmen: Langsam in die Kuh – Becken kippt nur leicht nach vorn, Brustbein nach vorn, Blick leicht nach vorn. Kleiner Bewegungsumfang, kein tiefes Hohlkreuz.', 'Wirbel für Wirbel bewegen, ca. 3–4 s pro Richtung.'],
+    cues: ['Kleiner Bewegungsumfang – bei der Kuh NICHT tief ins Hohlkreuz (Streckung ist dein Auslöser)', 'Bewegung startet aus dem Becken', 'Ruhig mit dem Atem koppeln', 'Arme bleiben gestreckt, Schultern weg von den Ohren', 'Kribbeln, Ausstrahlung ins Bein oder einschießender Schmerz → Übung heute weglassen'],
+    err: ['Zu großer Bewegungsumfang – tief ins Hohlkreuz durchhängen', 'Zu schnell / ruckartig', 'Nur den Nacken bewegen statt die ganze Wirbelsäule', 'In der Kuh ins Hohlkreuz „fallen“ – kontrolliert bleiben'] },
   { id: 'n9090', core: 1, n: '90/90 Hüftrotation', sub: 'Sitzend, Knie wechseln', dose: '8 Wechsel', t: 'reps', sets: 1, reps: 8,
     steps: ['Aufrecht sitzen, beide Knie ca. 90° gebeugt, Füße etwas breiter als hüftbreit.', 'Hände hinter dem Körper abstützen.', 'Beide Knie gleichzeitig zur einen Seite zum Boden sinken lassen (vorderes Bein 90°, hinteres Bein 90°).', 'Kontrolliert über die Mitte zur anderen Seite wechseln. Ein Wechsel = eine Wdh.'],
-    cues: ['Brust aufrecht, Wirbelsäule lang', 'Nur so tief, wie es schmerzfrei geht', 'Langsam durch die Mitte'],
+    cues: ['Brust aufrecht, Wirbelsäule lang', 'Nur so tief, wie es schmerzfrei geht', 'Langsam durch die Mitte', 'Kribbeln, Ausstrahlung ins Bein oder einschießender Schmerz → Übung heute weglassen'],
     err: ['Knie auf den Boden zwingen', 'Rundrücken / zusammensacken', 'Knie verdrehen statt aus der Hüfte rotieren'] },
+  { id: 'hipflex', core: 1, n: 'Aktiver Hüftbeuger-Stretch im Ausfallschritt', sub: 'Becken nach vorn schieben & lösen · Gesäß aktiv', dose: '20 Wdh. pro Seite', t: 'reps', sets: 1, reps: 20, ps: true,
+    steps: ['Großer Ausfallschritt: hinteres Knie auf einer weichen Unterlage (oder Bein lang), vorderer Fuß flach, Oberkörper aufrecht, Hände an die Hüfte.', 'Gesäß der hinteren Seite fest anspannen und das Becken leicht nach hinten kippen (Schambein Richtung Bauchnabel).', 'Becken ruhig nach vorn schieben, bis vorne in der Hüfte/Leiste ein Ziehen kommt – dann wieder lösen (zurücknehmen).', '20 langsame Wiederholungen, dann Seite wechseln.'],
+    cues: ['Erst Po anspannen und Becken aufrichten – dann schieben. Solange Strecken im Rücken zieht: weniger tief', 'Dehnung vorne an der Hüfte/Leiste des hinteren Beins', 'Rippen unten, Bauch leicht fest – nur die Hüfte bewegt sich', 'Kleine, fließende Bewegung ohne Schwung', 'Vorderes Knie über dem Fuß', 'Kribbeln, Ausstrahlung ins Bein oder einschießender Schmerz → Übung heute weglassen'],
+    err: ['Ins Hohlkreuz ausweichen statt Becken zu kippen', 'Zu weit nach vorn schieben – weniger ist mehr', 'Gesäß locker lassen', 'Wippen mit Schwung'] },
+  { id: 'hamfloss', core: 1, n: 'Hamstring-Floss in Rückenlage', sub: 'Beinrückseite & Nervengleiten · ohne Vorbeugen', dose: '10 pro Seite, langsam', t: 'reps', sets: 1, reps: 10, ps: true,
+    steps: ['Rückenlage, Kopf liegt ab. Ein Bein aufgestellt (Fuß am Boden), der Rücken bleibt flach.', 'Das andere Bein anheben, bis die Hüfte ca. 90° gebeugt ist. Oberschenkel mit beiden Händen (oder Gurt/Handtuch) hinten halten, Knie gebeugt.', 'Knie langsam strecken, bis hinten am Oberschenkel ein sanfter Zug kommt – dann wieder beugen.', 'Ca. 2–3 s pro Richtung, 10× pro Seite. Optional: Fuß beim Strecken anziehen, beim Beugen locker lassen.'],
+    cues: ['Ersetzt den Hamstring-Walk: morgens kein Vorbeugen – Bandscheiben sind morgens am vollsten', 'Rücken und Becken bleiben flach am Boden', 'Nur bis sanfter Zug (max. 3–4/10) – das Knie muss nicht ganz gerade werden', 'Langsam und fließend, ruhig atmen', 'Kribbeln, Ausstrahlung ins Bein oder einschießender Schmerz → Übung heute weglassen'],
+    err: ['Mit Schwung strecken', 'Unterer Rücken / Becken hebt ab', 'Kopf hochziehen', 'Kribbeln ignorieren'] },
   { id: 'bridge', core: 1, n: 'Glute Bridge', sub: 'Gesäßbrücke', dose: '2×12, 2 s oben halten', t: 'reps', sets: 2, reps: 12,
-    steps: ['Rückenlage, Knie gebeugt, Füße hüftbreit flach am Boden, Arme neben dem Körper.', 'Bauch leicht anspannen, Becken leicht nach hinten kippen.', 'Über die Fersen drücken und das Becken heben, bis Knie–Hüfte–Schulter eine Linie bilden.', 'Oben 2 s halten, Gesäß fest anspannen, langsam absenken.'],
-    cues: ['Druck über die Fersen', 'Arbeit im Gesäß, nicht im unteren Rücken', 'Knie zeigen nach vorn'],
+    steps: ['Rückenlage, Knie gebeugt, Füße hüftbreit flach am Boden, Arme neben dem Körper.', 'Bauch leicht anspannen, Becken leicht nach hinten kippen.', 'Über die Fersen drücken und das Becken heben – oben nur bis zur geraden Linie Schulter–Hüfte–Knie, nicht höher (nicht überstrecken).', 'Oben 2 s halten, Gesäß fest anspannen, langsam absenken.'],
+    cues: ['Oben nur bis zur geraden Linie Schulter–Hüfte–Knie – nicht überstrecken', 'Druck über die Fersen', 'Arbeit im Gesäß, nicht im unteren Rücken', 'Knie zeigen nach vorn', 'Kribbeln, Ausstrahlung ins Bein oder einschießender Schmerz → Übung heute weglassen'],
     err: ['Zu hoch drücken → Hohlkreuz', 'Knie fallen nach innen', 'Oben nicht halten / zu schnell'] },
   { id: 'birddog', core: 1, n: 'Bird Dog', sub: 'Vierfüßlerstand, diagonal', dose: '2×8 pro Seite, 3 s halten', t: 'reps', sets: 2, reps: 8, ps: true,
     steps: ['Vierfüßlerstand, Rücken neutral (gerade wie ein Tisch).', 'Bauch leicht anspannen.', 'Gleichzeitig rechten Arm nach vorn und linkes Bein nach hinten lang strecken – bis auf Rumpfhöhe.', '3 s halten, kontrolliert zurück, dann Seite wechseln.'],
-    cues: ['Becken bleibt waagrecht – stell dir ein Glas Wasser auf dem Rücken vor', 'Lang machen statt hoch heben', 'Blick zum Boden, Nacken lang'],
+    cues: ['Bein nur bis Rumpfhöhe – kein Hohlkreuz', 'Becken bleibt waagrecht – stell dir ein Glas Wasser auf dem Rücken vor', 'Lang machen statt hoch heben', 'Blick zum Boden, Nacken lang', 'Kribbeln, Ausstrahlung ins Bein oder einschießender Schmerz → Übung heute weglassen'],
     err: ['Bein zu hoch → Hohlkreuz', 'Becken kippt zur Seite', 'Hektisch, ohne Halten'] },
   { id: 'deadbug', core: 1, n: 'Dead Bug', sub: 'Rücken flach', dose: '2×8 pro Seite, Rücken flach', t: 'reps', sets: 2, reps: 8, ps: true,
     steps: ['Rückenlage, Arme senkrecht zur Decke, Beine angehoben: Hüfte und Knie 90°.', 'Unteren Rücken sanft in den Boden drücken – er bleibt die ganze Zeit flach.', 'Ausatmen: rechten Arm nach hinten und linkes Bein nach vorn lang strecken, knapp über dem Boden.', 'Zurück in die Mitte, Seite wechseln.'],
-    cues: ['Rücken flach am Boden – das ist die eigentliche Übung', 'Langsam ausatmen beim Strecken', 'Nur so weit strecken, wie der Rücken unten bleibt'],
+    cues: ['Zieht es im unteren Rücken: nur das Bein bewegen, Arme oben lassen', 'Rücken flach am Boden – das ist die eigentliche Übung', 'Langsam ausatmen beim Strecken', 'Nur so weit strecken, wie der Rücken unten bleibt', 'Kribbeln, Ausstrahlung ins Bein oder einschießender Schmerz → Übung heute weglassen'],
     err: ['Hohlkreuz beim Strecken', 'Luft anhalten', 'Zu schnell, Schwung'] },
+  { id: 'sideplank', core: 1, n: 'Seitstütz auf den Knien', sub: 'Seitlicher Rumpf & Hüfte · schützt den unteren Rücken', dose: '2×15–20 s pro Seite', t: 'time', sets: 2, secs: 20, ps: true,
+    steps: ['Seitlage, Unterarm am Boden, Ellbogen genau unter der Schulter.', 'Knie ca. 90° gebeugt, Unterschenkel nach hinten, Knie übereinander. Obere Hand an die Hüfte.', 'Bauch leicht fest, dann die Hüfte heben, bis Kopf, Hüfte und Knie eine gerade Linie bilden.', '15–20 s halten, ruhig weiteratmen, langsam ablegen. Seite wechseln, 2 Runden.', 'Variante Wand (wenn es links unten zieht): seitlich zur Wand stellen, Unterarm (oder Hand) an die Wand, Körper gerade, Hüfte sanft Richtung Wand schieben und halten.'],
+    cues: ['Doc: Zieht es links unten – erst nur 10 s oder die Wand-Variante', 'Kopf–Hüfte–Knie eine Linie, Hüfte nicht durchhängen lassen', 'Schulter weg vom Ohr, Ellbogen unter der Schulter', 'Weiteratmen, nicht pressen', 'Kribbeln, Ausstrahlung ins Bein oder einschießender Schmerz → Übung heute weglassen'],
+    err: ['Hüfte sackt durch oder schiebt nach hinten', 'Ins Hohlkreuz kippen', 'Luft anhalten', 'Schulter hochziehen'] },
+  { id: 'wgs', n: "World's Greatest Stretch", sub: 'Ausfallschritt + Rotation', dose: '5 pro Seite', t: 'reps', sets: 1, reps: 5, ps: true,
+    steps: ['Großer Ausfallschritt nach vorn, hinteres Bein lang, Hände innen neben dem vorderen Fuß aufsetzen.', 'Hüfte sanft Richtung Boden sinken lassen.', 'Den Arm auf der Seite des vorderen Beins zur Decke aufdrehen, Blick folgt der Hand.', 'Langsam zurück, Hand absetzen. 5× wiederholen, dann Seite wechseln.'],
+    cues: ['Bis einschließlich Di 17.11. pausiert (Hexenschuss)', 'Rotation kommt aus der Brustwirbelsäule', 'Hinteres Bein aktiv lang', 'Bewegung ruhig, 2 s oben halten'],
+    err: ['Vorderes Knie fällt nach innen', 'Rund im unteren Rücken hängen', 'Mit Schwung aufdrehen'] },
   { id: 'rolle', n: 'Bein über die Rolle', sub: 'Sitzend · Blackroll · Hüfte aktiv & kontrolliert', dose: '10 Wdh. pro Seite', t: 'reps', sets: 1, reps: 10, ps: true,
     steps: ['Aufrecht sitzen (Stuhl oder Boden), die Blackroll liegt quer vor dem Fuß am Boden.', 'Oberkörper bleibt aufrecht, Hände stützen seitlich oder an den Oberschenkeln.', 'Ein Bein kontrolliert anheben und über die Blackroll führen, ohne Schwung.', 'Langsam wieder zurückführen. 10 Wdh., dann Seite wechseln. Fortgeschritten: Rolle höher stellen (hochkant).'],
-    cues: ['Rücken lang, Bauch leicht fest – das Becken bleibt ruhig', 'Langsam heben, langsam zurück', 'Fortgeschritten: Rolle höher stellen', 'Kein Vorbeugen – bleib aufrecht'],
+    cues: ['Bis einschließlich Di 17.11. pausiert (Hexenschuss)', 'Rücken lang, Bauch leicht fest – das Becken bleibt ruhig', 'Langsam heben, langsam zurück', 'Fortgeschritten: Rolle höher stellen', 'Kein Vorbeugen – bleib aufrecht'],
     err: ['Mit Schwung über die Rolle schleudern', 'Oberkörper kippt zur Seite oder nach hinten', 'Rundrücken'] }
 ];
+// v1.8.6: Hamstring-Walk (Vorbeuge) aus der Morgen-Routine entfernt – bleibt für alte Verlaufs-Einträge erhalten
+const MRET = [
+  { id: 'hamwalk', ret: 1, n: 'Hamstring-Walk (Vorbeuge, Knie wechseln)', sub: 'Beinrückseite · Knie abwechselnd beugen/strecken', dose: '8–10 Wechsel, langsam', t: 'reps', sets: 1, reps: 10,
+    steps: ['Hüftbreit stehen, Knie zunächst leicht gebeugt.', 'Mit langem Rücken aus der Hüfte nach vorn neigen, Hände auf die Schienbeine oder auf einen Block legen – der Boden muss nicht erreicht werden.', 'Ein Knie beugen, das andere sanft strecken, bis hinten am Oberschenkel/in der Wade ein leichtes Ziehen kommt.', 'Langsam wechseln, wie auf der Stelle gehen. Ruhig atmen, ca. 2–3 s pro Wechsel. Zum Schluss mit gebeugten Knien und Händen auf den Oberschenkeln langsam aufrichten.'],
+    cues: ['Markus, Bandscheibe zuerst: Knie anfangs ruhig etwas mehr beugen, Rücken lang statt rund', 'Hände stützen auf Schienbeinen oder Block – nicht zum Boden zwingen', 'Langsam ein- und ausatmen, Dehnung nur sanft (max. 3–4/10)', 'Kribbeln in den Zehen oder Ziehen ins Bein → sofort lockerer lassen bzw. abbrechen'],
+    err: ['Mit rundem Rücken tief „hängen“ statt aus der Hüfte zu beugen', 'Knie durchdrücken oder federn', 'Luft anhalten', 'Weitermachen trotz Kribbeln/Ausstrahlen ins Bein'] }
+];
+const EX_OLD = ['catcow', 'hamwalk', 'hipflex', 'wgs', 'n9090', 'bridge', 'birddog', 'deadbug', 'rolle']; // Plan vor v1.7.15 (nur Verlauf)
 /* v1.8.3: hipwallrot/hipwallstep Texte exakt nach Zac-Video, je 4 Schritt-Bilder (pics: Start, Bewegung, Ende, Fehler) */
 /* v1.7.29: hipwallstep Seitenregel klar: Wandfuß = hohe Seite, Hand Wandseite → vorderes Knie */
 /* v1.7.25: hipwallrot korrigiert (Zac Cupples) + Diagonalschritt an der Wand (hipwallstep) – Abend-Kern, Zähler 11/11 */
@@ -119,17 +135,17 @@ const EVE = [
     cues: ['Nicht nach vorne kippen – Rumpf bleibt in einer Ebene', 'Bauch leicht fest', 'Nur bis angenehmer Zug', 'Kein Kribbeln/Ausstrahlen ins Bein (Bandscheibe) – sonst lockerer'], err: ['Ins Hohlkreuz fallen', 'Schulter hochziehen', 'Ruckartig wippen'] },
   { id: 'couch', eve: 1, n: 'Couch Stretch', sub: 'Abend · Hüftbeuger & Quadrizeps', dose: '1×2 min pro Seite', t: 'time', sets: 1, secs: 120, ps: true,
     steps: ['Knie auf einer weichen Unterlage (Kissen/Matte) vor dem Sofa absetzen, vorderer Fuß flach, Knie ca. 90°.', 'Den hinteren Fuß erhöht aufs Sofa legen, Schienbein an der Lehne.', 'Gesäß der hinteren Seite fest anspannen und das Becken leicht nach hinten kippen, dann Becken nach vorn schieben, bis vorne an Hüfte und Oberschenkel ein Zug kommt.', 'Oberkörper aufrecht, 2 min ruhig atmen. Seite wechseln.'],
-    cues: ['Dehnung vorne an Hüfte und Oberschenkel des hinteren Beins', 'Rippen unten, Bauch leicht fest – nicht ins Hohlkreuz', 'Knie weiter vom Sofa weg = sanfter', 'Nur bis angenehmer Zug – nichts erzwingen'],
+    cues: ['Bis einschließlich Di 17.11. pausiert (Hexenschuss)', 'Dehnung vorne an Hüfte und Oberschenkel des hinteren Beins', 'Rippen unten, Bauch leicht fest – nicht ins Hohlkreuz', 'Knie weiter vom Sofa weg = sanfter', 'Nur bis angenehmer Zug – nichts erzwingen'],
     err: ['Ins Hohlkreuz ausweichen', 'Knieschmerz ignorieren', 'Zu aggressiv ins Sofa pressen'] },
   { id: 'pigeonq', eve: 1, n: 'Taube – Schienbein quer', sub: 'Abend · Gesäß/Piriformis außen', dose: '3×60 s links, 2×60 s rechts', t: 'time', sets: 3, setsL: 3, setsR: 2, secs: 60, ps: true,
     steps: ['Aus dem Vierfüßlerstand das linke Knie nach vorn bringen und das Schienbein QUER vor den Körper legen – so parallel zur vorderen Mattenkante, wie es angenehm ist. Die Wade zeigt Richtung Bauchnabel, der Fuß liegt Richtung andere Hüfte.', 'Hinteres Bein lang nach hinten ausstrecken.', 'Hüfte gerade ausrichten, aufrecht abstützen.', 'Dann langsam mit dem Oberkörper über das vordere Schienbein nach vorn sinken, Unterarme oder Stirn ablegen. 60 s halten, ruhig atmen, Seite wechseln.'],
-    cues: ['In zwei Phasen: zuerst aufrecht halten, dann mit dem Oberkörper nach vorne unten sinken', 'Kissen unter die linke Pobacke, wenn du nicht runterkommst', 'Knie ca. 90°, Fuß aktiv (Zehen angezogen) schützt das Knie', 'Dehnung tief im Gesäß, nicht im Knie'], err: ['Hüfte kippt zur Seite', 'Schienbein erzwingen – lieber Fuß näher zum Körper', 'Knieschmerz ignorieren'] },
+    cues: ['In zwei Phasen: zuerst aufrecht halten, dann mit dem Oberkörper nach vorne unten sinken', 'Bis einschließlich Di 17.11. (Hexenschuss): nur aufrecht bzw. auf die Unterarme, nicht tief nach vorn sinken; aufrecht nicht ins Hohlkreuz', 'Kissen unter die linke Pobacke, wenn du nicht runterkommst', 'Knie ca. 90°, Fuß aktiv (Zehen angezogen) schützt das Knie', 'Dehnung tief im Gesäß, nicht im Knie'], err: ['Hüfte kippt zur Seite', 'Schienbein erzwingen – lieber Fuß näher zum Körper', 'Knieschmerz ignorieren'] },
   { id: 'turtle', eve: 1, n: 'Schildkröte (Yoga)', sub: 'Abend · Kurmasana, sanfte Variante', dose: '2×60 s', t: 'time', sets: 2, secs: 60,
     steps: ['Sitzen, Beine weit gegrätscht, Knie gebeugt, Füße am Boden.', 'Oberkörper langsam nach vorn sinken lassen.', 'Arme unter den Knien nach außen schieben, Handflächen am Boden.', 'Locker lassen, 60 s ruhig atmen. Langsam wieder aufrollen.'],
-    cues: ['Nur bis kurz vor Kribbeln – dann etwas zurück', 'Nur abends – nichts erzwingen', 'Knie so weit gebeugt wie nötig'], err: ['Mit Kraft nach unten drücken', 'Bei Rücken-/Ausstrahlungsschmerz weitermachen → sofort abbrechen'] },
+    cues: ['Bis einschließlich Di 17.11. pausiert (Hexenschuss)', 'Nur bis kurz vor Kribbeln – dann etwas zurück', 'Nur abends – nichts erzwingen', 'Knie so weit gebeugt wie nötig'], err: ['Mit Kraft nach unten drücken', 'Bei Rücken-/Ausstrahlungsschmerz weitermachen → sofort abbrechen'] },
   { id: 'rollbecken', eve: 1, n: 'Rolle unterm Becken – Grätsche', sub: 'Abend · Blackroll · Adduktoren/Leiste & Hüftbeuger', dose: '2×30 s, sanft', t: 'time', sets: 2, secs: 30,
     steps: ['Rückenlage, Knie gebeugt, Füße am Boden. Becken kurz anheben und die Blackroll quer unter das Kreuzbein (flacher Knochen am Beckenende) legen – NICHT unter die Lendenwirbelsäule.', 'Becken wieder sanft auf der Rolle ablegen.', 'Beine langsam weit in eine Grätsche öffnen, Knie leicht gebeugt.', 'Arme seitlich ausbreiten, locker lassen und ruhig atmen – 30 s halten. Beine schließen, Becken anheben, Rolle entfernen.'],
-    cues: ['Rolle unters Kreuzbein – bei dumpfem Druckgefühl im unteren Rücken die Rolle tiefer Richtung Steiß legen oder flacher/weicher unterlagern (z. B. gefaltetes Handtuch)', 'Dumpfe Dehnung in der Leiste ist ok – stechender, ausstrahlender Schmerz oder Kribbeln → sofort abbrechen', 'Linke Seite nur so weit öffnen, wie es angenehm ist', 'Lange Ausatmung, loslassen statt drücken'],
+    cues: ['Bis einschließlich Di 17.11. pausiert (Hexenschuss)', 'Rolle unters Kreuzbein – bei dumpfem Druckgefühl im unteren Rücken die Rolle tiefer Richtung Steiß legen oder flacher/weicher unterlagern (z. B. gefaltetes Handtuch)', 'Dumpfe Dehnung in der Leiste ist ok – stechender, ausstrahlender Schmerz oder Kribbeln → sofort abbrechen', 'Linke Seite nur so weit öffnen, wie es angenehm ist', 'Lange Ausatmung, loslassen statt drücken'],
     err: ['Rolle unter der Lendenwirbelsäule → Hohlkreuz/Druck auf die Bandscheibe', 'Beine mit Kraft nach unten drücken', 'Dumpfen Rückendruck aushalten statt Rolle zu verschieben'] },
   { id: 'rollschien', eve: 1, n: 'Rolle unterm Schienbein – Hüftrotation im Vierfüßler', sub: 'Abend · Blackroll · Gesäß/Außenrotatoren & Adduktoren', dose: '2–3×30–40 s pro Seite, links etwas länger', t: 'time', sets: 3, setsL: 3, setsR: 2, secs: 35, ps: true,
     steps: ['Vierfüßlerstand, Hände unter den Schultern, Knie unter der Hüfte. Blackroll hochkant neben dich stellen.', 'Ein Bein seitlich abspreizen und anheben, Knie gebeugt.', 'Die Rückseite von Schienbein/Fuß oben auf die stehende Rolle legen – die Hüfte ist dabei abgespreizt und gedreht.', 'Position halten, ruhig atmen, 30–40 s. Langsam lösen, Seite wechseln. Links etwas länger halten.'],
@@ -149,11 +165,11 @@ const EVE = [
     err: ['Fersen rutschen an der Wand ab', 'Hohlkreuz statt flachem Rücken', 'Rolle fällt raus / wird nicht gehalten', 'Luft anhalten oder Schultern hochziehen'] },
   { id: 'kniefersenrock', core: 1, eve: 1, n: 'Kniestand-Fersensitz-Rock (links betont)', sub: 'Abend · Hüfte, Lenden & Rücken lang ziehen, links betont', dose: '5 Wdh × 20 s halten · links 1–2 mehr', t: 'time', sets: 6, setsL: 6, setsR: 5, secs: 20, ps: true,
     steps: ['Vierfüßlerstand, Zehen aufgestellt bzw. Fußrücken am Boden.', 'Das Gesäß langsam Richtung Fersen nach hinten schieben.', 'Arme lang nach vorn strecken, Rücken lang lassen.', '20 s halten, ruhig ausatmen. 5 Wiederholungen – links 1–2 mehr (6–7), da es links stark zieht und rechts gut geht.'],
-    cues: ['Nur bis Ziehen – nie Schmerz', 'Links 1–2 Wiederholungen mehr als rechts', 'Lange, ruhige Ausatmung beim Halten', 'Rücken bleibt lang, nicht rund einsinken'],
+    cues: ['Nur bis Ziehen – nie Schmerz', 'Wird es im Rücken stärker statt lockerer: weniger weit nach hinten', 'Links 1–2 Wiederholungen mehr als rechts', 'Lange, ruhige Ausatmung beim Halten', 'Rücken bleibt lang, nicht rund einsinken'],
     err: ['Bis in den Schmerz gehen', 'Rücken rundet sich / Arme verkürzt', 'Ruckartig nach hinten schieben', 'Luft anhalten'] },
   { id: 'hipflexstand', core: 1, eve: 1, n: 'Hüftbeuger-Dehnung im Stehen (Fuß erhöht)', sub: 'Abend · Hüftbeuger, hinteres Bein gestreckt', dose: '2×30–45 s pro Seite', t: 'time', sets: 2, secs: 40, ps: true,
     steps: ['Vorderen Fuß auf eine Erhöhung stellen (Stufe oder Bank), hinteres Bein gestreckt am Boden.', 'Gesäß des hinteren Beins fest anspannen und das Becken leicht nach hinten kippen (Schambein Richtung Bauchnabel).', 'Dann die Hüfte nur ein kleines Stück nach vorn Richtung vorderes Knie schieben, bis es im Hüftbeuger des hinteren Beins zieht.', 'Oberkörper aufrecht, ruhig atmen, 30–45 s halten. Seite wechseln – 2 Sätze pro Seite.'],
-    cues: ['Kein Hohlkreuz – Rippen unten, Bauch leicht fest', 'Oberkörper bleibt aufrecht', 'Ruhig atmen, Zug deutlich aber nie stechend', 'Nicht nachfedern'],
+    cues: ['Kein Hohlkreuz – Rippen unten, Bauch leicht fest. Erst Po anspannen, dann schieben; solange Strecken zieht: weniger tief', 'Oberkörper bleibt aufrecht', 'Ruhig atmen, Zug deutlich aber nie stechend', 'Nicht nachfedern'],
     err: ['Ins Hohlkreuz ausweichen', 'Zu weit nach vorn schieben / wippen', 'Stechenden Schmerz ignorieren', 'Oberkörper nach vorn kippen'] },
   { id: 'hipwallrot', core: 1, eve: 1, n: 'Hüft-Rotation an der Wand (Seitlage)', sub: 'Abend · Hüft-Innenrotation, hohe Seite oben · Zac Cupples', dose: '3×60 s · beidseitig (bis hohe Seite geklärt)', t: 'time', sets: 3, secs: 60, ps: true,
     steps: ['Seitlage, hohe Hüfte OBEN (vorerst beidseitig, bis die hohe Seite fachlich geklärt ist). Kopf auf einen festen, rechteckigen Block bzw. ein Polster legen.', 'Arme: Unterer Arm gerade nach vorn auf den Boden, Handfläche nach unten. Obere Hand hinter Kopf/Nacken, Ellbogen zeigt nach oben.', 'Unteres Bein am Boden: Hüfte ca. 45° gebeugt, Knie ca. 90° gebeugt. Die Außenseite vom unteren Oberschenkel liegt am Boden.', 'Oberes Bein ganz gestreckt an der Wand hochlegen, etwa auf Hüfthöhe (waagrecht in der Luft). Ferse UND Fußballen flach in die Wand drücken, Zehen zeigen nach vorn – in dieselbe Richtung wie die Brust.', 'Oberes Knie nach vorn schieben – dadurch drehen Becken und Oberkörper Richtung Boden (Hüft-Innenrotation). Der untere Oberschenkel bleibt am Boden, die Hüfte NICHT Richtung Rippen hochziehen. Position halten.', 'Lang und langsam durch die Nase einatmen, so voll wie möglich, ohne zu pressen; sanft durch den Mund ausatmen. 60 s, 3 Runden pro Seite.'],
@@ -173,13 +189,13 @@ const FAS = [
     cues: ['Druck nur „angenehm-intensiv“ (max. 6–7 von 10)', 'Ruhig atmen, nicht verkrampfen'], err: ['Zu schnell rollen', 'Auf das Steißbein/Kreuzbein rollen'] },
   { id: 'froll_t', fas: 1, n: 'Blackroll Oberschenkel außen/vorne', sub: 'Faszien · Quadrizeps & Außenseite', dose: '60 s pro Seite', t: 'time', sets: 1, secs: 60, ps: true,
     steps: ['Unterarmstütz, Blackroll unter dem vorderen Oberschenkel.', 'Langsam von knapp über dem Knie bis zur Hüfte rollen.', 'Für die Außenseite leicht auf die Seite drehen (nicht direkt auf den Knochen/Tractus pressen).', '60 s, dann anderes Bein.'],
-    cues: ['Bauch fest, kein Durchhängen im Rücken', 'Gewicht mit dem anderen Bein/Armen dosieren'], err: ['Über das Knie rollen', 'Hohlkreuz im Unterarmstütz', 'Zähne zusammenbeißen – zu viel Druck'] },
+    cues: ['Bauch fest, kein Durchhängen im Rücken – zieht es im unteren Rücken: Außenseite in Seitlage rollen statt im Unterarmstütz', 'Gewicht mit dem anderen Bein/Armen dosieren'], err: ['Über das Knie rollen', 'Hohlkreuz im Unterarmstütz', 'Zähne zusammenbeißen – zu viel Druck'] },
   { id: 'ballpir', fas: 1, n: 'Faszien Ball Piriformis', sub: 'Faszien · tiefe Hüftmuskulatur', dose: '90 s links, 60 s rechts', t: 'time', sets: 1, secs: 90, secsL: 90, secsR: 60, ps: true,
     steps: ['Sitzen, kleinen (oder großen) Ball mittig unter eine Gesäßhälfte legen.', 'Bein der Seite überschlagen (Knöchel auf das andere Knie).', 'Kleine Kreise und Vor-zurück-Bewegungen, druckempfindliche Stelle suchen.', 'Dort ruhig atmen und lösen lassen, dann Seite wechseln.'],
     cues: ['Großer Ball = sanfter, kleiner Ball = intensiver', 'Kribbeln/Ausstrahlen ins Bein → Ball verschieben'], err: ['Auf den Ischiasnerv drücken (Kribbeln ignorieren)', 'Zu lange auf einem Punkt (> 30 s)'] },
   { id: 'duoball', fas: 1, n: 'Duoball LWS – Atmen & Sinken + Triggerpunkt rollen', sub: 'Faszien · Rückenstrecker · 2 Phasen', dose: '2 Phasen à 60–90 s', t: 'time', sets: 1, secs: 180,
     steps: ['Vorbereitung: Rückenlage, Knie gebeugt, Füße am Boden. Becken kurz anheben und den Duoball quer unter die Lendenwirbelsäule legen – die Ballhälften liegen links und rechts neben der Wirbelsäule, NIE auf der Wirbelsäule selbst. Dann sanft ablegen.', 'Phase 1 – Duoball LWS – Atmen & Sinken (60–90 s): Tief einatmen, lang ausatmen und dich mit jedem Atemzug ein Stück tiefer auf den Ball sinken lassen.', 'Phase 2 – Duoball LWS – Triggerpunkt rollen (60–90 s gesamt): Langsam über den Ball hoch und runter rollen, druckempfindliche Stellen suchen.', 'Auf jeder empfindlichen Stelle 20–30 s verweilen und ruhig weiteratmen. Linke Seite etwas länger bearbeiten.'],
-    cues: ['Abbrechen, wenn Schmerz ausstrahlt oder Kribbeln beginnt', 'NIE direkt auf der Wirbelsäule', 'Lange Ausatmung – loslassen statt drücken', 'Sanfter Druck – Bandscheibe schonen'], err: ['Ball auf den Dornfortsätzen', 'Ins Hohlkreuz drücken', 'Zu schnell oder mit viel Gewicht rollen', 'Ausstrahlung/Kribbeln ignorieren'] },
+    cues: ['Bis einschließlich Di 17.11. pausiert (Hexenschuss)', 'Abbrechen, wenn Schmerz ausstrahlt oder Kribbeln beginnt', 'NIE direkt auf der Wirbelsäule', 'Lange Ausatmung – loslassen statt drücken', 'Sanfter Druck – Bandscheibe schonen'], err: ['Ball auf den Dornfortsätzen', 'Ins Hohlkreuz drücken', 'Zu schnell oder mit viel Gewicht rollen', 'Ausstrahlung/Kribbeln ignorieren'] },
   { id: 'shakti', fas: 1, n: 'Shakti-Matte Entspannung', sub: 'Faszien · Entspannung', dose: '10 Min', t: 'time', sets: 1, secs: 600,
     steps: ['Matte auf eine ebene Unterlage legen, langsam darauf hinlegen (Rücken, ggf. dünnes Shirt am Anfang).', 'Beine lang oder angewinkelt, Arme locker neben den Körper.', 'Die ersten 1–2 Minuten sind intensiv – ruhig weiteratmen.', '10 Min liegen bleiben, langsam über die Seite aufstehen.'],
     cues: ['Lange, ruhige Ausatmung', 'Ideal abends vor dem Schlafen'], err: ['Schnell aufspringen (Kreislauf)', 'Sich auf die Matte „fallen lassen“'] }
@@ -200,15 +216,15 @@ const ROT = [
     err: ['Becken hebt ab / rollt ein', 'Am Knie statt am Oberschenkel ziehen', 'Schultern verkrampfen'] },
   { id: 'halfhero', rot: 1, n: 'Halber Held', sub: 'Abwechslung · Oberschenkel vorne & Hüftbeuger', dose: '30 s pro Seite', t: 'time', sets: 1, secs: 30, ps: true,
     steps: ['Aufrecht sitzen, ein Bein lang nach vorn.', 'Das andere Bein nach hinten beugen, der Fuß liegt neben der Hüfte, Fußrücken am Boden.', 'Mit den Händen hinter dir abstützen und vorsichtig nur so weit zurücklehnen, wie es angenehm ist.', '30 s ruhig atmen, langsam aufrichten, Seite wechseln.'],
-    cues: ['Vorsicht mit dem Knie – bei Knieschmerz Kissen unters Gesäß oder aufrecht bleiben', 'Bauch leicht fest, Becken nach hinten kippen – kein Hohlkreuz', 'Kribbeln in den Zehen → sofort lockerer'],
+    cues: ['Bis einschließlich Di 17.11. pausiert (Hexenschuss)', 'Vorsicht mit dem Knie – bei Knieschmerz Kissen unters Gesäß oder aufrecht bleiben', 'Bauch leicht fest, Becken nach hinten kippen – kein Hohlkreuz, lieber aufrecht bleiben als zurücklehnen', 'Kribbeln in den Zehen → sofort lockerer'],
     err: ['Ins Hohlkreuz zurücklehnen', 'Knie zeigt nach außen', 'Zu weit nach hinten erzwingen'] },
   { id: 'sphinx', rot: 1, n: 'Sphinx', sub: 'Abwechslung · Wirbelsäule/Bauch, sanfte Streckung', dose: '1×30 s', t: 'time', sets: 1, secs: 30,
     steps: ['Bauchlage, Beine lang, Stirn am Boden.', 'Ellbogen unter die Schultern, Unterarme parallel ablegen.', 'Brust sanft anheben, Blick nach vorn unten, Nacken lang.', 'Gesäß locker lassen, 30 s ruhig in den Bauch atmen, dann langsam ablegen.'],
-    cues: ['Oft angenehm für die Bandscheibe', 'Gesäß entspannt, Schultern weg von den Ohren', 'Strahlt es ins Bein aus oder kribbeln die Zehen → sofort abbrechen'],
+    cues: ['Bis einschließlich Di 17.11. pausiert (Hexenschuss)', 'Nur flach auf den Unterarmen, nie auf gestreckte Arme hochdrücken – Streckung ist aktuell dein Auslöser', 'Oft angenehm für die Bandscheibe', 'Gesäß entspannt, Schultern weg von den Ohren', 'Strahlt es ins Bein aus oder kribbeln die Zehen → sofort abbrechen'],
     err: ['Gesäß anspannen', 'Schultern hochziehen', 'Kopf in den Nacken'] },
   { id: 'sphinxrot', rot: 1, n: 'Sphinx mit Öffnung', sub: 'Abwechslung · Brustwirbelsäule-Rotation', dose: '8 pro Seite', t: 'reps', sets: 1, reps: 8, ps: true,
     steps: ['Aus der Sphinx: Unterarme unter den Schultern, Brust leicht angehoben.', 'Einen Arm seitlich nach außen und oben öffnen, Blick folgt der Hand.', 'Brustkorb dreht mit auf, das Becken bleibt am Boden.', 'Langsam zurück, 8 pro Seite.'],
-    cues: ['Drehung aus der Brust, nicht aus dem unteren Rücken', 'Stützarm aktiv, Schulter stabil', 'Ausstrahlen oder Zehen-Kribbeln → kleiner bewegen oder abbrechen'],
+    cues: ['Bis einschließlich Di 17.11. pausiert (Hexenschuss)', 'Drehung aus der Brust, nicht aus dem unteren Rücken', 'Stützarm aktiv, Schulter stabil', 'Ausstrahlen oder Zehen-Kribbeln → kleiner bewegen oder abbrechen'],
     err: ['Becken dreht mit', 'Schwung statt Kontrolle', 'Ins Hohlkreuz sinken'] },
   { id: 'sidehip', rot: 1, n: 'Seitliche Hüftdehnung', sub: 'Abwechslung · Adduktoren & Hüfte innen', dose: '30 s pro Seite', t: 'time', sets: 1, secs: 30, ps: true,
     steps: ['Aus dem Ausfallschritt am Boden (ein Knie unten).', 'Das vordere Bein seitlich nach außen stellen, Fuß flach, Zehen leicht nach außen.', 'Mit der Hand am Boden oder Knie abstützen.', 'Hüfte sanft zur Seite/nach unten schieben, 30 s halten, Seite wechseln.'],
@@ -220,11 +236,11 @@ const ROT = [
     err: ['Schwung holen', 'Becken rollt nach hinten', 'Bein zu hoch reißen'] },
   { id: 'bearrock', rot: 1, n: 'Bärengang zum Rolling Rock', sub: 'Abwechslung · Rumpf, Hüfte & Schultern', dose: '8 Wiederholungen', t: 'reps', sets: 1, reps: 8,
     steps: ['Vierfüßlerstand, Hände unter den Schultern, Knie unter der Hüfte.', 'Knie wenige Zentimeter vom Boden abheben (schweben).', 'Einen kleinen Schritt vor und zurück machen, Rücken flach.', 'Knie ablegen und das Gesäß sanft Richtung Fersen zurückschaukeln, dann wieder nach vorn – 8 Wiederholungen.'],
-    cues: ['Rücken neutral wie ein Tisch', 'Ruhig atmen, Bauch fest', 'Zurückschaukeln nur so weit, wie der Rücken lang bleibt', 'Kribbeln in den Zehen → abbrechen'],
+    cues: ['Rücken neutral wie ein Tisch', 'Ruhig atmen, Bauch fest', 'Zurückschaukeln nur so weit, wie der Rücken lang bleibt – nicht rund einrollen', 'Kribbeln in den Zehen → abbrechen'],
     err: ['Hohlkreuz oder Rundrücken', 'Gesäß zu hoch', 'Hektisch'] },
   { id: 'armbeinwisch', rot: 1, n: 'Arm-Bein-Wischübung in Bauchlage (diagonal)', sub: 'Abwechslung · Hüfte & seitlicher Rumpf, Gesäß leicht aktiv · links betont', dose: '1×8 pro Seite · 6–8 Wdh, links ein paar mehr', t: 'reps', sets: 1, reps: 8, ps: true,
     steps: ['Bauchlage, Stirn auf der Matte, Arme und Beine lang.', 'Diagonal einen Arm und das gegenüberliegende Bein gestreckt seitlich über den Boden nach außen wischen (Arm nach oben-außen, Bein nach außen).', 'Kurz halten, dann zurück in die Mitte, Seite wechseln.', 'Langsam, Bauch leicht angespannt, Becken bleibt am Boden. 6–8 Wdh pro Seite – links ein paar mehr (links betont).'],
-    cues: ['Nur im schmerzfreien Bereich', 'Wenn der Rücken zwickt: Bewegung kleiner machen', 'Becken bleibt am Boden, Bauch leicht fest', 'Links ein paar Wiederholungen mehr als rechts', 'Langsam wischen, kurz halten – kein Schwung'],
+    cues: ['Nur im schmerzfreien Bereich', 'Arme und Beine nur flach über den Boden wischen – nicht anheben (kein Hohlkreuz)', 'Wenn der Rücken zwickt: Bewegung kleiner machen', 'Becken bleibt am Boden, Bauch leicht fest', 'Links ein paar Wiederholungen mehr als rechts', 'Langsam wischen, kurz halten – kein Schwung'],
     err: ['Becken hebt ab oder dreht mit', 'Ins Hohlkreuz drücken', 'Mit Schwung und zu hektisch', 'Bewegung erzwingen, obwohl der Rücken zwickt'] },
   { id: 'halbfrosch', rot: 1, n: 'Halber Frosch', sub: 'Abwechslung · Adduktoren-Stretch (Half Frog)', dose: '1×10 Wdh. pro Seite + 20 s halten am Ende', t: 'reps', sets: 1, reps: 10, ps: true,
     steps: ['Vierfüßlerstand: Hände unter den Schultern, Knie unter den Hüften.', 'Ein Bein gestreckt zur Seite abspreizen, Fuß flach am Boden, Zehen zeigen nach vorn.', 'Hüfte langsam Richtung Ferse des knienden Beins nach hinten schaukeln und wieder nach vorn – Rücken bleibt lang.', '10 Wiederholungen, dann am Ende 20 s in der Dehnung halten. Seite wechseln – beide Seiten gleich.'],
@@ -233,7 +249,16 @@ const ROT = [
   { id: 'seitausfall', rot: 1, n: 'Seitlicher Ausfallschritt im Knien', sub: 'Abwechslung · Adduktoren-Rock (Kneeling side lunge)', dose: '1×8 pro Seite', t: 'reps', sets: 1, reps: 8, ps: true,
     steps: ['Auf ein Knie knien, Oberkörper aufrecht.', 'Das andere Bein gestreckt zur Seite abspreizen, Fuß flach am Boden.', 'Gewicht seitlich über das gestreckte Bein schieben, bis innen am Oberschenkel ein sanfter Zug entsteht – dann wieder zurück zur Mitte.', '8 Wiederholungen, Seite wechseln – beide Seiten gleich.'],
     cues: ['Schmerzfrei, mittlere Intensität', 'Beide Seiten gleich', 'Oberkörper bleibt aufrecht', 'Kleine, kontrollierte Seitverschiebung – kein Schwung'],
-    err: ['Oberkörper nach vorn kippen', 'Knie des gestreckten Beins nach innen fallen lassen', 'Zu weit / in den Schmerz schieben', 'Mit Schwung wippen'] }
+    err: ['Oberkörper nach vorn kippen', 'Knie des gestreckten Beins nach innen fallen lassen', 'Zu weit / in den Schmerz schieben', 'Mit Schwung wippen'] },
+  // v1.8.6: Bausteine für langes Stehen/Gehen (Leiter): seitliche Hüfte (Gluteus medius) + Waden/Fuß
+  { id: 'abduct', rot: 1, n: 'Seitliches Beinheben in Seitlage', sub: 'Abwechslung · seitliche Hüfte (Gluteus medius) · Becken stabil im Stand', dose: '2×12 pro Seite', t: 'reps', sets: 2, reps: 12, ps: true,
+    steps: ['Seitlage, Kopf auf dem unteren Arm, obere Hand vor der Brust am Boden. Unteres Bein leicht gebeugt.', 'Oberes Bein gestreckt in Verlängerung des Körpers, Zehen zeigen nach vorn (nicht zur Decke).', 'Bein langsam ca. 30–40° anheben – leicht nach hinten statt nach vorn –, 1 s halten.', 'Langsam ablegen. 12×, dann Seite wechseln, 2 Runden.'],
+    cues: ['Spüren: seitlich oben am Po, nicht vorne in der Leiste', 'Becken bleibt übereinander, nicht nach hinten rollen', 'Lieber niedrig und sauber als hoch', 'Kribbeln, Ausstrahlung ins Bein oder einschießender Schmerz → Übung weglassen'],
+    err: ['Bein zu hoch reißen → Becken kippt, Rücken arbeitet', 'Zehen zur Decke drehen', 'Bein nach vorn ziehen (Hüftbeuger statt Po)', 'Schwung'] },
+  { id: 'calfraise', rot: 1, n: 'Wadenheben', sub: 'Abwechslung · Waden & Fuß · langes Stehen auf der Leiter', dose: '2×15, oben 1 s halten', t: 'reps', sets: 2, reps: 15,
+    steps: ['Hüftbreit stehen, eine Hand leicht an Wand oder Türrahmen für das Gleichgewicht.', 'Aufrecht, Bauch leicht fest, Knie gestreckt (nicht durchgedrückt).', 'Langsam über den Fußballen hoch auf die Zehen drücken, oben 1 s halten.', 'In 2–3 s kontrolliert absenken. 15×, 2 Runden. Später: auf einer Stufe (Fersen unter Stufenhöhe) oder einbeinig.'],
+    cues: ['Gewicht über dem Großzehenballen – Knöchel kippen nicht nach außen', 'Langsam runter ist der wichtige Teil', 'Körper bleibt aufrecht, kein Hohlkreuz', 'Hilft gegen schwere Beine und Fußermüdung beim langen Stehen'],
+    err: ['Hüpfen / federn', 'Nach außen auf die kleine Zehe rollen', 'Ins Hohlkreuz kippen', 'Zu schnell absenken'] }
 
 ];
 const ROT_PLAN = ['aei', 'abc', 'def', 'ghi', 'adg', 'beh', 'cfi']; // So..Sa
@@ -247,26 +272,27 @@ const RET = [
     steps: ['Halbkniestand wie morgens, hinteres Knie gepolstert.', 'Gesäß anspannen, Becken leicht nach hinten kippen.', 'Arm der hinteren Seite über den Kopf strecken, leicht zur Gegenseite neigen.', 'Hüfte minimal nach vorn, 60 s ruhig atmen, dann Seite wechseln.'],
     cues: ['Dehnung vorn an der Hüfte bis in die Flanke', 'Oberkörper aufrecht'], err: ['Hohlkreuz', 'Zu tief nach vorn schieben'] }
 ];
-const ALL = [...EX, ...ROT, ...EVE, ...FAS, ...RET];
+const ALL = [...EX, ...ROT, ...EVE, ...FAS, ...RET, ...MRET];
 const byId = id => ALL.find(e => e.id === id);
 const im = ex => ex.img || ex.id;
 
 /* ---------- v1.7.15: Tages-Rotation ----------
    Jeder Block hat feste Kern-Übungen (core: 1, täglich) + einen Wechsel-Pool. Aus dem Pool kommen pro Tag k Übungen,
    deterministisch nach Datum (Tag-Nr. × k mod Poolgröße → lückenlos, jede Übung kommt regelmäßig dran). */
-const BLK = { m: { pool: EX, k: 2 }, w: { pool: ROT, k: 3 }, a: { pool: EVE, k: 3 }, f: { pool: FAS, k: 3 } };
-const dayNum = key => { const [y, m, d] = key.split('-').map(Number); return Math.floor(Date.UTC(y, m - 1, d) / 864e5); };
-function lineup(b, key) { const B = BLK[b]; const rot = B.pool.filter(e => !e.core); const n = dayNum(key), m = rot.length;
-  if (!m || B.k >= m) return B.pool.slice(); const s0 = (n * B.k) % m; const pick = new Set(Array.from({ length: B.k }, (_, i) => rot[(s0 + i) % m]));
-  return B.pool.filter(e => e.core || pick.has(e)); }
+// v1.8.6: Morgen k=1 – 9 Kern-Übungen + 1 im Wechsel (World's Greatest Stretch / Bein über die Rolle), damit die Routine kurz bleibt
+const BLK = { m: { pool: EX, k: 1 }, w: { pool: ROT, k: 3 }, a: { pool: EVE, k: 3 }, f: { pool: FAS, k: 3 } };
+// v1.8.6: Logik in MOBCORE.planIds (getestet) – pausierte Übungen (Hexenschuss bis 17.11.) fallen raus, zählen nicht im Zähler
+function lineup(b, key) { const B = BLK[b]; return MOBCORE.planIds(B.pool, B.k, key).map(byId); }
+const pausedNow = b => BLK[b].pool.filter(e => MOBCORE.pauseInfo(e.id, tk()));
+const pauseNote = b => { const p = pausedNow(b); return p.length ? `<div class="mob-pause muted small">⏸ ${p.map(e => esc(e.n)).join(', ')} – ${esc(MOBCORE.pauseInfo(p[0].id, tk()).label)}</div>` : ''; };
 const isRotToday = (e, b) => b !== 'w' && !e.core;
-const blockOf = e => e.eve ? 'a' : e.fas ? 'f' : e.rot ? 'w' : EX.includes(e) ? 'm' : null;
+const blockOf = e => e.eve ? 'a' : e.fas ? 'f' : e.rot ? 'w' : (EX.includes(e) || MRET.includes(e)) ? 'm' : null;
 // heutige Liste eines Blocks: Tages-Lineup + heute bereits Abgehaktes (z. B. vor dem Update), damit nichts verschwindet
-function todayList(b, d) { const lu = lineup(b, tk()); return lu.concat(BLK[b].pool.filter(e => !lu.includes(e) && d.today.done[e.id])); }
+function todayList(b, d) { const lu = lineup(b, tk()); return lu.concat([...BLK[b].pool, ...(b === 'm' ? MRET : [])].filter(e => !lu.includes(e) && d.today.done[e.id])); }
 
 /* ---------- v1.7.26: optionale Zusatzübungen (Morgen/Abend) ----------
    Extras liegen in d.today.extra.{m|a}; zählen NICHT zum Block-Zähler, werden aber geloggt. */
-const extraPool = b => b === 'm' ? [...EX, ...ROT] : b === 'a' ? [...EVE, ...RET] : [];
+const extraPool = b => (b === 'm' ? [...EX, ...ROT] : b === 'a' ? [...EVE, ...RET] : []).filter(e => !MOBCORE.pauseInfo(e.id, tk()));
 function extrasOf(b, d) { const ids = (d.today.extra && d.today.extra[b]) || []; return ids.map(byId).filter(Boolean); }
 function blockList(b, d) {
   const base = todayList(b, d); const seen = new Set(base.map(e => e.id));
@@ -277,7 +303,7 @@ function isExtra(ex, b, d) { return !!(d.today.extra && (d.today.extra[b] || [])
 
 // Plan eines gespeicherten Tages: neue Einträge haben h.lineup, ältere (vor v1.7.15) bekommen den damaligen Plan
 function planOf(h, b) { if (h.lineup && h.lineup[b]) return h.lineup[b].map(byId).filter(Boolean);
-  return b === 'm' ? EX.slice() : b === 'w' ? rotForOld(h.date) : b === 'a' ? EVE.filter(e => e.id !== 'psoasreset' && e.id !== 'kniefersenrock' && e.id !== 'hipflexstand' && e.id !== 'hipwallrot' && e.id !== 'hipwallstep') : FAS.slice(); }
+  return b === 'm' ? EX_OLD.map(byId) : b === 'w' ? rotForOld(h.date) : b === 'a' ? EVE.filter(e => e.id !== 'psoasreset' && e.id !== 'kniefersenrock' && e.id !== 'hipflexstand' && e.id !== 'hipwallrot' && e.id !== 'hipwallstep') : FAS.slice(); }
 
 /* ---------- Statistik ---------- */
 function stats() {
@@ -361,7 +387,7 @@ function viewList() {
   const fDone = FT.filter(e => d.today.done[e.id]).length;
   const nCore = b => BLK[b].pool.filter(e => e.core).length;
   const st = (n, tot) => n >= tot ? '<span class="mob-st ok">✓ heute erledigt</span>' : n ? `<span class="mob-st part">${n}/${tot} · läuft</span>` : '<span class="mob-st">noch offen</span>';
-  const hist = [...d.history].reverse().slice(0, 8).map(h => `<div class="mob-h"><span>${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)}</span><span class="muted small">${h.note ? '📝 ' : ''}${h.done.filter(x => EX.some(e => e.id === x)).length}/${planOf(h, 'm').length} Übungen${h.done.some(x => ROT.some(e => e.id === x)) ? ' · 🔄 Abwechslung' : ''}${h.done.some(x => [...EVE, ...RET].some(e => e.id === x)) ? ' · ☾ Abend' : ''}${h.done.some(x => FAS.some(e => e.id === x)) ? ' · ◎ Faszien' : ''}</span><button class="btn btn-ghost btn-sm" style="width:auto;padding:4px 10px;margin-left:6px" data-act="mobExp" data-date="${h.date}">Exportieren</button></div>`).join('') || '<div class="muted small">Noch keine Einheit – heute ist ein guter Tag zum Starten 🙂</div>';
+  const hist = [...d.history].reverse().slice(0, 8).map(h => `<div class="mob-h"><span>${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)}</span><span class="muted small">${h.note ? '📝 ' : ''}${h.done.filter(x => EX.some(e => e.id === x) || MRET.some(e => e.id === x)).length}/${planOf(h, 'm').length} Übungen${h.done.some(x => ROT.some(e => e.id === x)) ? ' · 🔄 Abwechslung' : ''}${h.done.some(x => [...EVE, ...RET].some(e => e.id === x)) ? ' · ☾ Abend' : ''}${h.done.some(x => FAS.some(e => e.id === x)) ? ' · ◎ Faszien' : ''}</span><button class="btn btn-ghost btn-sm" style="width:auto;padding:4px 10px;margin-left:6px" data-act="mobExp" data-date="${h.date}">Exportieren</button></div>`).join('') || '<div class="muted small">Noch keine Einheit – heute ist ein guter Tag zum Starten 🙂</div>';
   return {
     html: topbar('Hüft-Beweglichkeit', 'Dehnung & Gesundheit', null) + `
     <div class="mob-stats">
@@ -369,20 +395,20 @@ function viewList() {
       <div class="card"><div class="mob-big">${s.total}</div><div class="muted small">Einheiten gesamt</div></div>
       <div class="card"><div class="mob-big">${s.week}</div><div class="muted small">diese Woche</div></div>
     </div>
-    <div class="card mob-note">⚠️ <b>Morgens kein langes Vorbeugen</b> (Bandscheibe). Nichts erzwingen – <b>schmerzfrei bleiben</b>. Bei ausstrahlendem Schmerz abbrechen.</div>
+    <div class="card mob-note">⚠️ <b>Morgens kein langes Vorbeugen</b> (Bandscheibe), <b>kein tiefes Hohlkreuz</b>. Nichts erzwingen – <b>schmerzfrei bleiben</b>. Bei <b>Kribbeln, Ausstrahlung ins Bein oder einschießendem Schmerz</b> die Übung weglassen.</div>
     <div class="mob-prog"><div style="width:${mPlan ? (nDone / mPlan * 100) : 0}%"></div></div>
     <div class="card mob-today"><b>Heute</b> · ${s.todayDone ? '<span class="mob-st ok">✓ Einheit abgeschlossen</span>' : '<span class="mob-st">Einheit noch offen</span>'}
       <div class="mob-tl"><span>☀️ Morgen-Routine</span>${st(nDone, mPlan)}</div><div class="mob-tl"><span>🔄 Abwechslung</span>${st(rDone, RT.length)}</div><div class="mob-tl"><span>☾ Abend</span>${st(eDone, aPlan)}</div><div class="mob-tl"><span>◎ Faszien</span>${st(fDone, FT.length)}</div></div>
     <div class="sec-h muted small" style="margin:10px 2px 2px">☀️ MORGEN-ROUTINE · ${nDone}/${mPlan} erledigt</div><div class="mob-when">Morgens nach dem Aufstehen · ${nCore('m')} täglich + ${mPlan - nCore('m')} im Wechsel</div>
-    ${MT.map((e, i) => row(e, d, i + 1, 'm')).join('')}
+    ${MT.map((e, i) => row(e, d, i + 1, 'm')).join('')}${pauseNote('m')}
     <button class="btn btn-outline-gold btn-sm" data-act="mobExtra" data-b="m" style="margin:4px 0 8px">＋ Zusatzübung</button>
     <div class="sec-h muted small" style="margin:18px 2px 2px">🔄 ABWECHSLUNG · ${rDone}/${RT.length} erledigt</div><div class="mob-when">Heute (${WD[new Date().getDay()]}) · täglich 3 andere – in ${Math.ceil(ROT.length / 3)} Tagen alle ${ROT.length}</div>
-    ${RT.map((e, i) => row(e, d, i + 1, 'w')).join('')}
+    ${RT.map((e, i) => row(e, d, i + 1, 'w')).join('')}${pauseNote('w')}
     <div class="sec-h muted small" style="margin:18px 2px 2px">☾ ABEND (OPTIONAL) · ${eDone}/${aPlan} erledigt</div><div class="mob-when">Abends vor dem Schlafen · ${nCore('a')} täglich + ${aPlan - nCore('a')} im Wechsel</div>
-    ${ET.map((e, i) => row(e, d, i + 1, 'a')).join('')}
+    ${ET.map((e, i) => row(e, d, i + 1, 'a')).join('')}${pauseNote('a')}
     <button class="btn btn-outline-gold btn-sm" data-act="mobExtra" data-b="a" style="margin:4px 0 8px">＋ Zusatzübung</button>
     <div class="sec-h muted small" style="margin:18px 2px 2px">◎ FASZIEN (OPTIONAL)</div><div class="mob-when">Blackroll · Duoball/Bälle · Shakti-Matte – ideal abends · ${nCore('f')} täglich + ${FT.length - nCore('f')} im Wechsel</div>
-    ${FT.map((e, i) => row(e, d, i + 1, 'f')).join('')}
+    ${FT.map((e, i) => row(e, d, i + 1, 'f')).join('')}${pauseNote('f')}
     <div style="height:6px"></div>
     ${s.todayDone ? `<button class="btn btn-outline-gold" data-act="mobFinish">✓ Heute erledigt – Eintrag aktualisieren</button>` : `<button class="btn btn-red" data-act="mobFinish">Einheit abschließen ✓</button>`}
     ${s.todayDone ? `<div style="height:8px"></div><button class="btn btn-gold" data-act="mobExp" data-date="${tk()}">📋 Exportieren</button>` : ''}
@@ -408,14 +434,15 @@ function viewDetail(id) {
   }
   const li = a => `<ul class="mob-ul">${a.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
   return {
-    html: `<div id="mob-detail">` + topbar(ex.n, (ex.eve ? 'Abend · vor dem Schlafen' : ex.fas ? 'Faszien · optional' : ex.rot ? 'Abwechslung' : 'Morgens') + (list.length > 1 ? ` · Übung ${idx + 1} von ${list.length}` : '') + (bk && isRotToday(ex, bk) ? ' · heute im Wechsel' : bk && bk !== 'w' ? ' · täglich' : ''), '#/mob') + `
+    html: `<div id="mob-detail">` + topbar(ex.n, (ex.eve ? 'Abend · vor dem Schlafen' : ex.fas ? 'Faszien · optional' : ex.rot ? 'Abwechslung' : 'Morgens') + (list.length > 1 ? ` · Übung ${idx + 1} von ${list.length}` : '') + (MOBCORE.pauseInfo(ex.id, tk()) ? ' · pausiert bis 17.11.' : bk && isRotToday(ex, bk) ? ' · heute im Wechsel' : bk && bk !== 'w' ? ' · täglich' : ''), '#/mob') + `
     <div class="card mob-ill"><img class="mob-anat" src="./assets/mob/${im(ex)}.webp" alt="${esc(ex.n)} – Zielmuskulatur rot markiert"><div class="muted small mob-anat-cap"><span style="color:#ff6b6b">●</span> rot = Zielmuskulatur</div>${ex.pics ? `<div class="mob-pics">${ex.pics.map(p => `<figure class="mob-pic"><img src="./assets/mob/${p.f}.webp" alt="${esc(ex.n)} – ${esc(p.c)}" loading="lazy"><figcaption class="muted small">${esc(p.c)}</figcaption></figure>`).join('')}</div>` : `<img class="mob-seq" src="./assets/mob/seq_${im(ex)}.webp" alt="Bewegungsablauf ${esc(ex.n)}" loading="lazy">`}<div class="muted small" style="margin-top:6px">${esc(ex.sub)} · <span class="gold">→ Pfeil = Bewegungsablauf</span></div></div>
+    ${MOBCORE.pauseInfo(ex.id, tk()) ? `<div class="card mob-pause small">⏸ <b>${esc(MOBCORE.pauseInfo(ex.id, tk()).label)}</b> – wird bis dahin nicht eingeplant und zählt nicht.</div>` : ''}
     <div class="mob-dose">${esc(ex.dose)}</div>
     ${tool}
     <div class="card"><h3 class="mob-h3">So geht's</h3><ol class="mob-ol">${ex.steps.map(x => `<li>${esc(x)}</li>`).join('')}</ol></div>
     <div class="card mob-cue"><h3 class="mob-h3">✅ Darauf achten</h3>${li(ex.cues)}</div>
     <div class="card mob-err"><h3 class="mob-h3">❌ Häufige Fehler</h3>${li(ex.err)}</div>
-    <div class="card mob-note small">Nichts erzwingen, schmerzfrei bleiben.${ex.eve || ex.fas || ex.rot ? '' : ' Morgens kein langes Vorbeugen.'}</div>
+    <div class="card mob-note small">Nichts erzwingen, schmerzfrei bleiben.${ex.eve || ex.fas || ex.rot ? '' : ' Morgens kein langes Vorbeugen.'} Bei Kribbeln, Ausstrahlung ins Bein oder einschießendem Schmerz: Übung weglassen.</div>
     <button class="btn ${ok ? 'btn-outline-gold' : 'btn-red'}" data-act="mobChk" data-id="${id}">${ok ? '✓ Erledigt (tippen zum Zurücksetzen)' : 'Als erledigt abhaken'}</button>
     <div style="height:10px"></div>
     ${next ? `<button class="btn btn-ghost btn-sm" data-act="go" data-to="#/mob/${next.id}">Nächste: ${esc(next.n)} ›</button>` : `<button class="btn btn-ghost btn-sm" data-act="go" data-to="#/mob">Zur Übersicht ›</button>`}</div>`,
@@ -490,9 +517,9 @@ function saveNote(date) { const d = ld(); const h = d.history.find(x => x.date =
 function mobRep(h) {
   const L = h.log || {}, S2 = h.sets || {};
   // Blöcke: Plan des Tages (h.lineup bzw. alter Plan) + zusätzlich Abgehaktes; Zähler = erledigt / geplant
-  const blk = [['☀️ Morgen-Routine', 'm', EX], ['🔄 Abwechslung', 'w', ROT], ['☾ Abend', 'a', [...EVE, ...RET]], ['◎ Faszien', 'f', FAS]].map(([n, b, pool]) => {
+  const blk = [['☀️ Morgen-Routine', 'm', [...EX, ...MRET]], ['🔄 Abwechslung', 'w', ROT], ['☾ Abend', 'a', [...EVE, ...RET]], ['◎ Faszien', 'f', FAS]].map(([n, b, pool]) => {
     const plan = planOf(h, b); const extra = pool.filter(e => !plan.includes(e) && h.done.includes(e.id));
-    return { n, l: [...plan, ...extra], tot: plan.length + extra.filter(e => BLK[b].pool.includes(e)).length, dn: [...plan, ...extra].filter(e => h.done.includes(e.id) && BLK[b].pool.includes(e)).length }; });
+    return { n, l: [...plan, ...extra], tot: plan.length + extra.filter(e => cntPool(b).includes(e)).length, dn: [...plan, ...extra].filter(e => h.done.includes(e.id) && cntPool(b).includes(e)).length }; });
   const blocks = [];
   for (const { n, l, tot, dn } of blk) { const items = []; blocks.push({ n, tot, dn, anyDone: l.some(e => h.done.includes(e.id)), items });
     const ex = l.filter(e => h.done.includes(e.id) || (L[e.id] || []).length || S2[e.id]); if (!ex.length) continue;
@@ -503,6 +530,7 @@ function mobRep(h) {
       else { const n2 = S2[e.id] || 0; const segs = e.sets * (e.ps ? 2 : 1); det = n2 ? (e.ps ? `${Math.ceil(n2 / 2)}×${e.reps} pro Seite` : `${n2}×${e.reps}`) + (n2 < segs ? ` (${n2}/${segs})` : '') : 'abgehakt (' + e.dose + ')'; }
       items.push({ id: e.id, line: `${h.done.includes(e.id) ? '✓' : '◐'} ${e.n}: ${det}` }); } }
   return { head: `Hüft-Beweglichkeit – ${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)}`, blocks, note: h.note || '' }; }
+function cntPool(b) { return b === 'm' ? [...EX, ...MRET] : BLK[b].pool; }
 function mobText(h) { return MOBCORE.fullText(mobRep(h)); }
 /* Gemeldet-Stand pro Tag – eigener Schlüssel, Übungsdaten 'vgl-mob' bleiben unberührt */
 const SKEY = 'vgl-mob-sent';
@@ -511,4 +539,5 @@ function putSent(date, s) { try { const a = JSON.parse(localStorage.getItem(SKEY
 
 function fmtS(x) { return x >= 60 && x % 60 === 0 ? (x / 60) + ' min' : x >= 60 ? Math.floor(x / 60) + ':' + pad(x % 60) + ' min' : x + ' s'; }
 window.mobText = mobText; window.mobRep = mobRep;
+window.MOBDATA = { EX, ROT, EVE, FAS, MRET, ALL, BLK, lineup, planOf, byId }; // für Tests
 })();

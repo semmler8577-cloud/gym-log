@@ -497,3 +497,6 @@ body.scan-open #tabs{visibility:hidden}
 .mind-dot i.sel{box-shadow:0 0 0 2px #000,0 0 0 3.5px var(--red2)}
 .mind-st{text-align:center;margin-top:10px}
 #tabs a{flex:1 1 auto}/* 9 Tabs: lange Beschriftungen (Fortschritt, Messungen) bekommen etwas mehr Breite */
+
+/* v1.8.6 Hexenschuss-Pause */
+.mob-pause{margin:2px 2px 8px;padding:7px 10px;border-radius:10px;border:1px dashed rgba(212,175,55,.45);background:rgba(212,175,55,.06);color:#cfc6a8}

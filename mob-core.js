@@ -1,4 +1,4 @@
-/* Voccola Gym Log – Hüft-Beweglichkeit: Export-Text + "nur Neues senden" (v1.8.4). Reine Logik, getestet in tests/mob.test.js.
+/* Voccola Gym Log – Hüft-Beweglichkeit: Export-Text + "nur Neues senden" (v1.8.4) + Tagesplan/Hexenschuss-Pause (v1.8.6). Reine Logik, getestet in tests/mob.test.js.
    rep = { head, blocks: [{ n, dn, tot, anyDone, items: [{ id, line }] }], note }
    sent (pro Tag) = { n: Anzahl Meldungen, ex: { id: gesendete Zeile }, blocks: [Blocknamen], note } */
 (function (root, factory) {
@@ -45,5 +45,16 @@
   /* Alte Tage aufräumen (nur die letzten `keep` Tage behalten) */
   function prune(all, keep = 14) { const ks = Object.keys(all || {}).sort(); const o = {}; ks.slice(-keep).forEach(k => { o[k] = all[k]; }); return o; }
 
-  return { fullText, diffReport, markSent, prune };
+  /* v1.8.6: Tagesplan + datumsbasierte Pausen (Hexenschuss). Schlüssel 'YYYY-MM-DD', bis einschließlich `until` pausiert. */
+  const PAUSES = [{ until: '2026-11-17', why: 'Hexenschuss', label: 'pausiert bis nach Di 17.11. (Hexenschuss)',
+    ids: ['wgs', 'rolle', 'sphinx', 'sphinxrot', 'halfhero', 'turtle', 'rollbecken', 'couch', 'duoball'] }];
+  function pausedIds(key) { const o = new Set(); PAUSES.forEach(p => { if (key <= p.until) p.ids.forEach(i => o.add(i)); }); return o; }
+  function pauseInfo(id, key) { return PAUSES.find(p => key <= p.until && p.ids.includes(id)) || null; }
+  const dayNum = key => { const [y, m, d] = key.split('-').map(Number); return Math.floor(Date.UTC(y, m - 1, d) / 864e5); };
+  /* pool = [{id, core}] in Anzeige-Reihenfolge; Kern täglich, aus dem Rest k pro Tag deterministisch nach Datum. Pausierte fallen ganz raus. */
+  function planIds(pool, k, key) { const pz = pausedIds(key); const P = pool.filter(e => !pz.has(e.id)); const rot = P.filter(e => !e.core); const m = rot.length;
+    if (!m || k >= m) return P.map(e => e.id); const s0 = (dayNum(key) * k) % m; const pick = new Set(Array.from({ length: k }, (_, i) => rot[(s0 + i) % m].id));
+    return P.filter(e => e.core || pick.has(e.id)).map(e => e.id); }
+
+  return { fullText, diffReport, markSent, prune, PAUSES, pausedIds, pauseInfo, dayNum, planIds };
 });
