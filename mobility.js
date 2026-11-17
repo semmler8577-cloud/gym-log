@@ -1,4 +1,4 @@
-/* Voccola Gym Log – Hüft-Beweglichkeit (v1.8.7: Abend +Figure-4-Dehnung (Kern, auch im Hexenschuss), +Liegende Rumpfrotation im Wechsel ab 18.11.). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
+/* Voccola Gym Log – Hüft-Beweglichkeit (v1.8.8: +Hüft-Reha HipFit Phase 1 ab 18.11., Ziel 3×/Woche, optional). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
 'use strict';
 (function () {
 const KEY = 'vgl-mob';
@@ -282,7 +282,56 @@ const RET = [
     steps: ['Halbkniestand wie morgens, hinteres Knie gepolstert.', 'Gesäß anspannen, Becken leicht nach hinten kippen.', 'Arm der hinteren Seite über den Kopf strecken, leicht zur Gegenseite neigen.', 'Hüfte minimal nach vorn, 60 s ruhig atmen, dann Seite wechseln.'],
     cues: ['Dehnung vorn an der Hüfte bis in die Flanke', 'Oberkörper aufrecht'], err: ['Hohlkreuz', 'Zu tief nach vorn schieben'] }
 ];
-const ALL = [...EX, ...ROT, ...EVE, ...FAS, ...RET, ...MRET];
+
+/* v1.8.8: Hüft-Reha (HipFit) Phase 1 – ab 18.11.2026, Ziel 3×/Woche, täglich optional.
+   Keine Duplikate von bridge / birddog / hipflex; abduct bleibt in der Abwechslung. */
+const STOP = 'Stopp bei: Leistenstechen, Blockieren, Instabilität links, Ausstrahlung oder Ziehen Richtung Steißbein';
+const HIP = [
+  { id: 'hipabdst', hip: 1, core: 1, n: 'Hüftabduktion im Stehen', sub: 'Hüft-Reha · HipFit · äußere Hüfte / Gesäß', dose: '10–15 pro Seite, 3 s halten', t: 'reps', sets: 1, reps: 15, ps: true,
+    yt: 'https://www.youtube.com/watch?v=yiGPgws33Hg',
+    steps: ['Füße geschlossen zusammenstellen. Hände seitlich am Rumpf abstützen – bei Bedarf an einer Stuhllehne festhalten.', 'Gesäßmuskulatur anspannen und ein Bein vom Boden abheben, das Knie dabei etwa 45° gebeugt.', 'Becken, Oberkörper und Schultern bleiben aufrecht. Das Knie aus der Körpermitte nach außen zur Seite öffnen.', '3 Sekunden halten, dann kontrolliert in die Ausgangsstellung zurück. Das Gesäß bleibt an, die Beinachse des Standbeins bleibt stabil. 10–15 Wiederholungen, dann Seite wechseln.'],
+    cues: ['Aufrichtung: Becken, Oberkörper und Schultern gerade', 'Standbein stabil, Knie in der Beinachse', 'Gesäß die ganze Zeit anspannen', 'Knie kontrolliert nach außen öffnen – kein Schwung', STOP],
+    err: ['Standbein sackt ein oder das Knie fällt nach innen', 'Oberkörper oder Becken kippt zur Seite', 'Mit Schwung öffnen statt 3 s halten'] },
+  { id: 'wallsit', hip: 1, core: 1, n: 'Wandrutschen', sub: 'Hüft-Reha · HipFit · Oberschenkel & Gesäß', dose: '10×15 s, 5 s Pause', t: 'time', sets: 10, secs: 15, pause: 5,
+    yt: 'https://www.youtube.com/watch?v=OLALc2fsmtM',
+    steps: ['Hüftbreiter Stand, Rücken an die Wand gelehnt, Hände seitlich am Rumpf. Die Füße eine Fußlänge von der Wand entfernt aufstellen.', 'Mit aufrechtem Oberkörper an der Wand nach unten rutschen, bis die Knie 45–60° gebeugt sind – nicht tiefer.', 'Knie nicht über die Zehen hinausschieben, Knie bleiben in der Beinachse.', '15 Sekunden halten, dann nach oben in die Ausgangsstellung drücken. 5 Sekunden Pause, insgesamt 10 Wiederholungen.'],
+    cues: ['Knie nur 45–60°, nicht in die tiefe Hocke', 'Knie nicht über die Zehen, in der Beinachse bleiben', 'Oberkörper aufrecht, Rücken bleibt an der Wand', STOP],
+    err: ['Zu tief rutschen (unter 60°)', 'Knie wandern über die Zehen oder nach innen', 'Oberkörper löst sich von der Wand'] },
+  { id: 'slbalance', hip: 1, core: 1, n: 'Einbeiniges Gleichgewicht an der Wand', sub: 'Hüft-Reha · HipFit · Standbein & Hüftstabilität', dose: '10–15×5 s pro Seite, 5 s Pause', t: 'time', sets: 10, secs: 5, ps: true, pause: 5, sideThen: 1,
+    yt: 'https://www.youtube.com/watch?v=ILpQHqdF5Xc',
+    steps: ['Schulterbreiter Stand an einer Wand: ein Bein und der Arm derselben Seite berühren die Wand (Arm-Außenseite an der Wand).', 'Das wandseitige Bein 90° in Knie und Hüfte anbeugen und den Kontakt zur Wand halten.', 'Das Bein mit Spannung gegen die Wand drücken. Auf dem Standbein bei leicht gebeugtem Knie die Balance halten und auf die Beinachse achten.', '5 Sekunden halten, zurück in die Ausgangsstellung. 10–15 Wiederholungen mit 5 Sekunden Pause dazwischen, dann Seite wechseln.'],
+    cues: ['Standbein: Knie leicht gebeugt, in der Beinachse', 'Spannung gegen die Wand, nicht nur anlehnen', 'Becken bleibt gerade, Oberkörper aufrecht', 'Erst eine Seite fertig, dann wechseln', STOP],
+    err: ['Standbein durchdrücken oder Knie nach innen fallen lassen', 'Becken zur Seite kippen', 'Den Wandkontakt verlieren'] },
+  { id: 'sidewalk', hip: 1, core: 1, n: 'Seitwärts gehen', sub: 'Hüft-Reha · HipFit · äußere Hüfte, Rumpfstabilität', dose: '3–5 Bahnen à 5 Schritte hin und zurück', t: 'reps', sets: 1, reps: 5,
+    yt: 'https://www.youtube.com/watch?v=jy55DMhen_k',
+    steps: ['Hüftbreiter Stand, Fußspitzen zeigen gerade nach vorn, Arme zur Seite ausgestreckt, Knie leicht gebeugt.', 'Gleichmäßige, große Seitwärtsschritte in eine Richtung. Balance und Stabilität im Oberkörper halten – der Oberkörper neigt sich nicht zur Seite.', '5 Schritte hin, dann 5 Schritte zurück. Das ist eine Bahn.', '3–5 Bahnen wiederholen.'],
+    cues: ['Fußspitzen bleiben nach vorn, Knie leicht gebeugt', 'Oberkörper nicht zur Seite neigen', 'Gleichmäßige, kontrollierte Schritte', STOP],
+    err: ['Oberkörper schwankt oder neigt sich', 'Fußspitzen drehen nach außen', 'Schritte zu klein oder mit Schwung'] },
+  { id: 'sidetap', hip: 1, core: 1, n: 'Seit-Tippen', sub: 'Hüft-Reha · HipFit · äußere Hüfte', dose: '10–15 pro Seite', t: 'reps', sets: 1, reps: 15, ps: true,
+    yt: 'https://www.youtube.com/watch?v=Z01xasXBQrw',
+    steps: ['Schulterbreiter Stand, Hände seitlich am Rumpf abstützen.', 'Ein Bein zur Seite strecken und mit der Fußspitze auf den Boden tippen – kein tiefer Ausfallschritt.', 'Das Bein anschließend in den schulterbreiten Stand zurückstellen.', 'Rumpf stabil, Oberkörper aufrecht. 10–15 Mal auf einer Seite, dann wechseln.'],
+    cues: ['Nur tippen, nicht in die Tiefe gehen', 'Rumpf stabil, Oberkörper aufrecht', 'Standbein bleibt in der Beinachse', STOP],
+    err: ['Zu weit oder zu tief zur Seite sinken', 'Oberkörper zur Seite neigen', 'Das Standbein einknicken'] },
+  { id: 'smalllunge', hip: 1, core: 1, n: 'Kleine Ausfallschritte', sub: 'Hüft-Reha · HipFit · Gesäß & Beinachse', dose: '10–15 pro Seite à 5 s', t: 'time', sets: 10, secs: 5, ps: true, pause: 5, sideThen: 1,
+    yt: 'https://www.youtube.com/watch?v=qKQJMwesjnM',
+    steps: ['Hüftbreiter Stand, Hände seitlich am Rumpf. Nur einen kleinen Ausfallschritt nach vorn – kurze Schrittstellung.', 'Beinachse: das vordere Knie zeigt in Richtung der Fußspitze. Vorderes Knie beugen und 5 Sekunden halten.', 'Die Ferse des hinteren Fußes bleibt am Boden, Becken gerade, Oberkörper aufrecht.', 'Spannung lösen, Knie wieder strecken. 10–15 Mal auf einer Seite, dann wechseln.'],
+    cues: ['Nur wenn der untere Rücken ruhig bleibt', 'Kurze Schrittstellung, hintere Ferse bleibt unten', 'Vorderes Knie in Richtung Fußspitze, nicht nach innen', 'Becken gerade, Oberkörper aufrecht', STOP],
+    err: ['Lange Schrittstellung oder hintere Ferse hebt ab', 'Vorderes Knie fällt nach innen', 'Hohlkreuz oder Ziehen im unteren Rücken – dann heute weglassen', 'Wippen statt 5 s halten'] }
+];
+const HIP2 = [
+  { id: 'stepdown', hip: 1, locked: 1, n: 'Herabsteigen', sub: 'Hüft-Reha · HipFit · Phase 2', dose: '10–15 pro Seite', t: 'reps', sets: 1, reps: 15, ps: true,
+    yt: 'https://www.youtube.com/watch?v=__zvHYMJYvk',
+    steps: ['Seitlich auf einer Treppenstufe oder einem Stepper stehen. Bei Bedarf am Geländer festhalten oder Hände seitlich am Rumpf abstützen.', 'Oberkörper aufrecht. Ein Bein seitlich der Stufe absenken, bis die Ferse den Boden berührt – dazu das Standbein in Hüfte und Knie beugen.', 'Das gebeugte Bein auf der Stufe bleibt in der Beinachse. Sobald die Ferse den Boden berührt, wieder nach oben in die Ausgangsstellung drücken.', '10–15 Wiederholungen auf einer Seite, dann Seite wechseln.'],
+    cues: ['Phase 2: nach MRT und wenn der Rücken ruhig ist – noch nicht aktiv', 'Standbein in der Beinachse', 'Oberkörper aufrecht', STOP],
+    err: ['Knie des Standbeins fällt nach innen', 'Zu tief oder unkontrolliert absenken'] },
+  { id: 'slsquat', hip: 1, locked: 1, n: 'Einbeinige Kniebeuge', sub: 'Hüft-Reha · HipFit · Phase 2', dose: '10–15 pro Seite, 45–60°', t: 'reps', sets: 1, reps: 15, ps: true,
+    yt: 'https://www.youtube.com/watch?v=ofKEb-bQUHk',
+    steps: ['Auf einem Bein stehen, das andere Bein 90° im Knie anbeugen. Bei Bedarf an einer Stuhllehne festhalten oder die Arme locker hängen lassen.', 'Das Standbein zwischen 45 und 60° beugen, dann das Knie wieder strecken und in die Ausgangsstellung zurückkehren.', 'Knie nicht über die Zehen hinausschieben, Knie bleibt in der Beinachse.', '10–15 Wiederholungen auf einer Seite, dann Seite wechseln.'],
+    cues: ['Phase 2: nach MRT und wenn der Rücken ruhig ist – noch nicht aktiv', 'Nur 45–60°, nicht tiefer', 'Knie in der Beinachse, nicht über die Zehen', STOP],
+    err: ['Knie wandert über die Zehen oder nach innen', 'Zu tief beugen', 'Oberkörper kippt nach vorn'] }
+];
+
+const ALL = [...EX, ...ROT, ...EVE, ...FAS, ...RET, ...MRET, ...HIP];
 const byId = id => ALL.find(e => e.id === id);
 const im = ex => ex.img || ex.id;
 
@@ -290,13 +339,13 @@ const im = ex => ex.img || ex.id;
    Jeder Block hat feste Kern-Übungen (core: 1, täglich) + einen Wechsel-Pool. Aus dem Pool kommen pro Tag k Übungen,
    deterministisch nach Datum (Tag-Nr. × k mod Poolgröße → lückenlos, jede Übung kommt regelmäßig dran). */
 // v1.8.6: Morgen k=1 – 9 Kern-Übungen + 1 im Wechsel (World's Greatest Stretch / Bein über die Rolle), damit die Routine kurz bleibt
-const BLK = { m: { pool: EX, k: 1 }, w: { pool: ROT, k: 3 }, a: { pool: EVE, k: 3 }, f: { pool: FAS, k: 3 } };
+const BLK = { m: { pool: EX, k: 1 }, w: { pool: ROT, k: 3 }, a: { pool: EVE, k: 3 }, f: { pool: FAS, k: 3 }, h: { pool: HIP, k: 6 } };
 // v1.8.6: Logik in MOBCORE.planIds (getestet) – pausierte Übungen (Hexenschuss bis 17.11.) fallen raus, zählen nicht im Zähler
-function lineup(b, key) { const B = BLK[b]; return MOBCORE.planIds(B.pool, B.k, key).map(byId); }
+function lineup(b, key) { if (b === 'h' && !MOBCORE.hipOpen(key)) return []; const B = BLK[b]; return MOBCORE.planIds(B.pool, B.k, key).map(byId); }
 const pausedNow = b => BLK[b].pool.filter(e => MOBCORE.pauseInfo(e.id, tk()));
 const pauseNote = b => { const p = pausedNow(b); return p.length ? `<div class="mob-pause muted small">⏸ ${p.map(e => esc(e.n)).join(', ')} – ${esc(MOBCORE.pauseInfo(p[0].id, tk()).label)}</div>` : ''; };
 const isRotToday = (e, b) => b !== 'w' && !e.core;
-const blockOf = e => e.eve ? 'a' : e.fas ? 'f' : e.rot ? 'w' : (EX.includes(e) || MRET.includes(e)) ? 'm' : null;
+const blockOf = e => e.hip ? 'h' : e.eve ? 'a' : e.fas ? 'f' : e.rot ? 'w' : (EX.includes(e) || MRET.includes(e)) ? 'm' : null;
 // heutige Liste eines Blocks: Tages-Lineup + heute bereits Abgehaktes (z. B. vor dem Update), damit nichts verschwindet
 function todayList(b, d) { const lu = lineup(b, tk()); return lu.concat([...BLK[b].pool, ...(b === 'm' ? MRET : [])].filter(e => !lu.includes(e) && d.today.done[e.id])); }
 
@@ -313,7 +362,23 @@ function isExtra(ex, b, d) { return !!(d.today.extra && (d.today.extra[b] || [])
 
 // Plan eines gespeicherten Tages: neue Einträge haben h.lineup, ältere (vor v1.7.15) bekommen den damaligen Plan
 function planOf(h, b) { if (h.lineup && h.lineup[b]) return h.lineup[b].map(byId).filter(Boolean);
-  return b === 'm' ? EX_OLD.map(byId) : b === 'w' ? rotForOld(h.date) : b === 'a' ? EVE.filter(e => e.id !== 'psoasreset' && e.id !== 'kniefersenrock' && e.id !== 'hipflexstand' && e.id !== 'hipwallrot' && e.id !== 'hipwallstep' && e.id !== 'fig4' && e.id !== 'rumpfrot') : FAS.slice(); }
+  if (b === 'm') return EX_OLD.map(byId);
+  if (b === 'w') return rotForOld(h.date);
+  if (b === 'a') return EVE.filter(e => e.id !== 'psoasreset' && e.id !== 'kniefersenrock' && e.id !== 'hipflexstand' && e.id !== 'hipwallrot' && e.id !== 'hipwallstep' && e.id !== 'fig4' && e.id !== 'rumpfrot');
+  if (b === 'f') return FAS.slice();
+  return []; } // h (HipFit) und Unbekanntes: bei alten Einträgen ohne lineup nicht nachträglich einfügen
+
+
+function hipDoneKeys(d, key) {
+  const keys = [];
+  (d.history || []).forEach(h => { const plan = planOf(h, 'h'); if (plan.length && plan.every(e => h.done.includes(e.id))) keys.push(h.date); });
+  if (key && MOBCORE.hipOpen(key) && d.today && d.today.date === key && !keys.includes(key)) {
+    const plan = lineup('h', key);
+    if (plan.length && plan.every(e => d.today.done[e.id])) keys.push(key);
+  }
+  return keys;
+}
+function hipWeekDone(d, key) { return MOBCORE.hipWeekCount(hipDoneKeys(d, key), key); }
 
 /* ---------- Statistik ---------- */
 function stats() {
@@ -326,9 +391,11 @@ function stats() {
 
 /* ---------- Timer ---------- */
 let T = null; // {id, segs:[{set,side}], i, left, run, last}
-function segsOf(ex) { const a = []; const nL = ex.setsL || ex.sets, nR = ex.setsR || ex.sets, mx = ex.ps ? Math.max(nL, nR) : ex.sets;
-  for (let s = 1; s <= mx; s++) { if (!ex.ps) a.push({ set: s, side: '', secs: ex.secs, n: ex.sets }); else { if (s <= nL) a.push({ set: s, side: 'Links', secs: ex.secsL || ex.secs, n: nL }); if (s <= nR) a.push({ set: s, side: 'Rechts', secs: ex.secsR || ex.secs, n: nR }); } }
-  const b = []; a.forEach((g, k) => { b.push(g); if (k < a.length - 1) { const nx = a[k + 1]; b.push({ pause: true, set: nx.set, side: 'Pause → ' + (nx.side || 'nächster Satz'), secs: 12, n: nx.n }); } });
+function segsOf(ex) { const a = []; const nL = ex.setsL || ex.sets, nR = ex.setsR || ex.sets, mx = ex.ps ? Math.max(nL, nR) : ex.sets; const pz = ex.pause != null ? ex.pause : 12;
+  if (!ex.ps) { for (let s = 1; s <= ex.sets; s++) a.push({ set: s, side: '', secs: ex.secs, n: ex.sets }); }
+  else if (ex.sideThen) { for (let s = 1; s <= nL; s++) a.push({ set: s, side: 'Links', secs: ex.secsL || ex.secs, n: nL }); for (let s = 1; s <= nR; s++) a.push({ set: s, side: 'Rechts', secs: ex.secsR || ex.secs, n: nR }); }
+  else { for (let s = 1; s <= mx; s++) { if (s <= nL) a.push({ set: s, side: 'Links', secs: ex.secsL || ex.secs, n: nL }); if (s <= nR) a.push({ set: s, side: 'Rechts', secs: ex.secsR || ex.secs, n: nR }); } }
+  const b = []; a.forEach((g, k) => { b.push(g); if (k < a.length - 1 && pz) { const nx = a[k + 1]; b.push({ pause: true, set: nx.set, side: 'Pause → ' + (nx.side || 'nächster Satz'), secs: pz, n: nx.n }); } });
   return b; }
 function logSeg(id, sg, secs) { const d = day(); const L = d.today.log || (d.today.log = {}); (L[id] || (L[id] = [])).push({ side: sg.side, set: sg.set, secs: Math.round(secs) }); sv(d); }
 function beep(n = 1, f = 880) {
@@ -382,22 +449,23 @@ function markDone(id, val) { const d = day(); if (val) { d.today.done[id] = true
 function row(ex, d, i, b) {
   const ok = !!d.today.done[ex.id]; const xtra = (b === 'm' || b === 'a') && isExtra(ex, b, d);
   return `<div class="card mob-row ${ok ? 'ok' : ''}" data-act="go" data-to="#/mob/${ex.id}">
-    <button class="mob-chk ${ok ? 'on' : ''}" data-act="mobChk" data-id="${ex.id}" aria-label="Abhaken">${ok ? '✓' : (xtra ? '＋' : ex.eve ? '☾' : ex.fas ? '◎' : ex.rot ? '🔄' : i)}</button>
+    <button class="mob-chk ${ok ? 'on' : ''}" data-act="mobChk" data-id="${ex.id}" aria-label="Abhaken">${ok ? '✓' : (xtra ? '＋' : ex.hip ? '◇' : ex.eve ? '☾' : ex.fas ? '◎' : ex.rot ? '🔄' : i)}</button>
     <div class="mob-thumb"><img class="mob-thumb-img" src="./assets/mob/${im(ex)}.webp" alt="" loading="lazy"></div>
     <div class="mob-rt"><b>${esc(ex.n)}</b><div class="muted small">${esc(ex.dose)}</div>${xtra ? '<div class="mob-rotl">＋ Zusatz (optional)</div>' : isRotToday(ex, b) ? '<div class="mob-rotl">↻ heute im Wechsel</div>' : ''}</div><span class="mob-go">›</span></div>`;
 }
 function viewList() {
-  const d = day(); const s = stats(); const MT = blockList('m', d), RT = todayList('w', d), ET = blockList('a', d), FT = todayList('f', d);
-  const mPlan = planCount('m', d), aPlan = planCount('a', d);
+  const d = day(); const s = stats(); const MT = blockList('m', d), RT = todayList('w', d), ET = blockList('a', d), FT = todayList('f', d), HT = todayList('h', d);
+  const mPlan = planCount('m', d), aPlan = planCount('a', d), hPlan = planCount('h', d); const hipOn = MOBCORE.hipOpen(tk()); const hWeek = hipWeekDone(d, tk());
   const cntPlan = (l, planN) => Math.min(planN, l.filter(e => d.today.done[e.id] && !isExtra(e, l === MT ? 'm' : 'a', d)).length);
   // Erledigt-Zähler nur über Plan (ohne Extras)
   const nDone = lineup('m', tk()).filter(e => d.today.done[e.id]).length;
   const rDone = RT.filter(e => d.today.done[e.id]).length;
   const eDone = lineup('a', tk()).filter(e => d.today.done[e.id]).length;
   const fDone = FT.filter(e => d.today.done[e.id]).length;
+  const hDone = lineup('h', tk()).filter(e => d.today.done[e.id]).length;
   const nCore = b => BLK[b].pool.filter(e => e.core).length;
   const st = (n, tot) => n >= tot ? '<span class="mob-st ok">✓ heute erledigt</span>' : n ? `<span class="mob-st part">${n}/${tot} · läuft</span>` : '<span class="mob-st">noch offen</span>';
-  const hist = [...d.history].reverse().slice(0, 8).map(h => `<div class="mob-h"><span>${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)}</span><span class="muted small">${h.note ? '📝 ' : ''}${h.done.filter(x => EX.some(e => e.id === x) || MRET.some(e => e.id === x)).length}/${planOf(h, 'm').length} Übungen${h.done.some(x => ROT.some(e => e.id === x)) ? ' · 🔄 Abwechslung' : ''}${h.done.some(x => [...EVE, ...RET].some(e => e.id === x)) ? ' · ☾ Abend' : ''}${h.done.some(x => FAS.some(e => e.id === x)) ? ' · ◎ Faszien' : ''}</span><button class="btn btn-ghost btn-sm" style="width:auto;padding:4px 10px;margin-left:6px" data-act="mobExp" data-date="${h.date}">Exportieren</button></div>`).join('') || '<div class="muted small">Noch keine Einheit – heute ist ein guter Tag zum Starten 🙂</div>';
+  const hist = [...d.history].reverse().slice(0, 8).map(h => `<div class="mob-h"><span>${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)}</span><span class="muted small">${h.note ? '📝 ' : ''}${h.done.filter(x => EX.some(e => e.id === x) || MRET.some(e => e.id === x)).length}/${planOf(h, 'm').length} Übungen${h.done.some(x => ROT.some(e => e.id === x)) ? ' · 🔄 Abwechslung' : ''}${h.done.some(x => [...EVE, ...RET].some(e => e.id === x)) ? ' · ☾ Abend' : ''}${h.done.some(x => FAS.some(e => e.id === x)) ? ' · ◎ Faszien' : ''}${h.done.some(x => HIP.some(e => e.id === x)) ? ' · ◇ HipFit' : ''}</span><button class="btn btn-ghost btn-sm" style="width:auto;padding:4px 10px;margin-left:6px" data-act="mobExp" data-date="${h.date}">Exportieren</button></div>`).join('') || '<div class="muted small">Noch keine Einheit – heute ist ein guter Tag zum Starten 🙂</div>';
   return {
     html: topbar('Hüft-Beweglichkeit', 'Dehnung & Gesundheit', null) + `
     <div class="mob-stats">
@@ -408,7 +476,7 @@ function viewList() {
     <div class="card mob-note">⚠️ <b>Morgens kein langes Vorbeugen</b> (Bandscheibe), <b>kein tiefes Hohlkreuz</b>. Nichts erzwingen – <b>schmerzfrei bleiben</b>. Bei <b>Kribbeln, Ausstrahlung ins Bein oder einschießendem Schmerz</b> die Übung weglassen.</div>
     <div class="mob-prog"><div style="width:${mPlan ? (nDone / mPlan * 100) : 0}%"></div></div>
     <div class="card mob-today"><b>Heute</b> · ${s.todayDone ? '<span class="mob-st ok">✓ Einheit abgeschlossen</span>' : '<span class="mob-st">Einheit noch offen</span>'}
-      <div class="mob-tl"><span>☀️ Morgen-Routine</span>${st(nDone, mPlan)}</div><div class="mob-tl"><span>🔄 Abwechslung</span>${st(rDone, RT.length)}</div><div class="mob-tl"><span>☾ Abend</span>${st(eDone, aPlan)}</div><div class="mob-tl"><span>◎ Faszien</span>${st(fDone, FT.length)}</div></div>
+      <div class="mob-tl"><span>☀️ Morgen-Routine</span>${st(nDone, mPlan)}</div><div class="mob-tl"><span>🔄 Abwechslung</span>${st(rDone, RT.length)}</div><div class="mob-tl"><span>☾ Abend</span>${st(eDone, aPlan)}</div>${hipOn ? `<div class="mob-tl"><span>◇ Hüft-Reha (HipFit)</span>${hDone >= hPlan && hPlan ? '<span class="mob-st ok">✓ heute erledigt</span>' : hDone ? `<span class="mob-st part">${hDone}/${hPlan} · läuft</span>` : `<span class="mob-st">${hWeek}/${MOBCORE.HIP_TARGET} diese Woche</span>`}</div>` : ''}<div class="mob-tl"><span>◎ Faszien</span>${st(fDone, FT.length)}</div></div>
     <div class="sec-h muted small" style="margin:10px 2px 2px">☀️ MORGEN-ROUTINE · ${nDone}/${mPlan} erledigt</div><div class="mob-when">Morgens nach dem Aufstehen · ${nCore('m')} täglich + ${mPlan - nCore('m')} im Wechsel</div>
     ${MT.map((e, i) => row(e, d, i + 1, 'm')).join('')}${pauseNote('m')}
     <button class="btn btn-outline-gold btn-sm" data-act="mobExtra" data-b="m" style="margin:4px 0 8px">＋ Zusatzübung</button>
@@ -417,6 +485,9 @@ function viewList() {
     <div class="sec-h muted small" style="margin:18px 2px 2px">☾ ABEND (OPTIONAL) · ${eDone}/${aPlan} erledigt</div><div class="mob-when">Abends vor dem Schlafen · ${nCore('a')} täglich + ${aPlan - nCore('a')} im Wechsel</div>
     ${ET.map((e, i) => row(e, d, i + 1, 'a')).join('')}${pauseNote('a')}
     <button class="btn btn-outline-gold btn-sm" data-act="mobExtra" data-b="a" style="margin:4px 0 8px">＋ Zusatzübung</button>
+    ${hipOn ? `<div class="sec-h muted small" style="margin:18px 2px 2px">◇ HÜFT-REHA (HIPFIT) · ${hDone}/${hPlan} erledigt · ${hWeek}/${MOBCORE.HIP_TARGET} diese Woche</div><div class="mob-when">Vom Gelenkquartier empfohlen · Ziel ${MOBCORE.HIP_TARGET}× pro Woche, nicht jeden Tag nötig · Start 18.11.2026 · zu jeder Übung gibt es das HipFit-Video</div>
+    ${HT.map((e, i) => row(e, d, i + 1, 'h')).join('')}
+    <div class="card mob-locked"><div class="muted small"><b>Phase 2</b> – nach MRT und wenn der Rücken ruhig ist, noch nicht aktiv: ${HIP2.map(e => esc(e.n)).join(', ')}.</div></div>` : ''}
     <div class="sec-h muted small" style="margin:18px 2px 2px">◎ FASZIEN (OPTIONAL)</div><div class="mob-when">Blackroll · Duoball/Bälle · Shakti-Matte – ideal abends · ${nCore('f')} täglich + ${FT.length - nCore('f')} im Wechsel</div>
     ${FT.map((e, i) => row(e, d, i + 1, 'f')).join('')}${pauseNote('f')}
     <div style="height:6px"></div>
@@ -435,7 +506,7 @@ function viewDetail(id) {
       <div class="mt-in"><div class="mt-num">0:00</div><div class="mt-sub"></div></div>
       <div class="mt-segs">${T.segs.filter(s => !s.pause).map(s => `<span class="mt-seg">${s.side ? s.side[0] : 'S'}${s.set}</span>`).join('')}</div>
       <div class="row" style="margin-top:12px"><button class="btn btn-red btn-sm" data-act="mobT">▶ Start</button><button class="btn btn-ghost btn-sm" data-act="mobTR" style="max-width:120px">↺ Reset</button></div>
-      <div class="muted small" style="margin-top:8px;text-align:center">${ex.ps ? 'Seitenwechsel automatisch mit Signalton/Vibration · 12 s Pause zum Umsetzen' : (ex.sets > 1 ? '12 s Pause zwischen den Sätzen · ' : '') + 'Signalton/Vibration am Ende'} · 3-2-1-Countdown · Display bleibt an</div></div>`;
+      <div class="muted small" style="margin-top:8px;text-align:center">${ex.ps ? 'Seitenwechsel automatisch mit Signalton/Vibration · ' + (ex.pause != null ? ex.pause : 12) + ' s Pause zum Umsetzen' : (ex.sets > 1 ? (ex.pause != null ? ex.pause : 12) + ' s Pause zwischen den Sätzen · ' : '') + 'Signalton/Vibration am Ende'} · 3-2-1-Countdown · Display bleibt an</div></div>`;
   } else {
     const n = d.today.sets[id] || 0; const tot = ex.sets * (ex.ps ? 2 : 1);
     const segs = []; for (let s = 1; s <= ex.sets; s++) (ex.ps ? ['Links', 'Rechts'] : ['']).forEach(side => segs.push({ s, side }));
@@ -444,15 +515,16 @@ function viewDetail(id) {
   }
   const li = a => `<ul class="mob-ul">${a.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
   return {
-    html: `<div id="mob-detail">` + topbar(ex.n, (ex.eve ? 'Abend · vor dem Schlafen' : ex.fas ? 'Faszien · optional' : ex.rot ? 'Abwechslung' : 'Morgens') + (list.length > 1 ? ` · Übung ${idx + 1} von ${list.length}` : '') + (MOBCORE.pauseInfo(ex.id, tk()) ? ' · pausiert bis 17.11.' : bk && isRotToday(ex, bk) ? ' · heute im Wechsel' : bk && bk !== 'w' ? ' · täglich' : ''), '#/mob') + `
+    html: `<div id="mob-detail">` + topbar(ex.n, (ex.hip ? 'Hüft-Reha · HipFit · 3×/Woche' : ex.eve ? 'Abend · vor dem Schlafen' : ex.fas ? 'Faszien · optional' : ex.rot ? 'Abwechslung' : 'Morgens') + (list.length > 1 ? ` · Übung ${idx + 1} von ${list.length}` : '') + (MOBCORE.pauseInfo(ex.id, tk()) ? ' · pausiert bis 17.11.' : ex.hip ? ' · optional' : bk && isRotToday(ex, bk) ? ' · heute im Wechsel' : bk && bk !== 'w' ? ' · täglich' : ''), '#/mob') + `
     <div class="card mob-ill"><img class="mob-anat" src="./assets/mob/${im(ex)}.webp" alt="${esc(ex.n)} – Zielmuskulatur rot markiert"><div class="muted small mob-anat-cap"><span style="color:#ff6b6b">●</span> rot = Zielmuskulatur</div>${ex.pics ? `<div class="mob-pics">${ex.pics.map(p => `<figure class="mob-pic"><img src="./assets/mob/${p.f}.webp" alt="${esc(ex.n)} – ${esc(p.c)}" loading="lazy"><figcaption class="muted small">${esc(p.c)}</figcaption></figure>`).join('')}</div>` : `<img class="mob-seq" src="./assets/mob/seq_${im(ex)}.webp" alt="Bewegungsablauf ${esc(ex.n)}" loading="lazy">`}<div class="muted small" style="margin-top:6px">${esc(ex.sub)} · <span class="gold">→ Pfeil = Bewegungsablauf</span></div></div>
     ${MOBCORE.pauseInfo(ex.id, tk()) ? `<div class="card mob-pause small">⏸ <b>${esc(MOBCORE.pauseInfo(ex.id, tk()).label)}</b> – wird bis dahin nicht eingeplant und zählt nicht.</div>` : ''}
     <div class="mob-dose">${esc(ex.dose)}</div>
+    ${ex.yt ? `<a class="btn btn-outline-gold btn-sm mob-yt" href="${esc(ex.yt)}" target="_blank" rel="noopener">▶ Video ansehen (HipFit)</a>` : ''}
     ${tool}
     <div class="card"><h3 class="mob-h3">So geht's</h3><ol class="mob-ol">${ex.steps.map(x => `<li>${esc(x)}</li>`).join('')}</ol></div>
     <div class="card mob-cue"><h3 class="mob-h3">✅ Darauf achten</h3>${li(ex.cues)}</div>
     <div class="card mob-err"><h3 class="mob-h3">❌ Häufige Fehler</h3>${li(ex.err)}</div>
-    <div class="card mob-note small">Nichts erzwingen, schmerzfrei bleiben.${ex.eve || ex.fas || ex.rot ? '' : ' Morgens kein langes Vorbeugen.'} Bei Kribbeln, Ausstrahlung ins Bein oder einschießendem Schmerz: Übung weglassen.</div>
+    <div class="card mob-note small">Nichts erzwingen, schmerzfrei bleiben.${ex.hip ? ' Stopp bei Leistenstechen, Blockieren, Instabilität links, Ausstrahlung oder Ziehen Richtung Steißbein.' : (ex.eve || ex.fas || ex.rot ? '' : ' Morgens kein langes Vorbeugen.')} Bei Kribbeln, Ausstrahlung ins Bein oder einschießendem Schmerz: Übung weglassen.</div>
     <button class="btn ${ok ? 'btn-outline-gold' : 'btn-red'}" data-act="mobChk" data-id="${id}">${ok ? '✓ Erledigt (tippen zum Zurücksetzen)' : 'Als erledigt abhaken'}</button>
     <div style="height:10px"></div>
     ${next ? `<button class="btn btn-ghost btn-sm" data-act="go" data-to="#/mob/${next.id}">Nächste: ${esc(next.n)} ›</button>` : `<button class="btn btn-ghost btn-sm" data-act="go" data-to="#/mob">Zur Übersicht ›</button>`}</div>`,
@@ -527,7 +599,7 @@ function saveNote(date) { const d = ld(); const h = d.history.find(x => x.date =
 function mobRep(h) {
   const L = h.log || {}, S2 = h.sets || {};
   // Blöcke: Plan des Tages (h.lineup bzw. alter Plan) + zusätzlich Abgehaktes; Zähler = erledigt / geplant
-  const blk = [['☀️ Morgen-Routine', 'm', [...EX, ...MRET]], ['🔄 Abwechslung', 'w', ROT], ['☾ Abend', 'a', [...EVE, ...RET]], ['◎ Faszien', 'f', FAS]].map(([n, b, pool]) => {
+  const blk = [['☀️ Morgen-Routine', 'm', [...EX, ...MRET]], ['🔄 Abwechslung', 'w', ROT], ['☾ Abend', 'a', [...EVE, ...RET]], ['◇ Hüft-Reha (HipFit)', 'h', HIP], ['◎ Faszien', 'f', FAS]].map(([n, b, pool]) => {
     const plan = planOf(h, b); const extra = pool.filter(e => !plan.includes(e) && h.done.includes(e.id));
     return { n, l: [...plan, ...extra], tot: plan.length + extra.filter(e => cntPool(b).includes(e)).length, dn: [...plan, ...extra].filter(e => h.done.includes(e.id) && cntPool(b).includes(e)).length }; });
   const blocks = [];
@@ -549,5 +621,5 @@ function putSent(date, s) { try { const a = JSON.parse(localStorage.getItem(SKEY
 
 function fmtS(x) { return x >= 60 && x % 60 === 0 ? (x / 60) + ' min' : x >= 60 ? Math.floor(x / 60) + ':' + pad(x % 60) + ' min' : x + ' s'; }
 window.mobText = mobText; window.mobRep = mobRep;
-window.MOBDATA = { EX, ROT, EVE, FAS, MRET, ALL, BLK, lineup, planOf, byId }; // für Tests
+window.MOBDATA = { EX, ROT, EVE, FAS, MRET, HIP, HIP2, ALL, BLK, lineup, planOf, byId, hipWeekDone, hipDoneKeys }; // für Tests
 })();

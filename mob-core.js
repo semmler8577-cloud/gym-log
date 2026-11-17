@@ -1,4 +1,4 @@
-/* Voccola Gym Log – Hüft-Beweglichkeit: Export-Text + "nur Neues senden" (v1.8.4) + Tagesplan/Hexenschuss-Pause (v1.8.6, v1.8.7 +rumpfrot). Reine Logik, getestet in tests/mob.test.js.
+/* Voccola Gym Log – Hüft-Beweglichkeit: Export-Text + "nur Neues senden" (v1.8.4) + Tagesplan/Hexenschuss-Pause (v1.8.6, v1.8.7 +rumpfrot, v1.8.8 HipFit ab 18.11.). Reine Logik, getestet in tests/mob.test.js.
    rep = { head, blocks: [{ n, dn, tot, anyDone, items: [{ id, line }] }], note }
    sent (pro Tag) = { n: Anzahl Meldungen, ex: { id: gesendete Zeile }, blocks: [Blocknamen], note } */
 (function (root, factory) {
@@ -56,5 +56,28 @@
     if (!m || k >= m) return P.map(e => e.id); const s0 = (dayNum(key) * k) % m; const pick = new Set(Array.from({ length: k }, (_, i) => rot[(s0 + i) % m].id));
     return P.filter(e => e.core || pick.has(e.id)).map(e => e.id); }
 
-  return { fullText, diffReport, markSent, prune, PAUSES, pausedIds, pauseInfo, dayNum, planIds };
+  /* v1.8.8: Hüft-Reha (HipFit) ab 18.11.2026, Ziel 3 Einheiten pro Kalenderwoche (Mo–So). */
+  const HIP_START = '2026-11-18';
+  const HIP_TARGET = 3;
+  const hipOpen = key => !!key && key >= HIP_START;
+  function keyFromDayNum(n) {
+    const d = new Date(n * 864e5);
+    const p = x => String(x).padStart(2, '0');
+    return d.getUTCFullYear() + '-' + p(d.getUTCMonth() + 1) + '-' + p(d.getUTCDate());
+  }
+  function weekStartKey(key) {
+    const [y, m, d] = key.split('-').map(Number);
+    const wd = new Date(Date.UTC(y, m - 1, d)).getUTCDay(); // 0 = So
+    return keyFromDayNum(dayNum(key) - ((wd + 6) % 7));
+  }
+  function weekEndKey(key) { return keyFromDayNum(dayNum(weekStartKey(key)) + 6); }
+  /* doneKeys = ['YYYY-MM-DD', ...] Tage, an denen der HipFit-Block vollständig erledigt wurde. */
+  function hipWeekCount(doneKeys, key) {
+    if (!hipOpen(key)) return 0;
+    const a = weekStartKey(key), b = weekEndKey(key), from = a > HIP_START ? a : HIP_START;
+    return [...new Set(doneKeys || [])].filter(k => k >= from && k <= b).length;
+  }
+
+  return { fullText, diffReport, markSent, prune, PAUSES, pausedIds, pauseInfo, dayNum, planIds,
+    HIP_START, HIP_TARGET, hipOpen, keyFromDayNum, weekStartKey, weekEndKey, hipWeekCount };
 });

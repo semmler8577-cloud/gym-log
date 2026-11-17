@@ -500,3 +500,6 @@ body.scan-open #tabs{visibility:hidden}
 
 /* v1.8.6 Hexenschuss-Pause */
 .mob-pause{margin:2px 2px 8px;padding:7px 10px;border-radius:10px;border:1px dashed rgba(212,175,55,.45);background:rgba(212,175,55,.06);color:#cfc6a8}
+
+.mob-yt{display:flex;align-items:center;justify-content:center;margin:0 0 12px;text-decoration:none}
+.mob-locked{padding:10px 12px;margin:4px 0 8px;border-style:dashed;opacity:.85}
