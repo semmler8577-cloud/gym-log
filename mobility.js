@@ -1,4 +1,4 @@
-/* Voccola Gym Log – Hüft-Beweglichkeit (v1.8.9: HipFit-Bilder korrigiert, Dosierungen nach Video, Stopp Einklemmen, Gym/Alltag + MRT-Fragen bis zum MRT). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
+/* Voccola Gym Log – Hüft-Beweglichkeit (v1.9.0: HipFit + Seitlage-Abduktion, Gluteus-medius-Seitstütz, einbeinige Brücke; Pause bis nach MRT; Schmerz-Ampel; Alltag/Schlaf/Gym; MRT-Fragen LCE/Torsion/Zweitmeinung). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
 'use strict';
 (function () {
 const KEY = 'vgl-mob';
@@ -85,7 +85,7 @@ const EX = [
     err: ['Knie auf den Boden zwingen', 'Rundrücken / zusammensacken', 'Knie verdrehen statt aus der Hüfte rotieren'] },
   { id: 'hipflex', core: 1, n: 'Aktiver Hüftbeuger-Stretch im Ausfallschritt', sub: 'Becken nach vorn schieben & lösen · Gesäß aktiv', dose: '20 Wdh. pro Seite', t: 'reps', sets: 1, reps: 20, ps: true,
     steps: ['Großer Ausfallschritt: hinteres Knie auf einer weichen Unterlage (oder Bein lang), vorderer Fuß flach, Oberkörper aufrecht, Hände an die Hüfte.', 'Gesäß der hinteren Seite fest anspannen und das Becken leicht nach hinten kippen (Schambein Richtung Bauchnabel).', 'Becken ruhig nach vorn schieben, bis vorne in der Hüfte/Leiste ein Ziehen kommt – dann wieder lösen (zurücknehmen).', '20 langsame Wiederholungen, dann Seite wechseln.'],
-    cues: ['Erst Po anspannen und Becken aufrichten – dann schieben. Solange Strecken im Rücken zieht: weniger tief', 'Dehnung vorne an der Hüfte/Leiste des hinteren Beins', 'Rippen unten, Bauch leicht fest – nur die Hüfte bewegt sich', 'Kleine, fließende Bewegung ohne Schwung', 'Vorderes Knie über dem Fuß', 'Kribbeln, Ausstrahlung ins Bein oder einschießender Schmerz → Übung heute weglassen'],
+    cues: ['Erst Po anspannen und Becken aufrichten – dann schieben. Solange Strecken im Rücken zieht: weniger tief', 'Becken aufgerichtet, nur ein kurzer Weg – nicht weit in die Streckung', 'Dehnung vorne an der Hüfte/Leiste des hinteren Beins', 'Rippen unten, Bauch leicht fest – nur die Hüfte bewegt sich', 'Kleine, fließende Bewegung ohne Schwung', 'Vorderes Knie über dem Fuß', 'Kribbeln, Ausstrahlung ins Bein oder einschießender Schmerz → Übung heute weglassen'],
     err: ['Ins Hohlkreuz ausweichen statt Becken zu kippen', 'Zu weit nach vorn schieben – weniger ist mehr', 'Gesäß locker lassen', 'Wippen mit Schwung'] },
   { id: 'hamfloss', core: 1, n: 'Hamstring-Floss in Rückenlage', sub: 'Beinrückseite & Nervengleiten · ohne Vorbeugen', dose: '10 pro Seite, langsam', t: 'reps', sets: 1, reps: 10, ps: true,
     steps: ['Rückenlage, Kopf liegt ab. Ein Bein aufgestellt (Fuß am Boden), der Rücken bleibt flach.', 'Das andere Bein anheben, bis die Hüfte ca. 90° gebeugt ist. Oberschenkel mit beiden Händen (oder Gurt/Handtuch) hinten halten, Knie gebeugt.', 'Knie langsam strecken, bis hinten am Oberschenkel ein sanfter Zug kommt – dann wieder beugen.', 'Ca. 2–3 s pro Richtung, 10× pro Seite. Optional: Fuß beim Strecken anziehen, beim Beugen locker lassen.'],
@@ -166,12 +166,12 @@ const EVE = [
     err: ['Stechender Schmerz → sofort abbrechen', 'Luft anhalten', 'Hohlkreuz beim Drücken'] },
   { id: 'psoasreset', core: 1, eve: 1, n: 'Psoas-Reset an der Wand (links betont)', sub: 'Abend · Hüftbeuger/Psoas lösen, Becken links zurückdrehen', dose: '1 Satz · 5–10 tiefe Atemzüge', t: 'reps', sets: 1, reps: 10,
     steps: ['Rückenlage, Füße flach an der Wand, Hüfte und Knie je 90°. Faszienrolle zwischen die Oberschenkel klemmen, Kinn locker zur Decke.', 'Fersen an der Wand nach unten ziehen, ohne zu rutschen – der untere Rücken wird flach, die hinteren Oberschenkel spannen.', 'Spannung halten, linkes Knie sanft nach unten, rechtes Knie nach oben bewegen – die Rolle bleibt dabei eingeklemmt (aktiviert linke Hamstrings + Adduktoren, dreht das Becken links zurück).', '5–10 langsame Bauchatmungen, dabei Spannung und Knieposition halten. Danach lösen und Beine ablegen.'],
-    cues: ['Unterer Rücken bleibt flach am Boden', 'Spannung kommt aus den hinteren Oberschenkeln und der Innenseite – kein Ruck', 'Rolle die ganze Zeit eingeklemmt halten', 'Lange, ruhige Bauchatmung – nicht pressen'],
+    cues: ['Sanft arbeiten – keine große Kraft, nicht in den Schmerz', 'Unterer Rücken bleibt flach am Boden', 'Spannung kommt aus den hinteren Oberschenkeln und der Innenseite – kein Ruck', 'Rolle die ganze Zeit eingeklemmt halten', 'Lange, ruhige Bauchatmung – nicht pressen'],
     err: ['Fersen rutschen an der Wand ab', 'Hohlkreuz statt flachem Rücken', 'Rolle fällt raus / wird nicht gehalten', 'Luft anhalten oder Schultern hochziehen'] },
   // v1.8.7: feste Abend-Übung, auch im Hexenschuss (rückenschonende Gesäßdehnung)
   { id: 'fig4', core: 1, eve: 1, n: 'Figure-4-Dehnung (Rückenlage)', sub: 'Abend · Gesäß/Piriformis, rückenschonend', dose: '2×30 s pro Seite', t: 'time', sets: 2, secs: 30, ps: true,
     steps: ['Rückenlage, Kopf und gesamter Rücken bleiben flach am Boden, Arme entspannt.', 'Den einen Knöchel auf das gegenüberliegende Knie legen (Figur 4), Fuß aktiv angezogen.', 'Mit beiden Händen hinter den Oberschenkel des unteren Beins greifen und beide Beine sanft Richtung Brust ziehen – nur so weit, dass es im Gesäß der oberen Seite dehnt.', '30 s ruhig atmen, langsam ablegen, Seite wechseln. 2 Runden pro Seite.'],
-    cues: ['Kein Ziehen im Rücken – nur Dehnung im Gesäß', 'Kopf und Rücken bleiben am Boden, nicht einrollen', 'Ruhig atmen, mit der Ausatmung etwas tiefer loslassen', 'Bei Kribbeln oder ausstrahlendem Schmerz abbrechen'],
+    cues: ['Nur schmerzfrei, kein Druck am Endpunkt', 'Kein Ziehen im Rücken – nur Dehnung im Gesäß', 'Kopf und Rücken bleiben am Boden, nicht einrollen', 'Ruhig atmen, mit der Ausatmung etwas tiefer loslassen', 'Bei Kribbeln oder ausstrahlendem Schmerz abbrechen'],
     err: ['Kopf oder Schultern anheben / Rücken einrollen', 'Am Knie statt am Oberschenkel ziehen', 'In den Schmerz oder ins Ziehen im Rücken gehen', 'Kribbeln oder Ausstrahlung ignorieren'] },
   { id: 'kniefersenrock', core: 1, eve: 1, n: 'Kniestand-Fersensitz-Rock (links betont)', sub: 'Abend · Hüfte, Lenden & Rücken lang ziehen, links betont', dose: '5 Wdh × 20 s halten · links 1–2 mehr', t: 'time', sets: 6, setsL: 6, setsR: 5, secs: 20, ps: true,
     steps: ['Vierfüßlerstand, Zehen aufgestellt bzw. Fußrücken am Boden.', 'Das Gesäß langsam Richtung Fersen nach hinten schieben.', 'Arme lang nach vorn strecken, Rücken lang lassen.', '20 s halten, ruhig ausatmen. 5 Wiederholungen – links 1–2 mehr (6–7), da es links stark zieht und rechts gut geht.'],
@@ -222,7 +222,7 @@ const ROT = [
     err: ['Ruckartig ziehen', 'Langes Bein hebt mit ab', 'Kopf zum Knie heben'] },
   { id: 'recpig', rot: 1, n: 'Liegende Taube (Figur 4)', sub: 'Abwechslung · Gesäß/Piriformis', dose: '30 s pro Seite, links 40 s', t: 'time', sets: 1, secs: 30, secsL: 40, secsR: 30, ps: true,
     steps: ['Rückenlage, beide Knie gebeugt, Füße am Boden.', 'Linken Knöchel auf das rechte Knie legen (Figur 4), Fuß aktiv angezogen.', 'Mit beiden Händen hinter den rechten Oberschenkel greifen und ihn sanft zu dir ziehen.', 'Links 40 s, rechts 30 s halten, ruhig atmen.'],
-    cues: ['Dehnung im Gesäß der oberen Seite, nicht im Knie', 'Becken und Kopf bleiben am Boden', 'Links etwas länger – die steifere Seite', 'Kribbeln in den Zehen → weniger ziehen'],
+    cues: ['Nur schmerzfrei, kein Druck am Endpunkt', 'Dehnung im Gesäß der oberen Seite, nicht im Knie', 'Becken und Kopf bleiben am Boden', 'Links etwas länger – die steifere Seite', 'Kribbeln in den Zehen → weniger ziehen'],
     err: ['Becken hebt ab / rollt ein', 'Am Knie statt am Oberschenkel ziehen', 'Schultern verkrampfen'] },
   { id: 'halfhero', rot: 1, n: 'Halber Held', sub: 'Abwechslung · Oberschenkel vorne & Hüftbeuger', dose: '30 s pro Seite', t: 'time', sets: 1, secs: 30, ps: true,
     steps: ['Aufrecht sitzen, ein Bein lang nach vorn.', 'Das andere Bein nach hinten beugen, der Fuß liegt neben der Hüfte, Fußrücken am Boden.', 'Mit den Händen hinter dir abstützen und vorsichtig nur so weit zurücklehnen, wie es angenehm ist.', '30 s ruhig atmen, langsam aufrichten, Seite wechseln.'],
@@ -261,10 +261,6 @@ const ROT = [
     cues: ['Schmerzfrei, mittlere Intensität', 'Beide Seiten gleich', 'Oberkörper bleibt aufrecht', 'Kleine, kontrollierte Seitverschiebung – kein Schwung'],
     err: ['Oberkörper nach vorn kippen', 'Knie des gestreckten Beins nach innen fallen lassen', 'Zu weit / in den Schmerz schieben', 'Mit Schwung wippen'] },
   // v1.8.6: Bausteine für langes Stehen/Gehen (Leiter): seitliche Hüfte (Gluteus medius) + Waden/Fuß
-  { id: 'abduct', rot: 1, n: 'Seitliches Beinheben in Seitlage', sub: 'Abwechslung · seitliche Hüfte (Gluteus medius) · Becken stabil im Stand', dose: '2×12 pro Seite', t: 'reps', sets: 2, reps: 12, ps: true,
-    steps: ['Seitlage, Kopf auf dem unteren Arm, obere Hand vor der Brust am Boden. Unteres Bein leicht gebeugt.', 'Oberes Bein gestreckt in Verlängerung des Körpers, Zehen zeigen nach vorn (nicht zur Decke).', 'Bein langsam ca. 30–40° anheben – leicht nach hinten statt nach vorn –, 1 s halten.', 'Langsam ablegen. 12×, dann Seite wechseln, 2 Runden.'],
-    cues: ['Spüren: seitlich oben am Po, nicht vorne in der Leiste', 'Becken bleibt übereinander, nicht nach hinten rollen', 'Lieber niedrig und sauber als hoch', 'Kribbeln, Ausstrahlung ins Bein oder einschießender Schmerz → Übung weglassen'],
-    err: ['Bein zu hoch reißen → Becken kippt, Rücken arbeitet', 'Zehen zur Decke drehen', 'Bein nach vorn ziehen (Hüftbeuger statt Po)', 'Schwung'] },
   { id: 'calfraise', rot: 1, n: 'Wadenheben', sub: 'Abwechslung · Waden & Fuß · langes Stehen auf der Leiter', dose: '2×15, oben 1 s halten', t: 'reps', sets: 2, reps: 15,
     steps: ['Hüftbreit stehen, eine Hand leicht an Wand oder Türrahmen für das Gleichgewicht.', 'Aufrecht, Bauch leicht fest, Knie gestreckt (nicht durchgedrückt).', 'Langsam über den Fußballen hoch auf die Zehen drücken, oben 1 s halten.', 'In 2–3 s kontrolliert absenken. 15×, 2 Runden. Später: auf einer Stufe (Fersen unter Stufenhöhe) oder einbeinig.'],
     cues: ['Gewicht über dem Großzehenballen – Knöchel kippen nicht nach außen', 'Langsam runter ist der wichtige Teil', 'Körper bleibt aufrecht, kein Hohlkreuz', 'Hilft gegen schwere Beine und Fußermüdung beim langen Stehen'],
@@ -283,16 +279,32 @@ const RET = [
     cues: ['Dehnung vorn an der Hüfte bis in die Flanke', 'Oberkörper aufrecht'], err: ['Hohlkreuz', 'Zu tief nach vorn schieben'] }
 ];
 
-/* v1.8.8: Hüft-Reha (HipFit) Phase 1 – ab 18.11.2026, Ziel 3×/Woche, täglich optional.
-   Keine Duplikate von bridge / birddog / hipflex; abduct bleibt in der Abwechslung. */
-const STOP = 'Stopp bei: Leistenstechen, Einklemmen oder plötzlichem Blockieren mitten in der Bewegung, Instabilität links, Ausstrahlung oder Ziehen Richtung Steißbein – dann aufhören und beim Arzt ansprechen';
+/* v1.8.8/v1.9.0: Hüft-Reha (HipFit) Phase 1 – ab 18.11.2026, Ziel 3×/Woche, täglich optional.
+   Keine Duplikate von bridge / birddog / hipflex; abduct ist nach v1.9.0 in diesen Block verschoben. */
+const HIP_AMPEL = {
+  title: 'Schmerz-Ampel',
+  items: [
+    'Bis 3/10 ist okay, wenn du am nächsten Morgen wieder auf dem Ausgangsniveau bist.',
+    'Ziehen Richtung Steißbein ist nur ein Stopp, wenn es zunimmt.',
+    'Stopp bei: Leistenstechen, hartes Anstoßgefühl, Blockieren oder Einklemmen, Instabilität links oder Wegknicken, Ausstrahlung, Nachtschmerz, Hinken, schmerzhaftes Knacken (schmerzloses Knacken ist meist harmlos). Dann aufhören und beim Arzt ansprechen.'
+  ]
+};
+const STOP = HIP_AMPEL.items.join(' ');
 
 const HIP_ALLTAG = {
-  title: 'Gym & Alltag – bis zum MRT',
+  title: 'Alltag, Schlaf & Gym – bis zum MRT',
   items: [
+    'Schlaf: Rückenlage oder rechte Seite mit Kissen zwischen den Knien.',
+    'Nicht im Hüftstand stehen, keine überschlagenen Beine.',
+    'Tiefe Sitze und die Hocke meiden; bei Montagen knien mit Kniekissen.',
+    'Langes Stehen alle 20–30 Min auflockern. Einlage weiter tragen.',
+    'Radfahren mit etwas höherem Sattel.',
     'Keine harten Stoßbelastungen: keine Sprünge, kein Joggen auf hartem Boden, keine schweren Lasten tief in der Hüfte.',
     'Gut geeignet: Rad, Crosstrainer, Gehen, Schwimmen (kein Brustbeinschlag, lieber Kraul-Beine).',
-    'Bei Beinen und Hüfte lieber mehr Wiederholungen mit moderatem Gewicht als wenige schwere.'
+    'Bei Beinen und Hüfte lieber mehr Wiederholungen mit moderatem Gewicht als wenige schwere.',
+    'Gym: Beinpresse und Hackenschmidt max. ca. 90° Hüftbeugung, Knie nicht nach innen.',
+    'Abduktoren-Maschine und Hip Thrust okay, wenn schmerzfrei.',
+    'Keine Rotation unter Last. Schwere Seitbeugen weglassen.'
   ]
 };
 const HIP_MRT_Q = {
@@ -301,14 +313,23 @@ const HIP_MRT_Q = {
     'Ist die Verkalkung eine Verdichtung am Pfannendach, Kalk im Knorpel oder Labrum, oder ein freier Gelenkkörper?',
     'Wie ist der Knorpel an der Stelle – gibt es Knorpelschäden oder ein Knochenödem?',
     'Falls Kalk im Knorpel: Blutwerte beim Hausarzt (Calcium, Parathormon, Ferritin/Eisen, Magnesium, Phosphat)?',
-    'Ändert der Befund etwas am Training oder an der OP-Frage?'
+    'Ändert der Befund etwas am Training oder an der OP-Frage?',
+    'Normales MRT oder MR-Arthrografie / 3 Tesla?',
+    'Wurde die Torsion von Oberschenkel und Pfanne mitgemessen?',
+    'LCE-Winkel, Tönnis-Winkel, vordere Überdachung – echte oder grenzwertige Dysplasie?',
+    'Wie sind Labrum und Knorpel, welcher Tönnis-Grad?',
+    'Gibt es eine Cam-Form, wie ist der Alpha-Winkel (Mischform)?',
+    'Erklärt die Hüfte die Beschwerden in Rücken und Steißbein, oder die LWS mitbeurteilen?',
+    'Ab welchen Befunden wäre eine OP sinnvoll, und wie lange ist eine Trainingschance (3–6 Monate)?',
+    'Physio-Rezept mit Fokus Hüftstabilisation, Freigabe für Training und Arbeit?',
+    'Bei der OP-Frage eine Zweitmeinung in einem Zentrum für Hüftgelenkerhalt einholen?'
   ]
 };
 function hipAdviceHtml() {
   const ul = (a) => `<ul class="mob-ul">${a.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
   return `<div class="sec-h muted small" style="margin:18px 2px 2px">◇ BIS ZUM MRT</div>
+    <div class="card mob-ampel"><h3 class="mob-h3">${esc(HIP_AMPEL.title)}</h3>${ul(HIP_AMPEL.items)}</div>
     <div class="card mob-alltag"><h3 class="mob-h3">${esc(HIP_ALLTAG.title)}</h3>${ul(HIP_ALLTAG.items)}</div>
-    <div class="card mob-note small"><b>Stoppzeichen:</b> ${esc(STOP)}</div>
     <div class="card mob-mrt"><h3 class="mob-h3">${esc(HIP_MRT_Q.title)}</h3>${ul(HIP_MRT_Q.items)}</div>`;
 }
 
@@ -342,9 +363,22 @@ const HIP = [
     yt: 'https://www.youtube.com/watch?v=qKQJMwesjnM',
     steps: ['Hüftbreiter Stand, Hände seitlich am Rumpf. Nur einen kleinen Ausfallschritt nach vorn – kurze Schrittstellung.', 'Beinachse: das vordere Knie zeigt in Richtung der Fußspitze. Vorderes Knie beugen und 5 Sekunden halten.', 'Die Ferse des hinteren Fußes bleibt am Boden, Becken gerade, Oberkörper aufrecht.', 'Spannung lösen, Knie wieder strecken. 10–15 Mal auf einer Seite, dann wechseln.'],
     cues: ['Nur wenn der untere Rücken ruhig bleibt', 'Kurze Schrittstellung, hintere Ferse bleibt unten', 'Vorderes Knie in Richtung Fußspitze, nicht nach innen', 'Becken gerade, Oberkörper aufrecht', STOP],
-    err: ['Lange Schrittstellung oder hintere Ferse hebt ab', 'Vorderes Knie fällt nach innen', 'Hohlkreuz oder Ziehen im unteren Rücken – dann heute weglassen', 'Wippen statt 5 s halten'] }
+    err: ['Lange Schrittstellung oder hintere Ferse hebt ab', 'Vorderes Knie fällt nach innen', 'Hohlkreuz oder Ziehen im unteren Rücken – dann heute weglassen', 'Wippen statt 5 s halten'] },
+  { id: 'abduct', hip: 1, core: 1, n: 'Seitlage-Abduktion', sub: 'Hüft-Reha · äußere Hüfte / Gluteus medius', dose: '3×10–15 pro Seite, 2 s halten', t: 'reps', sets: 3, reps: 15, ps: true,
+    steps: ['Seitlage, Kopf auf dem unteren Arm, obere Hand vor der Brust am Boden. Unteres Bein leicht gebeugt.', 'Oberes Bein gestreckt, leicht hinter der Körperlinie. Fußspitze neutral oder leicht nach unten, nicht zur Decke drehen.', 'Bein langsam anheben, 2 Sekunden halten, kontrolliert ablegen.', '10–15 Wiederholungen, dann Seite wechseln. 3 Sätze pro Seite.'],
+    cues: ['Bein leicht hinter der Körperlinie, nicht nach vorn', 'Fußspitze neutral oder leicht nach unten – nicht zur Decke', 'Becken bleibt übereinander, nicht nach hinten rollen', 'Lieber niedrig und sauber als hoch', STOP],
+    err: ['Bein zu hoch reißen → Becken kippt, Rücken arbeitet', 'Zehen zur Decke drehen', 'Bein nach vorn ziehen (Hüftbeuger statt Po)', 'Schwung'] },
+  { id: 'medplank', hip: 1, core: 1, n: 'Gluteus-medius-Seitstütz', sub: 'Hüft-Reha · Knie-Seitstütz, oberes Bein abheben', dose: '2×8–10 pro Seite, 2 s halten', t: 'reps', sets: 2, reps: 10, ps: true,
+    steps: ['Knie-Seitstütz: unterer Unterarm und unteres Knie am Boden, Hüfte anheben, Körper in einer Linie von Kopf bis Knie.', 'Das obere Bein langsam abheben, Fußspitze neutral, 2 Sekunden halten, kontrolliert ablegen – das Becken bleibt oben und nicht verdrehen.', '8–10 Wiederholungen, dann Seite wechseln. 2 Sätze.'],
+    cues: ['Knie-Seitstütz halten, dann das obere Bein abheben', 'Becken bleibt oben und zeigt nach vorn, nicht einknicken', 'Fußspitze neutral, keine Schwungbewegung', STOP],
+    err: ['Hüfte sackt ab oder dreht nach vorn', 'Oberes Bein mit Schwung reißen', 'In der Lende ein Hohlkreuz machen'] },
+  { id: 'slbridge', hip: 1, core: 1, n: 'Einbeinige Brücke', sub: 'Hüft-Reha · Gesäß, nur wenn beidbeinig schmerzfrei', dose: '2×8–10 pro Seite', t: 'reps', sets: 2, reps: 10, ps: true,
+    steps: ['Nur wenn die beidbeinige Brücke schmerzfrei gelingt.', 'Rückenlage, ein Fuß fest am Boden, das andere Bein strecken oder zur Decke halten.', 'Gesäß anspannen und das Becken heben, bis Schulter, Hüfte und Standknie eine Linie bilden – nicht überstrecken, kein Hohlkreuz.', 'Kurz halten, kontrolliert ablegen. 8–10 Wiederholungen, dann Seite wechseln. 2 Sätze.'],
+    cues: ['Nur wenn die beidbeinige Brücke schmerzfrei ist', 'Nicht überstrecken – Rippen unten, kein Hohlkreuz', 'Gewicht fest auf dem Standfuß, Becken bleibt waagrecht', STOP],
+    err: ['Überstrecken / Hohlkreuz', 'Becken kippt zur Seite', 'Trotz Schmerz in der beidbeinigen Brücke einbeinig weitermachen'] }
 ];
 const HIP2 = [
+
   { id: 'stepdown', hip: 1, locked: 1, n: 'Herabsteigen', sub: 'Hüft-Reha · HipFit · Phase 2', dose: '10–15 pro Seite', t: 'reps', sets: 1, reps: 15, ps: true,
     yt: 'https://www.youtube.com/watch?v=__zvHYMJYvk',
     steps: ['Seitlich auf einer Treppenstufe oder einem Stepper stehen. Bei Bedarf am Geländer festhalten oder Hände seitlich am Rumpf abstützen.', 'Oberkörper aufrecht. Ein Bein seitlich der Stufe absenken, bis die Ferse den Boden berührt – dazu das Standbein in Hüfte und Knie beugen.', 'Das gebeugte Bein auf der Stufe bleibt in der Beinachse. Sobald die Ferse den Boden berührt, wieder nach oben in die Ausgangsstellung drücken.', '10–15 Wiederholungen auf einer Seite, dann Seite wechseln.'],
@@ -365,10 +399,10 @@ const im = ex => ex.img || ex.id;
    Jeder Block hat feste Kern-Übungen (core: 1, täglich) + einen Wechsel-Pool. Aus dem Pool kommen pro Tag k Übungen,
    deterministisch nach Datum (Tag-Nr. × k mod Poolgröße → lückenlos, jede Übung kommt regelmäßig dran). */
 // v1.8.6: Morgen k=1 – 9 Kern-Übungen + 1 im Wechsel (World's Greatest Stretch / Bein über die Rolle), damit die Routine kurz bleibt
-const BLK = { m: { pool: EX, k: 1 }, w: { pool: ROT, k: 3 }, a: { pool: EVE, k: 3 }, f: { pool: FAS, k: 3 }, h: { pool: HIP, k: 6 } };
+const BLK = { m: { pool: EX, k: 1 }, w: { pool: ROT, k: 3 }, a: { pool: EVE, k: 3 }, f: { pool: FAS, k: 3 }, h: { pool: HIP, k: 9 } };
 // v1.8.6: Logik in MOBCORE.planIds (getestet) – pausierte Übungen (Hexenschuss bis 17.11.) fallen raus, zählen nicht im Zähler
 function lineup(b, key) { if (b === 'h' && !MOBCORE.hipOpen(key)) return []; const B = BLK[b]; return MOBCORE.planIds(B.pool, B.k, key).map(byId); }
-const pausedNow = b => BLK[b].pool.filter(e => MOBCORE.pauseInfo(e.id, tk()));
+const pausedNow = b => (b === 'a' ? [...BLK[b].pool, ...RET] : BLK[b].pool).filter(e => MOBCORE.pauseInfo(e.id, tk()));
 const pauseNote = b => { const p = pausedNow(b); return p.length ? `<div class="mob-pause muted small">⏸ ${p.map(e => esc(e.n)).join(', ')} – ${esc(MOBCORE.pauseInfo(p[0].id, tk()).label)}</div>` : ''; };
 const isRotToday = (e, b) => b !== 'w' && !e.core;
 const blockOf = e => e.hip ? 'h' : e.eve ? 'a' : e.fas ? 'f' : e.rot ? 'w' : (EX.includes(e) || MRET.includes(e)) ? 'm' : null;
@@ -489,7 +523,7 @@ function viewList() {
   const eDone = lineup('a', tk()).filter(e => d.today.done[e.id]).length;
   const fDone = FT.filter(e => d.today.done[e.id]).length;
   const hDone = lineup('h', tk()).filter(e => d.today.done[e.id]).length;
-  const nCore = b => BLK[b].pool.filter(e => e.core).length;
+  const nCore = b => BLK[b].pool.filter(e => e.core && !MOBCORE.pauseInfo(e.id, tk())).length;
   const st = (n, tot) => n >= tot ? '<span class="mob-st ok">✓ heute erledigt</span>' : n ? `<span class="mob-st part">${n}/${tot} · läuft</span>` : '<span class="mob-st">noch offen</span>';
   const hist = [...d.history].reverse().slice(0, 8).map(h => `<div class="mob-h"><span>${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)}</span><span class="muted small">${h.note ? '📝 ' : ''}${h.done.filter(x => EX.some(e => e.id === x) || MRET.some(e => e.id === x)).length}/${planOf(h, 'm').length} Übungen${h.done.some(x => ROT.some(e => e.id === x)) ? ' · 🔄 Abwechslung' : ''}${h.done.some(x => [...EVE, ...RET].some(e => e.id === x)) ? ' · ☾ Abend' : ''}${h.done.some(x => FAS.some(e => e.id === x)) ? ' · ◎ Faszien' : ''}${h.done.some(x => HIP.some(e => e.id === x)) ? ' · ◇ HipFit' : ''}</span><button class="btn btn-ghost btn-sm" style="width:auto;padding:4px 10px;margin-left:6px" data-act="mobExp" data-date="${h.date}">Exportieren</button></div>`).join('') || '<div class="muted small">Noch keine Einheit – heute ist ein guter Tag zum Starten 🙂</div>';
   return {
@@ -648,5 +682,5 @@ function putSent(date, s) { try { const a = JSON.parse(localStorage.getItem(SKEY
 
 function fmtS(x) { return x >= 60 && x % 60 === 0 ? (x / 60) + ' min' : x >= 60 ? Math.floor(x / 60) + ':' + pad(x % 60) + ' min' : x + ' s'; }
 window.mobText = mobText; window.mobRep = mobRep;
-window.MOBDATA = { EX, ROT, EVE, FAS, MRET, HIP, HIP2, ALL, BLK, lineup, planOf, byId, hipWeekDone, hipDoneKeys, HIP_ALLTAG, HIP_MRT_Q, STOP }; // für Tests
+window.MOBDATA = { EX, ROT, EVE, FAS, MRET, HIP, HIP2, ALL, BLK, lineup, planOf, byId, hipWeekDone, hipDoneKeys, HIP_ALLTAG, HIP_MRT_Q, HIP_AMPEL, STOP }; // für Tests
 })();

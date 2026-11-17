@@ -1,4 +1,4 @@
-/* Voccola Gym Log – Hüft-Beweglichkeit: Export-Text + "nur Neues senden" (v1.8.4) + Tagesplan/Hexenschuss-Pause (v1.8.6, v1.8.7 +rumpfrot, v1.8.8 HipFit ab 18.11.). Reine Logik, getestet in tests/mob.test.js.
+/* Voccola Gym Log – Hüft-Beweglichkeit: Export-Text + "nur Neues senden" (v1.8.4) + Tagesplan/Pausen (v1.8.6–v1.9.0: Hexenschuss bis 17.11., MRT-Pause bis nach MRT / 2027-01-31, HipFit ab 18.11.). Reine Logik, getestet in tests/mob.test.js.
    rep = { head, blocks: [{ n, dn, tot, anyDone, items: [{ id, line }] }], note }
    sent (pro Tag) = { n: Anzahl Meldungen, ex: { id: gesendete Zeile }, blocks: [Blocknamen], note } */
 (function (root, factory) {
@@ -46,8 +46,17 @@
   function prune(all, keep = 14) { const ks = Object.keys(all || {}).sort(); const o = {}; ks.slice(-keep).forEach(k => { o[k] = all[k]; }); return o; }
 
   /* v1.8.6: Tagesplan + datumsbasierte Pausen (Hexenschuss). Schlüssel 'YYYY-MM-DD', bis einschließlich `until` pausiert. */
-  const PAUSES = [{ until: '2026-11-17', why: 'Hexenschuss', label: 'pausiert bis nach Di 17.11. (Hexenschuss)',
-    ids: ['wgs', 'rolle', 'sphinx', 'sphinxrot', 'halfhero', 'turtle', 'rollbecken', 'couch', 'duoball', 'rumpfrot'] }];
+  const PAUSES = [
+    { until: '2026-11-17', why: 'Hexenschuss', label: 'pausiert bis nach Di 17.11. (Hexenschuss)',
+      ids: ['wgs', 'rolle', 'sphinx', 'sphinxrot', 'halfhero', 'turtle', 'rollbecken', 'couch', 'duoball', 'rumpfrot'] },
+    /* v1.9.0: bis nach MRT (offen, zunächst bis 2027-01-31). FADIR (tiefe Beugung+Innenrotation+Adduktion)
+       oder erzwungene Streckung / Außenrotation. Konservativ geprüft: n9090 (90/90, hintere Hüfte in Beugung+IR),
+       kneel und hipflexstand (erzwungene Hüftstreckung wie Couch), halfhero (Streckung), hipwallrot (endgradige IR).
+       hipwallstep bleibt (kein Endgrad-Dehn, nur flache Rotationsbewegung). fig4/recpig bleiben mit Cue. */
+    { until: '2027-01-31', why: 'MRT', label: 'pausiert bis nach MRT',
+      ids: ['couch', 'pigeon', 'pigeonq', 'wgs', 'n9090', 'kneel', 'hipflexstand', 'halfhero', 'hipwallrot'] }
+  ];
+  const MRT_UNTIL = '2027-01-31';
   function pausedIds(key) { const o = new Set(); PAUSES.forEach(p => { if (key <= p.until) p.ids.forEach(i => o.add(i)); }); return o; }
   function pauseInfo(id, key) { return PAUSES.find(p => key <= p.until && p.ids.includes(id)) || null; }
   const dayNum = key => { const [y, m, d] = key.split('-').map(Number); return Math.floor(Date.UTC(y, m - 1, d) / 864e5); };
@@ -79,5 +88,5 @@
   }
 
   return { fullText, diffReport, markSent, prune, PAUSES, pausedIds, pauseInfo, dayNum, planIds,
-    HIP_START, HIP_TARGET, hipOpen, keyFromDayNum, weekStartKey, weekEndKey, hipWeekCount };
+    HIP_START, HIP_TARGET, hipOpen, keyFromDayNum, weekStartKey, weekEndKey, hipWeekCount, MRT_UNTIL };
 });
