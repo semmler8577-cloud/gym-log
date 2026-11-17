@@ -503,3 +503,7 @@ body.scan-open #tabs{visibility:hidden}
 
 .mob-yt{display:flex;align-items:center;justify-content:center;margin:0 0 12px;text-decoration:none}
 .mob-locked{padding:10px 12px;margin:4px 0 8px;border-style:dashed;opacity:.85}
+
+.mob-alltag{border-color:rgba(212,175,55,.4);background:rgba(212,175,55,.06)}
+.mob-mrt{border-color:rgba(255,255,255,.12)}
+.mob-alltag .mob-h3,.mob-mrt .mob-h3{margin-bottom:6px}

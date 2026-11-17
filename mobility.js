@@ -1,4 +1,4 @@
-/* Voccola Gym Log – Hüft-Beweglichkeit (v1.8.8: +Hüft-Reha HipFit Phase 1 ab 18.11., Ziel 3×/Woche, optional). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
+/* Voccola Gym Log – Hüft-Beweglichkeit (v1.8.9: HipFit-Bilder korrigiert, Dosierungen nach Video, Stopp Einklemmen, Gym/Alltag + MRT-Fragen bis zum MRT). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
 'use strict';
 (function () {
 const KEY = 'vgl-mob';
@@ -285,26 +285,52 @@ const RET = [
 
 /* v1.8.8: Hüft-Reha (HipFit) Phase 1 – ab 18.11.2026, Ziel 3×/Woche, täglich optional.
    Keine Duplikate von bridge / birddog / hipflex; abduct bleibt in der Abwechslung. */
-const STOP = 'Stopp bei: Leistenstechen, Blockieren, Instabilität links, Ausstrahlung oder Ziehen Richtung Steißbein';
+const STOP = 'Stopp bei: Leistenstechen, Einklemmen oder plötzlichem Blockieren mitten in der Bewegung, Instabilität links, Ausstrahlung oder Ziehen Richtung Steißbein – dann aufhören und beim Arzt ansprechen';
+
+const HIP_ALLTAG = {
+  title: 'Gym & Alltag – bis zum MRT',
+  items: [
+    'Keine harten Stoßbelastungen: keine Sprünge, kein Joggen auf hartem Boden, keine schweren Lasten tief in der Hüfte.',
+    'Gut geeignet: Rad, Crosstrainer, Gehen, Schwimmen (kein Brustbeinschlag, lieber Kraul-Beine).',
+    'Bei Beinen und Hüfte lieber mehr Wiederholungen mit moderatem Gewicht als wenige schwere.'
+  ]
+};
+const HIP_MRT_Q = {
+  title: 'Fragen für das MRT-Gespräch',
+  items: [
+    'Ist die Verkalkung eine Verdichtung am Pfannendach, Kalk im Knorpel oder Labrum, oder ein freier Gelenkkörper?',
+    'Wie ist der Knorpel an der Stelle – gibt es Knorpelschäden oder ein Knochenödem?',
+    'Falls Kalk im Knorpel: Blutwerte beim Hausarzt (Calcium, Parathormon, Ferritin/Eisen, Magnesium, Phosphat)?',
+    'Ändert der Befund etwas am Training oder an der OP-Frage?'
+  ]
+};
+function hipAdviceHtml() {
+  const ul = (a) => `<ul class="mob-ul">${a.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
+  return `<div class="sec-h muted small" style="margin:18px 2px 2px">◇ BIS ZUM MRT</div>
+    <div class="card mob-alltag"><h3 class="mob-h3">${esc(HIP_ALLTAG.title)}</h3>${ul(HIP_ALLTAG.items)}</div>
+    <div class="card mob-note small"><b>Stoppzeichen:</b> ${esc(STOP)}</div>
+    <div class="card mob-mrt"><h3 class="mob-h3">${esc(HIP_MRT_Q.title)}</h3>${ul(HIP_MRT_Q.items)}</div>`;
+}
+
 const HIP = [
   { id: 'hipabdst', hip: 1, core: 1, n: 'Hüftabduktion im Stehen', sub: 'Hüft-Reha · HipFit · äußere Hüfte / Gesäß', dose: '10–15 pro Seite, 3 s halten', t: 'reps', sets: 1, reps: 15, ps: true,
     yt: 'https://www.youtube.com/watch?v=yiGPgws33Hg',
     steps: ['Füße geschlossen zusammenstellen. Hände seitlich am Rumpf abstützen – bei Bedarf an einer Stuhllehne festhalten.', 'Gesäßmuskulatur anspannen und ein Bein vom Boden abheben, das Knie dabei etwa 45° gebeugt.', 'Becken, Oberkörper und Schultern bleiben aufrecht. Das Knie aus der Körpermitte nach außen zur Seite öffnen.', '3 Sekunden halten, dann kontrolliert in die Ausgangsstellung zurück. Das Gesäß bleibt an, die Beinachse des Standbeins bleibt stabil. 10–15 Wiederholungen, dann Seite wechseln.'],
-    cues: ['Aufrichtung: Becken, Oberkörper und Schultern gerade', 'Standbein stabil, Knie in der Beinachse', 'Gesäß die ganze Zeit anspannen', 'Knie kontrolliert nach außen öffnen – kein Schwung', STOP],
+    cues: ['Aufrichtung: Becken waagrecht, Oberkörper und Schultern gerade', 'Standbein stabil, Knie in der Beinachse', 'Gesäß die ganze Zeit anspannen', 'Knie 45° gebeugt aus der Körpermitte nach außen öffnen – kein Schwung, kein Knieheben nach vorn', STOP],
     err: ['Standbein sackt ein oder das Knie fällt nach innen', 'Oberkörper oder Becken kippt zur Seite', 'Mit Schwung öffnen statt 3 s halten'] },
   { id: 'wallsit', hip: 1, core: 1, n: 'Wandrutschen', sub: 'Hüft-Reha · HipFit · Oberschenkel & Gesäß', dose: '10×15 s, 5 s Pause', t: 'time', sets: 10, secs: 15, pause: 5,
     yt: 'https://www.youtube.com/watch?v=OLALc2fsmtM',
     steps: ['Hüftbreiter Stand, Rücken an die Wand gelehnt, Hände seitlich am Rumpf. Die Füße eine Fußlänge von der Wand entfernt aufstellen.', 'Mit aufrechtem Oberkörper an der Wand nach unten rutschen, bis die Knie 45–60° gebeugt sind – nicht tiefer.', 'Knie nicht über die Zehen hinausschieben, Knie bleiben in der Beinachse.', '15 Sekunden halten, dann nach oben in die Ausgangsstellung drücken. 5 Sekunden Pause, insgesamt 10 Wiederholungen.'],
-    cues: ['Knie nur 45–60°, nicht in die tiefe Hocke', 'Knie nicht über die Zehen, in der Beinachse bleiben', 'Oberkörper aufrecht, Rücken bleibt an der Wand', STOP],
+    cues: ['Knie nur leicht 45–60° beugen – Oberschenkel nicht waagrecht, nicht in die tiefe Hocke', 'Füße eine Fußlänge von der Wand, Knie nicht über die Zehen, in der Beinachse bleiben', 'Oberkörper aufrecht, Rücken bleibt an der Wand', STOP],
     err: ['Zu tief rutschen (unter 60°)', 'Knie wandern über die Zehen oder nach innen', 'Oberkörper löst sich von der Wand'] },
   { id: 'slbalance', hip: 1, core: 1, n: 'Einbeiniges Gleichgewicht an der Wand', sub: 'Hüft-Reha · HipFit · Standbein & Hüftstabilität', dose: '10–15×5 s pro Seite, 5 s Pause', t: 'time', sets: 10, secs: 5, ps: true, pause: 5, sideThen: 1,
     yt: 'https://www.youtube.com/watch?v=ILpQHqdF5Xc',
-    steps: ['Schulterbreiter Stand an einer Wand: ein Bein und der Arm derselben Seite berühren die Wand (Arm-Außenseite an der Wand).', 'Das wandseitige Bein 90° in Knie und Hüfte anbeugen und den Kontakt zur Wand halten.', 'Das Bein mit Spannung gegen die Wand drücken. Auf dem Standbein bei leicht gebeugtem Knie die Balance halten und auf die Beinachse achten.', '5 Sekunden halten, zurück in die Ausgangsstellung. 10–15 Wiederholungen mit 5 Sekunden Pause dazwischen, dann Seite wechseln.'],
-    cues: ['Standbein: Knie leicht gebeugt, in der Beinachse', 'Spannung gegen die Wand, nicht nur anlehnen', 'Becken bleibt gerade, Oberkörper aufrecht', 'Erst eine Seite fertig, dann wechseln', STOP],
-    err: ['Standbein durchdrücken oder Knie nach innen fallen lassen', 'Becken zur Seite kippen', 'Den Wandkontakt verlieren'] },
-  { id: 'sidewalk', hip: 1, core: 1, n: 'Seitwärts gehen', sub: 'Hüft-Reha · HipFit · äußere Hüfte, Rumpfstabilität', dose: '3–5 Bahnen à 5 Schritte hin und zurück', t: 'reps', sets: 1, reps: 5,
+    steps: ['Schulterbreiter Stand seitlich an einer Wand, sodass ein Bein die Wand berührt – das ist das Spielbein, nicht das Standbein.', 'Der Arm dieser Seite lehnt mit der Außenseite ebenfalls gegen die Wand.', 'Dieses wandseitige Bein 90° in Knie und Hüfte anbeugen und den Kontakt halten. Dann den Oberschenkel bzw. das Knie mit Spannung seitlich gegen die Wand drücken.', 'Auf dem anderen Bein (Standbein) bei leicht gebeugtem Knie die Balance halten und auf die Beinachse achten. 5 Sekunden halten, zurück in die Ausgangsstellung.', '10–15 Wiederholungen mit 5 Sekunden Pause dazwischen, dann die andere Seite (Wand auf der anderen Seite).'],
+    cues: ['Die Wand ist seitlich, nicht vor dir', 'Spielbein und Arm-Außenseite derselben Seite berühren die Wand', 'Spielbein 90° in Hüfte und Knie, mit Spannung seitlich gegen die Wand drücken', 'Standbein = das andere Bein, Knie leicht gebeugt, in der Beinachse', STOP],
+    err: ['Die Wand vor den Körper stellen und mit der Handfläche dagegen stützen', 'Das Standbein gegen die Wand drücken statt das Spielbein', 'Standbein durchdrücken oder Knie nach innen fallen lassen', 'Becken zur Seite kippen', 'Den Wandkontakt verlieren'] },
+  { id: 'sidewalk', hip: 1, core: 1, n: 'Seitwärts gehen', sub: 'Hüft-Reha · HipFit · äußere Hüfte, Rumpfstabilität', dose: '4 Bahnen à 5 Schritte hin und zurück', t: 'reps', sets: 1, reps: 4,
     yt: 'https://www.youtube.com/watch?v=jy55DMhen_k',
-    steps: ['Hüftbreiter Stand, Fußspitzen zeigen gerade nach vorn, Arme zur Seite ausgestreckt, Knie leicht gebeugt.', 'Gleichmäßige, große Seitwärtsschritte in eine Richtung. Balance und Stabilität im Oberkörper halten – der Oberkörper neigt sich nicht zur Seite.', '5 Schritte hin, dann 5 Schritte zurück. Das ist eine Bahn.', '3–5 Bahnen wiederholen.'],
+    steps: ['Hüftbreiter Stand, Fußspitzen zeigen gerade nach vorn, Arme zur Seite ausgestreckt, Knie leicht gebeugt.', 'Gleichmäßige, große Seitwärtsschritte in eine Richtung. Balance und Stabilität im Oberkörper halten – der Oberkörper neigt sich nicht zur Seite.', '5 Schritte hin, dann 5 Schritte zurück. Das ist eine Bahn.', 'Die Übung viermal wiederholen (4 Bahnen).'],
     cues: ['Fußspitzen bleiben nach vorn, Knie leicht gebeugt', 'Oberkörper nicht zur Seite neigen', 'Gleichmäßige, kontrollierte Schritte', STOP],
     err: ['Oberkörper schwankt oder neigt sich', 'Fußspitzen drehen nach außen', 'Schritte zu klein oder mit Schwung'] },
   { id: 'sidetap', hip: 1, core: 1, n: 'Seit-Tippen', sub: 'Hüft-Reha · HipFit · äußere Hüfte', dose: '10–15 pro Seite', t: 'reps', sets: 1, reps: 15, ps: true,
@@ -485,6 +511,7 @@ function viewList() {
     <div class="sec-h muted small" style="margin:18px 2px 2px">☾ ABEND (OPTIONAL) · ${eDone}/${aPlan} erledigt</div><div class="mob-when">Abends vor dem Schlafen · ${nCore('a')} täglich + ${aPlan - nCore('a')} im Wechsel</div>
     ${ET.map((e, i) => row(e, d, i + 1, 'a')).join('')}${pauseNote('a')}
     <button class="btn btn-outline-gold btn-sm" data-act="mobExtra" data-b="a" style="margin:4px 0 8px">＋ Zusatzübung</button>
+    ${hipAdviceHtml()}
     ${hipOn ? `<div class="sec-h muted small" style="margin:18px 2px 2px">◇ HÜFT-REHA (HIPFIT) · ${hDone}/${hPlan} erledigt · ${hWeek}/${MOBCORE.HIP_TARGET} diese Woche</div><div class="mob-when">Vom Gelenkquartier empfohlen · Ziel ${MOBCORE.HIP_TARGET}× pro Woche, nicht jeden Tag nötig · Start 18.11.2026 · zu jeder Übung gibt es das HipFit-Video</div>
     ${HT.map((e, i) => row(e, d, i + 1, 'h')).join('')}
     <div class="card mob-locked"><div class="muted small"><b>Phase 2</b> – nach MRT und wenn der Rücken ruhig ist, noch nicht aktiv: ${HIP2.map(e => esc(e.n)).join(', ')}.</div></div>` : ''}
@@ -524,7 +551,7 @@ function viewDetail(id) {
     <div class="card"><h3 class="mob-h3">So geht's</h3><ol class="mob-ol">${ex.steps.map(x => `<li>${esc(x)}</li>`).join('')}</ol></div>
     <div class="card mob-cue"><h3 class="mob-h3">✅ Darauf achten</h3>${li(ex.cues)}</div>
     <div class="card mob-err"><h3 class="mob-h3">❌ Häufige Fehler</h3>${li(ex.err)}</div>
-    <div class="card mob-note small">Nichts erzwingen, schmerzfrei bleiben.${ex.hip ? ' Stopp bei Leistenstechen, Blockieren, Instabilität links, Ausstrahlung oder Ziehen Richtung Steißbein.' : (ex.eve || ex.fas || ex.rot ? '' : ' Morgens kein langes Vorbeugen.')} Bei Kribbeln, Ausstrahlung ins Bein oder einschießendem Schmerz: Übung weglassen.</div>
+    <div class="card mob-note small">Nichts erzwingen, schmerzfrei bleiben.${ex.hip ? ' ' + STOP : (ex.eve || ex.fas || ex.rot ? '' : ' Morgens kein langes Vorbeugen.')} Bei Kribbeln, Ausstrahlung ins Bein oder einschießendem Schmerz: Übung weglassen.</div>
     <button class="btn ${ok ? 'btn-outline-gold' : 'btn-red'}" data-act="mobChk" data-id="${id}">${ok ? '✓ Erledigt (tippen zum Zurücksetzen)' : 'Als erledigt abhaken'}</button>
     <div style="height:10px"></div>
     ${next ? `<button class="btn btn-ghost btn-sm" data-act="go" data-to="#/mob/${next.id}">Nächste: ${esc(next.n)} ›</button>` : `<button class="btn btn-ghost btn-sm" data-act="go" data-to="#/mob">Zur Übersicht ›</button>`}</div>`,
@@ -621,5 +648,5 @@ function putSent(date, s) { try { const a = JSON.parse(localStorage.getItem(SKEY
 
 function fmtS(x) { return x >= 60 && x % 60 === 0 ? (x / 60) + ' min' : x >= 60 ? Math.floor(x / 60) + ':' + pad(x % 60) + ' min' : x + ' s'; }
 window.mobText = mobText; window.mobRep = mobRep;
-window.MOBDATA = { EX, ROT, EVE, FAS, MRET, HIP, HIP2, ALL, BLK, lineup, planOf, byId, hipWeekDone, hipDoneKeys }; // für Tests
+window.MOBDATA = { EX, ROT, EVE, FAS, MRET, HIP, HIP2, ALL, BLK, lineup, planOf, byId, hipWeekDone, hipDoneKeys, HIP_ALLTAG, HIP_MRT_Q, STOP }; // für Tests
 })();
