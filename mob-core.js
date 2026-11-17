@@ -49,12 +49,13 @@
   const PAUSES = [
     { until: '2026-11-17', why: 'Hexenschuss', label: 'pausiert bis nach Di 17.11. (Hexenschuss)',
       ids: ['wgs', 'rolle', 'sphinx', 'sphinxrot', 'halfhero', 'turtle', 'rollbecken', 'couch', 'duoball', 'rumpfrot'] },
-    /* v1.9.0: bis nach MRT (offen, zunächst bis 2027-01-31). FADIR (tiefe Beugung+Innenrotation+Adduktion)
-       oder erzwungene Streckung / Außenrotation. Konservativ geprüft: n9090 (90/90, hintere Hüfte in Beugung+IR),
-       kneel und hipflexstand (erzwungene Hüftstreckung wie Couch), halfhero (Streckung), hipwallrot (endgradige IR).
-       hipwallstep bleibt (kein Endgrad-Dehn, nur flache Rotationsbewegung). fig4/recpig bleiben mit Cue. */
+    /* v1.9.0/v1.9.1: bis nach MRT (offen, zunächst bis 2027-01-31). FADIR, erzwungene Streckung/AR,
+       Endgrad-Mobilität, Rotation unter Last, tiefe Vorbeuge. v1.9.1 zusätzlich: tuer (überkreuzter Stand),
+       turtle, rollbecken, rollschien, rollknie, hipwallstep (Rotation unter Last), duoball, sphinx, sphinxrot, hamwalk.
+       fig4/recpig bleiben mit Cue (kein Zug ins Endgefühl). rumpfrot bleibt mit kleinem Weg. */
     { until: '2027-01-31', why: 'MRT', label: 'pausiert bis nach MRT',
-      ids: ['couch', 'pigeon', 'pigeonq', 'wgs', 'n9090', 'kneel', 'hipflexstand', 'halfhero', 'hipwallrot'] }
+      ids: ['couch', 'pigeon', 'pigeonq', 'wgs', 'n9090', 'kneel', 'hipflexstand', 'halfhero', 'hipwallrot',
+            'tuer', 'turtle', 'rollbecken', 'rollschien', 'rollknie', 'hipwallstep', 'duoball', 'sphinx', 'sphinxrot', 'hamwalk'] }
   ];
   const MRT_UNTIL = '2027-01-31';
   function pausedIds(key) { const o = new Set(); PAUSES.forEach(p => { if (key <= p.until) p.ids.forEach(i => o.add(i)); }); return o; }
