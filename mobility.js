@@ -1,11 +1,11 @@
-/* Voccola Gym Log – Hüft-Beweglichkeit (v1.9.1: weitere MRT-Pausen und Cues nach Doc-Regeln, kein Vorbeugen mit überkreuzten Beinen; v1.9.0: HipFit + Seitlage-Abduktion, Gluteus-medius-Seitstütz, einbeinige Brücke; Pause bis nach MRT; Schmerz-Ampel; Alltag/Schlaf/Gym; MRT-Fragen LCE/Torsion/Zweitmeinung). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
+/* Voccola Gym Log – Hüft-Beweglichkeit (v1.9.2: Hüft-Reha ohne Sekunden-Timer, Wdh. pro Seite; v1.9.1: weitere MRT-Pausen und Cues nach Doc-Regeln, kein Vorbeugen mit überkreuzten Beinen; v1.9.0: HipFit + Seitlage-Abduktion, Gluteus-medius-Seitstütz, einbeinige Brücke; Pause bis nach MRT; Schmerz-Ampel; Alltag/Schlaf/Gym; MRT-Fragen LCE/Torsion/Zweitmeinung). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
 'use strict';
 (function () {
 const KEY = 'vgl-mob';
 const ld = () => { try { return Object.assign({ today: null, history: [] }, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (_) { return { today: null, history: [] }; } };
 const sv = d => { try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (_) { } };
 const tk = () => dkey();
-function day() { const d = ld(); if (!d.today || d.today.date !== tk()) { d.today = { date: tk(), done: {}, sets: {}, log: {}, extra: { m: [], a: [] } }; sv(d); } if (!d.today.extra) d.today.extra = { m: [], a: [] }; if (!Array.isArray(d.today.extra.m)) d.today.extra.m = []; if (!Array.isArray(d.today.extra.a)) d.today.extra.a = []; return d; }
+function day() { const d = ld(); if (!d.today || d.today.date !== tk()) { d.today = { date: tk(), done: {}, sets: {}, log: {}, reps: {}, extra: { m: [], a: [] } }; sv(d); } if (!d.today.extra) d.today.extra = { m: [], a: [] }; if (!Array.isArray(d.today.extra.m)) d.today.extra.m = []; if (!Array.isArray(d.today.extra.a)) d.today.extra.a = []; if (!d.today.reps) d.today.reps = {}; return d; }
 
 /* ---------- Strichfiguren ---------- */
 const FG = '#ececee', FAR = '#8d8d94', ARW = '#D4AF37', GR = '#3a3a40';
@@ -335,20 +335,20 @@ function hipAdviceHtml() {
 }
 
 const HIP = [
-  { id: 'hipabdst', hip: 1, core: 1, n: 'Hüftabduktion im Stehen', sub: 'Hüft-Reha · HipFit · äußere Hüfte / Gesäß', dose: '10–15 pro Seite, 3 s halten', t: 'reps', sets: 1, reps: 15, ps: true,
+  { id: 'hipabdst', hip: 1, core: 1, n: 'Hüftabduktion im Stehen', sub: 'Hüft-Reha · HipFit · äußere Hüfte / Gesäß', dose: '10–15 pro Seite, 3 s halten', t: 'reps', sets: 1, reps: 15, ps: true, hold: 3,
     yt: 'https://www.youtube.com/watch?v=yiGPgws33Hg',
     steps: ['Füße geschlossen zusammenstellen. Hände seitlich am Rumpf abstützen – bei Bedarf an einer Stuhllehne festhalten.', 'Gesäßmuskulatur anspannen und ein Bein vom Boden abheben, das Knie dabei etwa 45° gebeugt.', 'Becken, Oberkörper und Schultern bleiben aufrecht. Das Knie aus der Körpermitte nach außen zur Seite öffnen.', '3 Sekunden halten, dann kontrolliert in die Ausgangsstellung zurück. Das Gesäß bleibt an, die Beinachse des Standbeins bleibt stabil. 10–15 Wiederholungen, dann Seite wechseln.'],
-    cues: ['Aufrichtung: Becken waagrecht, Oberkörper und Schultern gerade', 'Standbein stabil, Knie in der Beinachse', 'Gesäß die ganze Zeit anspannen', 'Knie 45° gebeugt aus der Körpermitte nach außen öffnen – kein Schwung, kein Knieheben nach vorn', STOP],
+    cues: ['Aufrichtung: Becken waagrecht, Oberkörper und Schultern gerade', 'Standbein stabil, Knie in der Beinachse', 'Gesäß die ganze Zeit anspannen', 'Knie 45° gebeugt aus der Körpermitte nach außen öffnen – kein Schwung, kein Knieheben nach vorn', 'Jede Wdh. 3 s halten, selbst zählen', STOP],
     err: ['Standbein sackt ein oder das Knie fällt nach innen', 'Oberkörper oder Becken kippt zur Seite', 'Mit Schwung öffnen statt 3 s halten'] },
-  { id: 'wallsit', hip: 1, core: 1, n: 'Wandrutschen', sub: 'Hüft-Reha · HipFit · Oberschenkel & Gesäß', dose: '10×15 s, 5 s Pause', t: 'time', sets: 10, secs: 15, pause: 5,
+  { id: 'wallsit', hip: 1, core: 1, n: 'Wandrutschen', sub: 'Hüft-Reha · HipFit · Oberschenkel & Gesäß', dose: '10×15 s, 5 s Pause', t: 'reps', sets: 1, reps: 10, hold: 15, pause: 5,
     yt: 'https://www.youtube.com/watch?v=OLALc2fsmtM',
     steps: ['Hüftbreiter Stand, Rücken an die Wand gelehnt, Hände seitlich am Rumpf. Die Füße eine Fußlänge von der Wand entfernt aufstellen.', 'Mit aufrechtem Oberkörper an der Wand nach unten rutschen, bis die Knie 45–60° gebeugt sind – nicht tiefer.', 'Knie nicht über die Zehen hinausschieben, Knie bleiben in der Beinachse.', '15 Sekunden halten, dann nach oben in die Ausgangsstellung drücken. 5 Sekunden Pause, insgesamt 10 Wiederholungen.'],
-    cues: ['Knie nur leicht 45–60° beugen – Oberschenkel nicht waagrecht, nicht in die tiefe Hocke', 'Füße eine Fußlänge von der Wand, Knie nicht über die Zehen, in der Beinachse bleiben', 'Oberkörper aufrecht, Rücken bleibt an der Wand', STOP],
+    cues: ['Knie nur leicht 45–60° beugen – Oberschenkel nicht waagrecht, nicht in die tiefe Hocke', 'Füße eine Fußlänge von der Wand, Knie nicht über die Zehen, in der Beinachse bleiben', 'Oberkörper aufrecht, Rücken bleibt an der Wand', 'Jede Wdh. 15 s halten, selbst zählen', STOP],
     err: ['Zu tief rutschen (unter 60°)', 'Knie wandern über die Zehen oder nach innen', 'Oberkörper löst sich von der Wand'] },
-  { id: 'slbalance', hip: 1, core: 1, n: 'Einbeiniges Gleichgewicht an der Wand', sub: 'Hüft-Reha · HipFit · Standbein & Hüftstabilität', dose: '10–15×5 s pro Seite, 5 s Pause', t: 'time', sets: 10, secs: 5, ps: true, pause: 5, sideThen: 1,
+  { id: 'slbalance', hip: 1, core: 1, n: 'Einbeiniges Gleichgewicht an der Wand', sub: 'Hüft-Reha · HipFit · Standbein & Hüftstabilität', dose: '10–15×5 s pro Seite, 5 s Pause', t: 'reps', sets: 1, reps: 15, ps: true, hold: 5, pause: 5,
     yt: 'https://www.youtube.com/watch?v=ILpQHqdF5Xc',
     steps: ['Schulterbreiter Stand seitlich an einer Wand, sodass ein Bein die Wand berührt – das ist das Spielbein, nicht das Standbein.', 'Der Arm dieser Seite lehnt mit der Außenseite ebenfalls gegen die Wand.', 'Dieses wandseitige Bein 90° in Knie und Hüfte anbeugen und den Kontakt halten. Dann den Oberschenkel bzw. das Knie mit Spannung seitlich gegen die Wand drücken.', 'Auf dem anderen Bein (Standbein) bei leicht gebeugtem Knie die Balance halten und auf die Beinachse achten. 5 Sekunden halten, zurück in die Ausgangsstellung.', '10–15 Wiederholungen mit 5 Sekunden Pause dazwischen, dann die andere Seite (Wand auf der anderen Seite).'],
-    cues: ['Die Wand ist seitlich, nicht vor dir', 'Spielbein und Arm-Außenseite derselben Seite berühren die Wand', 'Spielbein 90° in Hüfte und Knie, mit Spannung seitlich gegen die Wand drücken', 'Standbein = das andere Bein, Knie leicht gebeugt, in der Beinachse', STOP],
+    cues: ['Die Wand ist seitlich, nicht vor dir', 'Spielbein und Arm-Außenseite derselben Seite berühren die Wand', 'Spielbein 90° in Hüfte und Knie, mit Spannung seitlich gegen die Wand drücken', 'Standbein = das andere Bein, Knie leicht gebeugt, in der Beinachse', 'Jede Wdh. 5 s halten, selbst zählen', STOP],
     err: ['Die Wand vor den Körper stellen und mit der Handfläche dagegen stützen', 'Das Standbein gegen die Wand drücken statt das Spielbein', 'Standbein durchdrücken oder Knie nach innen fallen lassen', 'Becken zur Seite kippen', 'Den Wandkontakt verlieren'] },
   { id: 'sidewalk', hip: 1, core: 1, n: 'Seitwärts gehen', sub: 'Hüft-Reha · HipFit · äußere Hüfte, Rumpfstabilität', dose: '4 Bahnen à 5 Schritte hin und zurück', t: 'reps', sets: 1, reps: 4,
     yt: 'https://www.youtube.com/watch?v=jy55DMhen_k',
@@ -360,22 +360,22 @@ const HIP = [
     steps: ['Schulterbreiter Stand, Hände seitlich am Rumpf abstützen.', 'Ein Bein zur Seite strecken und mit der Fußspitze auf den Boden tippen – kein tiefer Ausfallschritt.', 'Das Bein anschließend in den schulterbreiten Stand zurückstellen.', 'Rumpf stabil, Oberkörper aufrecht. 10–15 Mal auf einer Seite, dann wechseln.'],
     cues: ['Nur tippen, nicht in die Tiefe gehen', 'Rumpf stabil, Oberkörper aufrecht', 'Standbein bleibt in der Beinachse', STOP],
     err: ['Zu weit oder zu tief zur Seite sinken', 'Oberkörper zur Seite neigen', 'Das Standbein einknicken'] },
-  { id: 'smalllunge', hip: 1, core: 1, n: 'Kleine Ausfallschritte', sub: 'Hüft-Reha · HipFit · Gesäß & Beinachse', dose: '10–15 pro Seite à 5 s', t: 'time', sets: 10, secs: 5, ps: true, pause: 5, sideThen: 1,
+  { id: 'smalllunge', hip: 1, core: 1, n: 'Kleine Ausfallschritte', sub: 'Hüft-Reha · HipFit · Gesäß & Beinachse', dose: '10–15 pro Seite à 5 s', t: 'reps', sets: 1, reps: 15, ps: true, hold: 5,
     yt: 'https://www.youtube.com/watch?v=qKQJMwesjnM',
     steps: ['Hüftbreiter Stand, Hände seitlich am Rumpf. Nur einen kleinen Ausfallschritt nach vorn – kurze Schrittstellung.', 'Beinachse: das vordere Knie zeigt in Richtung der Fußspitze. Vorderes Knie beugen und 5 Sekunden halten.', 'Die Ferse des hinteren Fußes bleibt am Boden, Becken gerade, Oberkörper aufrecht.', 'Spannung lösen, Knie wieder strecken. 10–15 Mal auf einer Seite, dann wechseln.'],
-    cues: ['Nur wenn der untere Rücken ruhig bleibt', 'Kurze Schrittstellung, hintere Ferse bleibt unten – hintere Hüfte nicht in die Streckung drücken', 'Vordere Hüfte nicht tief beugen, nicht ins Endgefühl', 'Vorderes Knie in Richtung Fußspitze, nicht nach innen', 'Becken gerade, Oberkörper aufrecht', STOP],
+    cues: ['Nur wenn der untere Rücken ruhig bleibt', 'Kurze Schrittstellung, hintere Ferse bleibt unten – hintere Hüfte nicht in die Streckung drücken', 'Vordere Hüfte nicht tief beugen, nicht ins Endgefühl', 'Vorderes Knie in Richtung Fußspitze, nicht nach innen', 'Becken gerade, Oberkörper aufrecht', 'Jede Wdh. 5 s halten, selbst zählen', STOP],
     err: ['Lange Schrittstellung oder hintere Ferse hebt ab', 'Vorderes Knie fällt nach innen', 'Hohlkreuz oder Ziehen im unteren Rücken – dann heute weglassen', 'Wippen statt 5 s halten'] },
-  { id: 'abduct', hip: 1, core: 1, n: 'Seitlage-Abduktion', sub: 'Hüft-Reha · äußere Hüfte / Gluteus medius', dose: '3×10–15 pro Seite, 2 s halten', t: 'reps', sets: 3, reps: 15, ps: true,
+  { id: 'abduct', hip: 1, core: 1, n: 'Seitlage-Abduktion', sub: 'Hüft-Reha · äußere Hüfte / Gluteus medius', dose: '3×10–15 pro Seite, 2 s halten', t: 'reps', sets: 3, reps: 15, ps: true, hold: 2,
     steps: ['Seitlage, Kopf auf dem unteren Arm, obere Hand vor der Brust am Boden. Unteres Bein leicht gebeugt.', 'Oberes Bein gestreckt, leicht hinter der Körperlinie. Fußspitze neutral oder leicht nach unten, nicht zur Decke drehen.', 'Bein langsam anheben, 2 Sekunden halten, kontrolliert ablegen.', '10–15 Wiederholungen, dann Seite wechseln. 3 Sätze pro Seite.'],
-    cues: ['Bein leicht hinter der Körperlinie, nicht nach vorn', 'Fußspitze neutral oder leicht nach unten – nicht zur Decke', 'Becken bleibt übereinander, nicht nach hinten rollen', 'Lieber niedrig und sauber als hoch', STOP],
+    cues: ['Bein leicht hinter der Körperlinie, nicht nach vorn', 'Fußspitze neutral oder leicht nach unten – nicht zur Decke', 'Becken bleibt übereinander, nicht nach hinten rollen', 'Lieber niedrig und sauber als hoch', 'Jede Wdh. 2 s halten, selbst zählen', STOP],
     err: ['Bein zu hoch reißen → Becken kippt, Rücken arbeitet', 'Zehen zur Decke drehen', 'Bein nach vorn ziehen (Hüftbeuger statt Po)', 'Schwung'] },
-  { id: 'medplank', hip: 1, core: 1, n: 'Gluteus-medius-Seitstütz', sub: 'Hüft-Reha · Knie-Seitstütz, oberes Bein abheben', dose: '2×8–10 pro Seite, 2 s halten', t: 'reps', sets: 2, reps: 10, ps: true,
+  { id: 'medplank', hip: 1, core: 1, n: 'Gluteus-medius-Seitstütz', sub: 'Hüft-Reha · Knie-Seitstütz, oberes Bein abheben', dose: '2×8–10 pro Seite, 2 s halten', t: 'reps', sets: 2, reps: 10, ps: true, hold: 2,
     steps: ['Knie-Seitstütz: unterer Unterarm und unteres Knie am Boden, Hüfte anheben, Körper in einer Linie von Kopf bis Knie.', 'Das obere Bein langsam abheben, Fußspitze neutral, 2 Sekunden halten, kontrolliert ablegen – das Becken bleibt oben und nicht verdrehen.', '8–10 Wiederholungen, dann Seite wechseln. 2 Sätze.'],
-    cues: ['Knie-Seitstütz halten, dann das obere Bein abheben', 'Becken bleibt oben und zeigt nach vorn, nicht einknicken', 'Fußspitze neutral, keine Schwungbewegung', STOP],
+    cues: ['Knie-Seitstütz halten, dann das obere Bein abheben', 'Becken bleibt oben und zeigt nach vorn, nicht einknicken', 'Fußspitze neutral, keine Schwungbewegung', 'Jede Wdh. 2 s halten, selbst zählen', STOP],
     err: ['Hüfte sackt ab oder dreht nach vorn', 'Oberes Bein mit Schwung reißen', 'In der Lende ein Hohlkreuz machen'] },
-  { id: 'slbridge', hip: 1, core: 1, n: 'Einbeinige Brücke', sub: 'Hüft-Reha · Gesäß, nur wenn beidbeinig schmerzfrei', dose: '2×8–10 pro Seite', t: 'reps', sets: 2, reps: 10, ps: true,
+  { id: 'slbridge', hip: 1, core: 1, n: 'Einbeinige Brücke', sub: 'Hüft-Reha · Gesäß, nur wenn beidbeinig schmerzfrei', dose: '2×8–10 pro Seite', t: 'reps', sets: 2, reps: 10, ps: true, hold: 'kurz',
     steps: ['Nur wenn die beidbeinige Brücke schmerzfrei gelingt.', 'Rückenlage, ein Fuß fest am Boden, das andere Bein strecken oder zur Decke halten.', 'Gesäß anspannen und das Becken heben, bis Schulter, Hüfte und Standknie eine Linie bilden – nicht überstrecken, kein Hohlkreuz.', 'Kurz halten, kontrolliert ablegen. 8–10 Wiederholungen, dann Seite wechseln. 2 Sätze.'],
-    cues: ['Nur wenn die beidbeinige Brücke schmerzfrei ist', 'Nicht überstrecken – Rippen unten, kein Hohlkreuz', 'Gewicht fest auf dem Standfuß, Becken bleibt waagrecht', STOP],
+    cues: ['Nur wenn die beidbeinige Brücke schmerzfrei ist', 'Nicht überstrecken – Rippen unten, kein Hohlkreuz', 'Gewicht fest auf dem Standfuß, Becken bleibt waagrecht', 'Jede Wdh. kurz halten, selbst zählen', STOP],
     err: ['Überstrecken / Hohlkreuz', 'Becken kippt zur Seite', 'Trotz Schmerz in der beidbeinigen Brücke einbeinig weitermachen'] }
 ];
 const HIP2 = [
@@ -504,7 +504,7 @@ function tPaint() {
 }
 
 /* ---------- Tagesstand ---------- */
-function markDone(id, val) { const d = day(); if (val) { d.today.done[id] = true; const ex = byId(id); if (ex && ex.t === 'reps') d.today.sets[id] = ex.sets * (ex.ps ? 2 : 1); } else delete d.today.done[id]; sv(d); const b = document.querySelector('[data-act=mobChk]'); if (b && document.getElementById('mob-detail')) render(true); }
+function markDone(id, val) { const d = day(); if (val) { d.today.done[id] = true; const ex = byId(id); if (ex && ex.t === 'reps' && !ex.hip) d.today.sets[id] = ex.sets * (ex.ps ? 2 : 1); } else delete d.today.done[id]; sv(d); const b = document.querySelector('[data-act=mobChk]'); if (b && document.getElementById('mob-detail')) render(true); }
 
 /* ---------- Views ---------- */
 function row(ex, d, i, b) {
@@ -558,11 +558,85 @@ function viewList() {
     <div class="sec-h muted small" style="margin:18px 2px 8px">VERLAUF</div><div class="card">${hist}</div>`
   };
 }
+
+/* v1.9.2: Hüft-Reha ohne Sekunden-Timer – einfache Wdh.-Felder (pro Seite bzw. eine Zahl), Haltezeit nur als Cue */
+function hipUnit(ex) { return ex.id === 'sidewalk' ? 'Bahnen' : 'Wdh'; }
+function hipHoldCue(ex) {
+  if (ex.hold == null) return '';
+  const base = ex.hold === 'kurz' ? 'Jede Wdh. kurz halten, selbst zählen' : `Jede Wdh. ${ex.hold} s halten, selbst zählen`;
+  return ex.pause ? base + ` (${ex.pause} s Pause)` : base;
+}
+function hipRepHint(ex) {
+  const parts = [];
+  if (ex.ps) parts.push('Erst eine Seite fertig, dann die andere.');
+  if (ex.sets > 1) parts.push(ex.sets + ' Sätze laut Plan – hier die Wdh. pro Seite eintragen.');
+  const h = hipHoldCue(ex); if (h) parts.push(h);
+  return parts.join(' ');
+}
+function parseRep(v) { const n = parseInt(String(v).trim(), 10); return Number.isFinite(n) && n >= 0 ? n : null; }
+function saveHipRep(id, side, raw) {
+  const d = day(); if (!d.today.reps) d.today.reps = {};
+  const cur = Object.assign({}, d.today.reps[id] || {});
+  const n = String(raw).trim() === '' ? null : parseRep(raw);
+  if (side === 'n') { if (n == null) delete cur.n; else cur.n = n; }
+  else if (side === 'L') { if (n == null) delete cur.L; else cur.L = n; }
+  else if (side === 'R') { if (n == null) delete cur.R; else cur.R = n; }
+  if (cur.L == null && cur.R == null && cur.n == null) delete d.today.reps[id];
+  else d.today.reps[id] = cur;
+  sv(d); return d.today.reps[id] || {};
+}
+function fmtHipReps(ex, r) {
+  if (!r) return '';
+  const u = hipUnit(ex);
+  if (r.n != null && r.n !== '') return r.n + ' ' + u;
+  const parts = [];
+  if (r.L != null && r.L !== '') parts.push('Links: ' + r.L + ' ' + u);
+  if (r.R != null && r.R !== '') parts.push('Rechts: ' + r.R + ' ' + u);
+  return parts.join(' · ');
+}
+function fmtTimeLog(e, lg) {
+  const by = {}; lg.forEach(x => (by[x.side || ''] = by[x.side || ''] || []).push(x.secs));
+  return Object.entries(by).map(([sd, a]) => { const pl = sd === 'Links' ? (e.setsL || e.sets) : sd === 'Rechts' ? (e.setsR || e.sets) : e.sets; return `${sd ? sd + ': ' : ''}${a.length}× ${a.map(fmtS).join('/')}${a.length < pl ? ` (${a.length}/${pl} Sätze)` : ''}`; }).join(' · ');
+}
+function fmtSetCount(e, n2) {
+  const segs = e.sets * (e.ps ? 2 : 1);
+  return (e.ps ? `${Math.ceil(n2 / 2)}×${e.reps} pro Seite` : `${n2}×${e.reps}`) + (n2 < segs ? ` (${n2}/${segs})` : '');
+}
+function exLineDet(e, h) {
+  const r = (h.reps || {})[e.id];
+  const hip = fmtHipReps(e, r);
+  if (hip) return hip;
+  const lg = (h.log || {})[e.id] || [];
+  if (lg.length && lg.some(x => x.secs != null)) return fmtTimeLog(e, lg);
+  const n2 = (h.sets || {})[e.id] || 0;
+  if (n2) return fmtSetCount(e, n2);
+  return 'abgehakt (' + e.dose + ')';
+}
+function hipStepper(id, side, label, value, unit, ph) {
+  const v = value != null && value !== '' ? value : '';
+  return `<div class="stepper"><label>${esc(label)} <span class="muted">(${esc(unit)})</span></label><div class="stp">` +
+    `<button type="button" data-act="mobHipStep" data-id="${id}" data-side="${side}" data-d="-1" aria-label="Weniger">−</button>` +
+    `<input data-hip-rep="${side}" data-id="${id}" inputmode="numeric" pattern="[0-9]*" value="${v}" placeholder="${esc(String(ph))}" aria-label="${esc(label)}">` +
+    `<button type="button" data-act="mobHipStep" data-id="${id}" data-side="${side}" data-d="1" aria-label="Mehr">+</button></div></div>`;
+}
+function hipRepTool(ex, saved = {}) {
+  const unit = hipUnit(ex);
+  const hint = hipRepHint(ex);
+  const fields = ex.ps
+    ? hipStepper(ex.id, 'L', 'Links', saved.L, unit, ex.reps) + hipStepper(ex.id, 'R', 'Rechts', saved.R, unit, ex.reps)
+    : hipStepper(ex.id, 'n', unit === 'Bahnen' ? 'Bahnen' : 'Wiederholungen', saved.n, unit, ex.reps);
+  return `<div class="card mob-hip-reps"><div class="muted small" style="margin-bottom:8px">WIEDERHOLUNGEN EINTRAGEN</div>` +
+    `<div class="steppers${ex.ps ? '' : ' one'}">${fields}</div>` +
+    `<div class="muted small" style="margin-top:8px">${esc(hint || ex.dose)}</div></div>`;
+}
+
 function viewDetail(id) {
   const ex = byId(id); if (!ex) { location.hash = '#/mob'; return { html: '' }; }
   const d = day(); const ok = !!d.today.done[id]; const bk = blockOf(ex); const tl = bk ? ((bk === 'm' || bk === 'a') ? blockList(bk, d) : todayList(bk, d)) : []; const list = tl.includes(ex) ? tl : [ex]; const idx = list.indexOf(ex); const next = list[idx + 1];
   let tool;
-  if (ex.t === 'time') {
+  if (ex.hip) {
+    tool = hipRepTool(ex, (d.today.reps || {})[id] || {});
+  } else if (ex.t === 'time') {
     tInit(ex); const C = 2 * Math.PI * 88;
     tool = `<div class="card mob-timer" id="mt"><svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="88" class="mt-bg"/><circle cx="100" cy="100" r="88" class="mt-fg" stroke-dasharray="${C}" transform="rotate(-90 100 100)"/></svg>
       <div class="mt-in"><div class="mt-num">0:00</div><div class="mt-sub"></div></div>
@@ -626,13 +700,23 @@ Object.assign(A, {
   mobSet: dd => { const ex = byId(dd.id); const d = day(); if (d.today.done[dd.id]) { toast('Heute schon erledigt ✓', 1400); return; } const i = +dd.i; const cur = d.today.sets[dd.id] || 0; d.today.sets[dd.id] = i < cur ? i : i + 1; const tot = ex.sets * (ex.ps ? 2 : 1);
     if (d.today.sets[dd.id] >= tot) { d.today.done[dd.id] = true; beep(2, 990); toast('Übung geschafft ✓', 1400); } else try { navigator.vibrate && navigator.vibrate(40); } catch (_) { }
     sv(d); render(true); },
+  mobHipStep: dd => {
+    const d = day(); const cur = ((d.today.reps || {})[dd.id] || {});
+    const side = dd.side; const delta = +dd.d;
+    const prev = side === 'n' ? cur.n : side === 'L' ? cur.L : cur.R;
+    const next = Math.max(0, (prev == null ? 0 : prev) + delta);
+    saveHipRep(dd.id, side, next);
+    const inp = document.querySelector(`[data-hip-rep="${side}"][data-id="${dd.id}"]`);
+    if (inp) inp.value = String(next);
+    else render(true);
+  },
   mobT: () => { if (!T) return; if (!T.run && day().today.done[T.id]) { toast('Heute schon erledigt ✓', 1400); return; } beep.c || beep(0); if (T.done) { const ex = byId(T.id); T = null; tInit(ex); } T.run = !T.run; T.last = Date.now(); if (T.run && !('wakeLock' in navigator)) wvStart(); wakeSync(); tPaint(); },
   mobTR: () => { if (!T) return; const ex = byId(T.id); T = null; tInit(ex); wakeSync(); tPaint(); },
   mobFinish: () => { const d = day(); const done = Object.keys(d.today.done);
     if (!done.length && !confirm('Noch keine Übung abgehakt. Trotzdem als Einheit speichern?')) return;
     const old = d.history.find(h => h.date === tk()) || {}; d.history = d.history.filter(h => h.date !== tk());
     const lineupIds = {}; Object.keys(BLK).forEach(b => { lineupIds[b] = lineup(b, tk()).map(e => e.id); });
-    d.history.push({ date: tk(), ts: Date.now(), lineup: lineupIds, extra: JSON.parse(JSON.stringify(d.today.extra || { m: [], a: [] })), done, sets: Object.assign({}, d.today.sets), log: JSON.parse(JSON.stringify(d.today.log || {})), note: old.note || '' }); d.history.sort((a, b) => a.date < b.date ? -1 : 1); sv(d);
+    d.history.push({ date: tk(), ts: Date.now(), lineup: lineupIds, extra: JSON.parse(JSON.stringify(d.today.extra || { m: [], a: [] })), done, sets: Object.assign({}, d.today.sets), log: JSON.parse(JSON.stringify(d.today.log || {})), reps: JSON.parse(JSON.stringify(d.today.reps || {})), note: old.note || '' }); d.history.sort((a, b) => a.date < b.date ? -1 : 1); sv(d);
     beep(2, 990); const s = stats(); toast(`Stark, Markus! ${s.streak} ${s.streak === 1 ? 'Tag' : 'Tage'} in Folge 🔥`, 2200); render(true); setTimeout(() => A.mobExp({ date: tk() }), 400); },
   mobExp: dd => { const d = ld(); const h = d.history.find(x => x.date === dd.date); if (!h) return toast('Eintrag nicht gefunden');
     const sent = getSent(h.date); const pv = sent.n ? MOBCORE.diffReport(mobRep(h), sent) : null;
@@ -666,12 +750,9 @@ function mobRep(h) {
     return { n, l: [...plan, ...extra], tot: plan.length + extra.filter(e => cntPool(b).includes(e)).length, dn: [...plan, ...extra].filter(e => h.done.includes(e.id) && cntPool(b).includes(e)).length }; });
   const blocks = [];
   for (const { n, l, tot, dn } of blk) { const items = []; blocks.push({ n, tot, dn, anyDone: l.some(e => h.done.includes(e.id)), items });
-    const ex = l.filter(e => h.done.includes(e.id) || (L[e.id] || []).length || S2[e.id]); if (!ex.length) continue;
-    for (const e of ex) { let det;
-      if (e.t === 'time') { const lg = L[e.id] || []; if (lg.length) { const by = {}; lg.forEach(x => (by[x.side || ''] = by[x.side || ''] || []).push(x.secs));
-          det = Object.entries(by).map(([sd, a]) => { const pl = sd === 'Links' ? (e.setsL || e.sets) : sd === 'Rechts' ? (e.setsR || e.sets) : e.sets; return `${sd ? sd + ': ' : ''}${a.length}× ${a.map(fmtS).join('/')}${a.length < pl ? ` (${a.length}/${pl} Sätze)` : ''}`; }).join(' · '); }
-        else det = 'abgehakt (' + e.dose + ')'; }
-      else { const n2 = S2[e.id] || 0; const segs = e.sets * (e.ps ? 2 : 1); det = n2 ? (e.ps ? `${Math.ceil(n2 / 2)}×${e.reps} pro Seite` : `${n2}×${e.reps}`) + (n2 < segs ? ` (${n2}/${segs})` : '') : 'abgehakt (' + e.dose + ')'; }
+    const ex = l.filter(e => h.done.includes(e.id) || (L[e.id] || []).length || S2[e.id] || ((h.reps || {})[e.id])); if (!ex.length) continue;
+    for (const e of ex) {
+      const det = exLineDet(e, h);
       items.push({ id: e.id, line: `${h.done.includes(e.id) ? '✓' : '◐'} ${e.n}: ${det}` }); } }
   return { head: `Hüft-Beweglichkeit – ${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)}`, blocks, note: h.note || '' }; }
 function cntPool(b) { return b === 'm' ? [...EX, ...MRET] : BLK[b].pool; }
@@ -683,5 +764,11 @@ function putSent(date, s) { try { const a = JSON.parse(localStorage.getItem(SKEY
 
 function fmtS(x) { return x >= 60 && x % 60 === 0 ? (x / 60) + ' min' : x >= 60 ? Math.floor(x / 60) + ':' + pad(x % 60) + ' min' : x + ' s'; }
 window.mobText = mobText; window.mobRep = mobRep;
-window.MOBDATA = { EX, ROT, EVE, FAS, MRET, HIP, HIP2, ALL, BLK, lineup, planOf, byId, hipWeekDone, hipDoneKeys, HIP_ALLTAG, HIP_MRT_Q, HIP_AMPEL, STOP }; // für Tests
+document.addEventListener('input', e => {
+  const el = e.target && e.target.closest && e.target.closest('[data-hip-rep]');
+  if (!el) return;
+  saveHipRep(el.dataset.id, el.dataset.hipRep, el.value);
+});
+
+window.MOBDATA = { EX, ROT, EVE, FAS, MRET, HIP, HIP2, ALL, BLK, lineup, planOf, byId, hipWeekDone, hipDoneKeys, HIP_ALLTAG, HIP_MRT_Q, HIP_AMPEL, STOP, hipRepTool, hipHoldCue, hipUnit, fmtHipReps, exLineDet, saveHipRep }; // für Tests
 })();

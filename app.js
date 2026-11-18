@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.9.1';
+const APP_VERSION = '1.9.2';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -140,6 +140,7 @@ const INCLINE_FLY = { id: 'b-fly-schraeg-kabel', name: 'Schrägbank-Kabelfly in 
   elbowNote: 'Tennisarm: Ellenbogen weich halten, keine schweren Gewichte – lieber leichter, sauber und kontrolliert.' };
 /* v1.7.17: Arm-Bein-Wischübung in Bauchlage (diagonal) – Abwechslung-Rotationspool (ROT, jetzt 10 Übungen, 3/Tag), Bilder armbeinwisch.webp + seq_armbeinwisch.webp; alte Verläufe unverändert (rotForOld nutzt nur die ersten 9, am Ende angehängt) */
 /* v1.8.6: Morgen-Routine neu (Aufwärmen, Hamstring-Floss statt Hamstring-Walk, Seitstütz Knie), Hexenschuss-Pause bis 17.11., +Seitliches Beinheben, +Wadenheben – mobility.js/mob-core.js */
+/* v1.9.2: Hüft-Reha ohne Sekunden-Timer – Wdh. pro Seite (Wandrutschen/Seitwärts gehen: eine Zahl), Haltezeit nur als Cue; alte Logs bleiben lesbar */
 /* v1.9.1: Weitere Übungen bis nach MRT pausiert (Türrahmen, Rollen-Hüftrotationen, Diagonalschritt, Sphinx, Turtle, Duo-Ball u. a.); Cues enger (kein Endgefühl, Figure-4 ohne Zug zur Brust); Hinweis: nicht vorbeugen mit überkreuzten Beinen */
 /* v1.9.0: HipFit um Seitlage-Abduktion, Gluteus-medius-Seitstütz und einbeinige Brücke ergänzt; Pause bis nach MRT (Couch, Taube, WGS u. a.); Schmerz-Ampel; Alltag/Schlaf/Gym; MRT-Fragen zu LCE, Torsion, Zweitmeinung */
 /* v1.8.9: HipFit-Illustrationen korrigiert (Hüftabduktion, Wandrutschen 45–60°, Gleichgewicht seitlich an der Wand), Dosierungen nach Video, Stopp bei Einklemmen/plötzlichem Blockieren, Karten Gym/Alltag und MRT-Fragen bis zum MRT */
