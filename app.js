@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.9.4';
+const APP_VERSION = '1.9.5';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -140,6 +140,7 @@ const INCLINE_FLY = { id: 'b-fly-schraeg-kabel', name: 'Schrägbank-Kabelfly in 
   elbowNote: 'Tennisarm: Ellenbogen weich halten, keine schweren Gewichte – lieber leichter, sauber und kontrolliert.' };
 /* v1.7.17: Arm-Bein-Wischübung in Bauchlage (diagonal) – Abwechslung-Rotationspool (ROT, jetzt 10 Übungen, 3/Tag), Bilder armbeinwisch.webp + seq_armbeinwisch.webp; alte Verläufe unverändert (rotForOld nutzt nur die ersten 9, am Ende angehängt) */
 /* v1.8.6: Morgen-Routine neu (Aufwärmen, Hamstring-Floss statt Hamstring-Walk, Seitstütz Knie), Hexenschuss-Pause bis 17.11., +Seitliches Beinheben, +Wadenheben – mobility.js/mob-core.js */
+/* v1.9.5: Neue Abend-Übung rollwiper (Bein-Scheibenwischer über die Blackroll), bis nach MRT pausiert; rollknie-Text wieder das Original
 /* v1.9.4: rollknie-Text an die echte Ausführung (Blackroll zwischen den Füßen, Rotation auf den Fersen); Dosis und MRT-Pause unverändert
 /* v1.9.3: Halber Frosch fest täglich im Abend-Block (nach Psoas-Reset, vor Figure-4), raus aus der Abwechslung
 /* v1.9.2: Hüft-Reha ohne Sekunden-Timer – Wdh. pro Seite (Wandrutschen/Seitwärts gehen: eine Zahl), Haltezeit nur als Cue; alte Logs bleiben lesbar */
