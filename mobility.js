@@ -1,4 +1,4 @@
-/* Voccola Gym Log – Hüft-Beweglichkeit (v1.9.2: Hüft-Reha ohne Sekunden-Timer, Wdh. pro Seite; v1.9.1: weitere MRT-Pausen und Cues nach Doc-Regeln, kein Vorbeugen mit überkreuzten Beinen; v1.9.0: HipFit + Seitlage-Abduktion, Gluteus-medius-Seitstütz, einbeinige Brücke; Pause bis nach MRT; Schmerz-Ampel; Alltag/Schlaf/Gym; MRT-Fragen LCE/Torsion/Zweitmeinung). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
+/* Voccola Gym Log – Hüft-Beweglichkeit (v1.9.3: Halber Frosch fest täglich im Abend-Block; v1.9.2: Hüft-Reha ohne Sekunden-Timer, Wdh. pro Seite; v1.9.1: weitere MRT-Pausen und Cues nach Doc-Regeln, kein Vorbeugen mit überkreuzten Beinen; v1.9.0: HipFit + Seitlage-Abduktion, Gluteus-medius-Seitstütz, einbeinige Brücke; Pause bis nach MRT; Schmerz-Ampel; Alltag/Schlaf/Gym; MRT-Fragen LCE/Torsion/Zweitmeinung). Eigene Daten in localStorage 'vgl-mob', berührt Trainingsdaten nicht. */
 'use strict';
 (function () {
 const KEY = 'vgl-mob';
@@ -168,6 +168,11 @@ const EVE = [
     steps: ['Rückenlage, Füße flach an der Wand, Hüfte und Knie je 90°. Faszienrolle zwischen die Oberschenkel klemmen, Kinn locker zur Decke.', 'Fersen an der Wand nach unten ziehen, ohne zu rutschen – der untere Rücken wird flach, die hinteren Oberschenkel spannen.', 'Spannung halten, linkes Knie sanft nach unten, rechtes Knie nach oben bewegen – die Rolle bleibt dabei eingeklemmt (aktiviert linke Hamstrings + Adduktoren, dreht das Becken links zurück).', '5–10 langsame Bauchatmungen, dabei Spannung und Knieposition halten. Danach lösen und Beine ablegen.'],
     cues: ['Sanft arbeiten – keine große Kraft, nicht in den Schmerz', 'Unterer Rücken bleibt flach am Boden', 'Spannung kommt aus den hinteren Oberschenkeln und der Innenseite – kein Ruck', 'Rolle die ganze Zeit eingeklemmt halten', 'Lange, ruhige Bauchatmung – nicht pressen'],
     err: ['Fersen rutschen an der Wand ab', 'Hohlkreuz statt flachem Rücken', 'Rolle fällt raus / wird nicht gehalten', 'Luft anhalten oder Schultern hochziehen'] },
+  // v1.9.3: fest täglich im Abend, nach Psoas-Reset und vor Figure-4 (vorher Abwechslung)
+  { id: 'halbfrosch', core: 1, eve: 1, n: 'Halber Frosch', sub: 'Abend · Adduktoren-Stretch (Half Frog)', dose: '1×10 Wdh. pro Seite, links zuerst, ohne Endhaltung', t: 'reps', sets: 1, reps: 10, ps: true,
+    steps: ['Vierfüßlerstand: Hände unter den Schultern, Knie unter den Hüften.', 'Ein Bein gestreckt zur Seite abspreizen, Fuß flach am Boden, Zehen zeigen nach vorn.', 'Hüfte langsam Richtung Ferse des knienden Beins nach hinten schaukeln und wieder nach vorn – Rücken bleibt lang.', 'Links zuerst: 10 Wiederholungen, dann Seite wechseln – beide Seiten gleich, ohne lange Endhaltung.'],
+    cues: ['Schmerzfrei, nur ein kurzer Weg, nicht ins Endgefühl', 'Keine lange Endhaltung', 'Beide Seiten gleich belasten', 'Links zuerst', 'Rücken lang, Bauch leicht fest', 'Bein geht zur Seite – nicht nach hinten'],
+    err: ['Bein nach hinten statt zur Seite', 'Ins Hohlkreuz sinken / Rücken runden', 'Mit Schwung wippen', 'In den Schmerz gehen'] },
   // v1.8.7: feste Abend-Übung, auch im Hexenschuss (rückenschonende Gesäßdehnung)
   { id: 'fig4', core: 1, eve: 1, n: 'Figure-4-Dehnung (Rückenlage)', sub: 'Abend · Gesäß/Piriformis, rückenschonend', dose: '2×30 s pro Seite', t: 'time', sets: 2, secs: 30, ps: true,
     steps: ['Rückenlage, Kopf und gesamter Rücken bleiben flach am Boden, Arme entspannt.', 'Den einen Knöchel auf das gegenüberliegende Knie legen (Figur 4), Fuß aktiv angezogen.', 'Den stützenden Fuß am Boden lassen oder das Bein nur ganz leicht heranziehen – nicht fest zur Brust ziehen und nicht ins Endgefühl gehen.', '30 s ruhig atmen, langsam ablegen, Seite wechseln. 2 Runden pro Seite.'],
@@ -210,7 +215,7 @@ const FAS = [
     steps: ['Matte auf eine ebene Unterlage legen, langsam darauf hinlegen (Rücken, ggf. dünnes Shirt am Anfang).', 'Beine lang oder angewinkelt, Arme locker neben den Körper.', 'Die ersten 1–2 Minuten sind intensiv – ruhig weiteratmen.', '10 Min liegen bleiben, langsam über die Seite aufstehen.'],
     cues: ['Lange, ruhige Ausatmung', 'Ideal abends vor dem Schlafen'], err: ['Schnell aufspringen (Kreislauf)', 'Sich auf die Matte „fallen lassen“'] }
 ];
-// v1.7.5: Abwechslung – Pool (täglich 3 nach Datum); v1.7.21: +Halber Frosch, +Seitlicher Ausfallschritt im Knien
+// v1.7.5: Abwechslung – Pool (täglich 3 nach Datum); v1.7.21: +Halber Frosch, +Seitlicher Ausfallschritt im Knien; v1.9.3: Halber Frosch fest in den Abend verschoben
 const ROT = [
   { id: 'rbutter', rot: 1, n: 'Liegender Schmetterling', sub: 'Abwechslung · Adduktoren/Leiste & Hüfte', dose: '1×30 s', t: 'time', sets: 1, secs: 30,
     steps: ['Rückenlage, Knie gebeugt, Füße am Boden.', 'Fußsohlen aneinanderlegen und die Knie langsam nach außen sinken lassen.', 'Arme locker neben dem Körper, unterer Rücken bleibt entspannt am Boden.', '30 s ruhig atmen und mit jeder Ausatmung etwas mehr loslassen. Knie mit den Händen zusammenführen und lösen.'],
@@ -252,10 +257,6 @@ const ROT = [
     steps: ['Bauchlage, Stirn auf der Matte, Arme und Beine lang.', 'Diagonal einen Arm und das gegenüberliegende Bein gestreckt seitlich über den Boden nach außen wischen (Arm nach oben-außen, Bein nach außen).', 'Kurz halten, dann zurück in die Mitte, Seite wechseln.', 'Langsam, Bauch leicht angespannt, Becken bleibt am Boden. 6–8 Wdh pro Seite – links ein paar mehr (links betont).'],
     cues: ['Nur im schmerzfreien Bereich', 'Arme und Beine nur flach über den Boden wischen – nicht anheben (kein Hohlkreuz)', 'Wenn der Rücken zwickt: Bewegung kleiner machen', 'Becken bleibt am Boden, Bauch leicht fest', 'Links ein paar Wiederholungen mehr als rechts', 'Langsam wischen, kurz halten – kein Schwung'],
     err: ['Becken hebt ab oder dreht mit', 'Ins Hohlkreuz drücken', 'Mit Schwung und zu hektisch', 'Bewegung erzwingen, obwohl der Rücken zwickt'] },
-  { id: 'halbfrosch', rot: 1, n: 'Halber Frosch', sub: 'Abwechslung · Adduktoren-Stretch (Half Frog)', dose: '1×10 Wdh. pro Seite, ohne Endhaltung', t: 'reps', sets: 1, reps: 10, ps: true,
-    steps: ['Vierfüßlerstand: Hände unter den Schultern, Knie unter den Hüften.', 'Ein Bein gestreckt zur Seite abspreizen, Fuß flach am Boden, Zehen zeigen nach vorn.', 'Hüfte langsam Richtung Ferse des knienden Beins nach hinten schaukeln und wieder nach vorn – Rücken bleibt lang.', '10 Wiederholungen, dann Seite wechseln – beide Seiten gleich, ohne lange Endhaltung.'],
-    cues: ['Schmerzfrei, nur ein kurzer Weg, nicht ins Endgefühl', 'Keine lange Endhaltung', 'Beide Seiten gleich belasten', 'Rücken lang, Bauch leicht fest', 'Bein geht zur Seite – nicht nach hinten'],
-    err: ['Bein nach hinten statt zur Seite', 'Ins Hohlkreuz sinken / Rücken runden', 'Mit Schwung wippen', 'In den Schmerz gehen'] },
   { id: 'seitausfall', rot: 1, n: 'Seitlicher Ausfallschritt im Knien', sub: 'Abwechslung · Adduktoren-Rock (Kneeling side lunge)', dose: '1×8 pro Seite', t: 'reps', sets: 1, reps: 8, ps: true,
     steps: ['Auf ein Knie knien, Oberkörper aufrecht.', 'Das andere Bein gestreckt zur Seite abspreizen, Fuß flach am Boden.', 'Gewicht seitlich über das gestreckte Bein schieben, bis innen am Oberschenkel ein sanfter Zug entsteht – dann wieder zurück zur Mitte.', '8 Wiederholungen, Seite wechseln – beide Seiten gleich.'],
     cues: ['Schmerzfrei, nur eine kleine Seitverschiebung, nicht ins Endgefühl', 'Beide Seiten gleich', 'Oberkörper bleibt aufrecht', 'Kleine, kontrollierte Bewegung – kein Schwung'],
@@ -425,7 +426,7 @@ function isExtra(ex, b, d) { return !!(d.today.extra && (d.today.extra[b] || [])
 function planOf(h, b) { if (h.lineup && h.lineup[b]) return h.lineup[b].map(byId).filter(Boolean);
   if (b === 'm') return EX_OLD.map(byId);
   if (b === 'w') return rotForOld(h.date);
-  if (b === 'a') return EVE.filter(e => e.id !== 'psoasreset' && e.id !== 'kniefersenrock' && e.id !== 'hipflexstand' && e.id !== 'hipwallrot' && e.id !== 'hipwallstep' && e.id !== 'fig4' && e.id !== 'rumpfrot');
+  if (b === 'a') return EVE.filter(e => e.id !== 'psoasreset' && e.id !== 'kniefersenrock' && e.id !== 'hipflexstand' && e.id !== 'hipwallrot' && e.id !== 'hipwallstep' && e.id !== 'fig4' && e.id !== 'rumpfrot' && e.id !== 'halbfrosch');
   if (b === 'f') return FAS.slice();
   return []; } // h (HipFit) und Unbekanntes: bei alten Einträgen ohne lineup nicht nachträglich einfügen
 
