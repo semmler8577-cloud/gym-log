@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.9.7';
+const APP_VERSION = '1.9.8';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -159,9 +159,10 @@ const INCLINE_ROW = { id: 'r-row-incline-kabel', name: 'Incline Row (Seilzug, Sc
 const CHEST_CURL = { id: 'a-bizeps-kabel-brustgestuetzt', name: 'Bizeps-Curl Kabel brustgestützt (Schrägbank, Gesicht zum Kabel)', group: 'Arme', sub: 'Bizeps', unit: 'reps', perSide: false, target: 12, order: 14.5,
   desc: 'Warum: Trainiert den Bizeps in erhöhter Armposition (kurze Muskellänge, starke Spitzenkontraktion). Der Oberkörper ist gestützt – kein Mogeln, der Rücken bleibt entlastet.\n\nPlan: 2 Aufwärmsätze + 2 Arbeitssätze, 10–15 Wdh., letzter Satz nah ans Muskelversagen. Gesamtgewicht (Kabel). Fokus: Bizeps.\n\nSetup: Kabel oben – Rolle knapp über Kopfhöhe im Sitzen. Kurze gerade Stange einhängen. Verstellbare Bank steil auf ca. 70–75° stellen und mit dem Gesicht zum Kabelturm setzen: Brust fest an die Lehne, Oberkante der Lehne etwa auf Achsel- bzw. oberer Brusthöhe. Stange im Untergriff schulterbreit fassen. Ellenbogen stehen vor dem Körper, erhöht und schräg nach oben Richtung Rolle – frei in der Luft, nicht aufgestützt, und bleiben dort fixiert. Start: Arme fast gestreckt, in der Kabellinie, unten nicht ganz durchdrücken.\n\nAusführung: Beidarmig curlen, bis die Stange Richtung Stirn kommt. Oben kurz anspannen (hoch ca. 1 s), dann 1,5–2 s langsam zurück.\n• Ellenbogen bleiben fixiert – nicht nach unten oder vorne wandern\n• Brust bleibt fest an der Lehne\n• Kein Schwung\n• Arme unten nicht komplett durchdrücken',
   elbowNote: 'Ellenbogen heilt noch, und das Kabel hält durchgehend Spannung: leicht starten, unten nicht ganz durchstrecken. Bei Ziehen am Ellenbogen sofort Gewicht runter.' };
-/* v1.9.6: Frontheben Kabel sitzend über Kopf (Schrägbank, Rücken zum Kabel) – sichtbar im Oberkörper-Plan (Schultern), nach „Schulterpresse Kabelzug (liegend)“, Bild s-frontheben-kabel-sitzend.webp; bestehende Übungen/Reihenfolge/Sätze unverändert */
-const FRONT_RAISE = { id: 's-frontheben-kabel-sitzend', name: 'Frontheben Kabel sitzend über Kopf (Schrägbank, Rücken zum Kabel)', group: 'Schultern', unit: 'reps', perSide: false, elbow: 'e', target: 12, order: 10.6,
-  desc: 'Warum: Trainiert die vordere Schulter unter Dehnung (lange Muskellänge) und gibt Schulter-Fullness ohne Druckbelastung.\n\nPlan: 2 Aufwärmsätze + 2 Arbeitssätze, 10–15 Wdh., letzter Satz nah ans Muskelversagen. Gesamtgewicht (Kabel). Fokus: vordere Schulter.\n\nSetup: Kabel ganz unten (untere Rolle). Verstellbare Bank steil auf ca. 60–70° stellen, mit dem Rücken zum Kabelturm. Zwischen Kabel und einer geraden Stange einen langen Gurt/Strap einhängen, damit das Kabel über die Bank und über den Kopf läuft. Hinsetzen: Rücken und Kopf fest an der Lehne, Füße flach am Boden, Knie ca. 90°. Stange im Obergriff fassen. Arme fast gestreckt, leichte Beugung im Ellenbogen fixieren (nicht mitbeugen). Startposition: Stange über dem Kopf oder leicht hinter dem Kopf.\n\nAusführung: Stange im Bogen nach vorn-unten bis etwa Brust-/Schulterhöhe ziehen (1–2 s), dann 2–3 s langsam zurück in die Dehnung – Stange wieder über oder leicht hinter den Kopf.\n• Rücken und Kopf bleiben fest an der Lehne – Becken nicht abheben, kein Hohlkreuz\n• Ellenbogenwinkel bleibt leicht gebeugt und unverändert (sonst wird’s zum Trizeps-Drücken)\n• Kein Schwung\n• Unterer Rücken bleibt an der Lehne (Bandscheibe/ISG)',
+/* v1.9.8: Frontheben-Text und -Bilder korrigiert (Gesicht zum Kabel, Start Hüfte, Bogen über Kopf); Bizeps-Bilder korrigiert (Brust an die Lehne). Gleiche IDs, Start+Ende-Bilder. Bestehende Sätze unverändert */
+/* v1.9.6: Frontheben Kabel sitzend – im Oberkörper-Plan (Schultern); v1.9.8 Name/Text/Bild korrigiert (nicht mehr „Rücken zum Kabel“) */
+const FRONT_RAISE = { id: 's-frontheben-kabel-sitzend', name: 'Frontheben Kabel sitzend (Schrägbank, Gesicht zum Kabel)', group: 'Schultern', unit: 'reps', perSide: false, elbow: 'e', target: 12, order: 10.6,
+  desc: 'Warum: Trainiert die vordere Schulter über einen großen Bewegungsweg bis über Kopf. Rücken und Kopf sind an der Lehne gestützt.\n\nPlan: 2 Aufwärmsätze + 2 Arbeitssätze, 10–15 Wdh., letzter Satz nah ans Muskelversagen. Gesamtgewicht (Kabel). Fokus: vordere Schulter.\n\nSetup: Kabel ganz unten (untere Rolle). Verstellbare Bank als Schrägbank aufstellen – die Lehne zeigt vom Kabelturm weg. Hinsetzen wie beim Schrägbankdrücken: mit dem Gesicht zum Kabelturm, Füße zum Turm, Rücken und Kopf fest an der Lehne anlehnen. Gerade Stange am unteren Kabel (ggf. mit Gurt/Strap). Stange im Obergriff fassen. Arme fast gestreckt, leichte Beugung im Ellenbogen fixieren (nicht mitbeugen). Startposition: Arme nach vorn-unten Richtung untere Rolle, Stange etwa auf Hüft-/Oberschenkelhöhe.\n\nAusführung: Stange im Bogen nach vorn-oben führen, bis die Arme nach oben über Kopf zeigen (Richtung oberes Ende des Turms). 1–2 s heben, dann 2–3 s langsam zurück in die Startposition.\n• Rücken und Kopf bleiben fest an der Lehne – Becken nicht abheben, kein Hohlkreuz\n• Ellenbogenwinkel bleibt leicht gebeugt und unverändert\n• Kein Schwung\n• Unterer Rücken bleibt an der Lehne (Bandscheibe/ISG)',
   elbowNote: 'Ellenbogen heilt noch: moderates Gewicht, sauber und kontrolliert – kein Schmerz im Ellenbogen. Bei stechendem Schmerz Gewicht runter oder Übung heute weglassen. Unterer Rücken bleibt an der Lehne (Bandscheibe/ISG).' };
 /* v1.2.1: neue Standard-Übungen, die direkt im Plan sichtbar sind (Migration fügt fehlende per ID ein) */
 const EXTRA_EX = [
@@ -332,6 +333,12 @@ async function loadAll() {
     // Nur ergänzen: Bizeps-Curl Kabel brustgestützt sichtbar im Oberkörper-Plan (Arme/Bizeps) – bestehende Übungen/Sätze/Reihenfolge bleiben unverändert
     if (!exById(CHEST_CURL.id) && !S.exercises.some(x => x.name === CHEST_CURL.name)) await save('exercises', { ...CHEST_CURL, photo: null });
     await setMeta('catalogVersion', 16);
+  }
+  if ((S.meta.catalogVersion || 0) < 17) {
+    // v1.9.8: Frontheben-Name und -Text korrigieren (gleiche ID, Sätze bleiben)
+    const fr = exById(FRONT_RAISE.id);
+    if (fr) { fr.name = FRONT_RAISE.name; fr.desc = FRONT_RAISE.desc; fr.elbowNote = FRONT_RAISE.elbowNote; await save('exercises', fr); }
+    await setMeta('catalogVersion', 17);
   }
 }
 
@@ -629,7 +636,7 @@ function viewEx(id) {
   const lastHtml = ls ? `<div class="card"><div class="small muted" style="letter-spacing:1px;text-transform:uppercase;font-weight:700;margin-bottom:6px">Letztes Mal · ${dateDE(dkey(ls.session.start))}</div><div class="last">${ls.sets.map(x => `<b>${x.warmup ? '<span style="color:#888">A</span> ' : ''}${setLabel(x, ex)}</b>${x.drops && x.drops.length ? ' <span style="color:#ff7070">→ ' + dropLabel(x, ex) + '</span>' : ''}`).join('<br>')}</div></div>` : '';
   return {
     html: topbar(ex.name, ex.group + (isSec(ex) ? ' · isometrisch' : ''), '#/train', `<span style="display:flex;gap:8px"><button class="icon-btn" data-act="editEx" data-id="${ex.id}" aria-label="Übung bearbeiten">✎</button><button class="icon-btn" data-act="go" data-to="#/progress/${ex.id}" aria-label="Fortschritt">📈</button></span>`) +
-      (exImg(ex) ? `<div class="card"><img class="mob-anat" src="${exImg(ex)}" alt=""><div class="muted small mob-anat-cap">● rot = trainierte Muskulatur</div></div>` : '') +
+      (exImgs(ex).length ? `<div class="card">${exImgs(ex).map(src => `<img class="mob-anat" src="${src}" alt="">`).join('')}<div class="muted small mob-anat-cap">${exImgs(ex).length > 1 ? 'Start → Ende · ' : ''}● rot = trainierte Muskulatur</div></div>` : '') +
       (ex.photo ? `<div class="photo-hero" style="background-image:url('${ex.photo}')" data-act="photo" data-id="${ex.id}"><span class="photo-edit">📷 Foto vom Gerät ändern</span></div>` : `<button class="btn btn-outline-gold btn-sm" data-act="photo" data-id="${ex.id}" style="margin-bottom:12px">📷 Foto vom Gerät aufnehmen</button>`) +
       (ex.desc || ex.elbowNote ? `<div class="card"><div class="small muted" style="letter-spacing:1px;text-transform:uppercase;font-weight:700;margin-bottom:6px">Ausführung</div>${ex.desc ? `<div style="font-size:14px;line-height:1.45;color:var(--tx2);white-space:pre-line">${esc(ex.desc)}</div>` : ''}${ex.elbowNote ? `<div style="margin-top:8px;font-size:14px">${elbowBadge(ex)} <span style="color:#ffd60a">${esc(ex.elbowNote)}</span></div>` : ''}</div>` : '') +
       lastHtml +
@@ -637,8 +644,13 @@ function viewEx(id) {
       `<div style="height:6px"></div>` + editorHTML(ex, act)
   };
 }
+const EX_IMG_SEQ = {
+  's-frontheben-kabel-sitzend': ['s-frontheben-kabel-sitzend.webp', 's-frontheben-kabel-sitzend-2.webp'],
+  'a-bizeps-kabel-brustgestuetzt': ['a-bizeps-kabel-brustgestuetzt.webp', 'a-bizeps-kabel-brustgestuetzt-2.webp']
+};
 const EX_IMG = new Set(["a-bizeps-kabel-brustgestuetzt", "b-guillotine", "b-fly-schraeg-kabel", "r-row-trapez-schraeg-breit", "bauch-crunch-maschine", "r-facepull", "r-revfly", "r-row-incline-kabel", "s-presse-kabel-liegend", "s-frontheben-kabel-sitzend", "s-seitheben-kabel-einarm", "s-seitheben-vorgebeugt", "x1", "x10", "x11", "x12", "x13", "x14", "x15", "x16", "x17", "x18", "x19", "x2", "x20", "x21", "x22", "x23", "x24", "x25", "x26", "x27", "x28", "x3", "x4", "x5", "x6", "x7", "x8", "x9"]);
-const exImg = ex => EX_IMG.has(ex.id) ? `./assets/ex/${ex.id}.webp` : '';
+const exImgs = ex => EX_IMG_SEQ[ex.id] ? EX_IMG_SEQ[ex.id].map(f => `./assets/ex/${f}`) : (EX_IMG.has(ex.id) ? [`./assets/ex/${ex.id}.webp`] : []);
+const exImg = ex => exImgs(ex)[0] || '';
 function setEdField(f, v, raw) {
   if (f === 'note') { ED.note = v; return; }
   const val = raw ? num(v) : v;
