@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '1.9.9';
+const APP_VERSION = '2.0.0';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -155,6 +155,10 @@ const INCLINE_FLY = { id: 'b-fly-schraeg-kabel', name: 'Schrägbank-Kabelfly in 
 /* v1.7.13: Incline Row (Seilzug, Schrägbank) – im Oberkörper-Plan (Rücken), nach „Rudern Maschine enger Griff“ */
 const INCLINE_ROW = { id: 'r-row-incline-kabel', name: 'Incline Row (Seilzug, Schrägbank)', group: 'Rücken', unit: 'reps', perSide: false, elbow: 'e', target: 12, order: 6.5,
   desc: 'Plan: 3×12 Wdh.\n\nSchrägbank vor den Seilzug, Brust aufliegend, Seil/Griff tief ziehen, flüssig bleiben und Richtung Hüfte ziehen.' };
+/* v2.0.0: Latzug Kabel kniend brustgestützt – im Oberkörper-Plan (Rücken), direkt nach der Incline Row (die bleibt). Start+Ende-Bilder r-latzug-kabel-kniend-brustgestuetzt(.webp/-2.webp) */
+const LAT_KNEEL = { id: 'r-latzug-kabel-kniend-brustgestuetzt', name: 'Latzug Kabel kniend brustgestützt (Schrägbank, beidseitig von oben)', group: 'Rücken', unit: 'reps', perSide: false, elbow: 'e', target: 12, order: 6.6,
+  desc: 'Warum: Die Brust liegt fest an der Lehne – das nimmt den unteren Rücken komplett raus und verhindert Schwung. So arbeitet fast nur der Latissimus. Ideal für dein ISG.\n\nPlan: 1 Aufwärmsatz + 3 Arbeitssätze, 10–15 Wdh., letzter Satz nah ans Muskelversagen. Gesamtgewicht (Kabel). Fokus: Latissimus.\n\nSetup: Beide Kabel ganz oben (obere Rollen) am Doppel-Kabelturm, an jedem Kabel ein einzelner D-Griff. Verstellbare Bank vor/zwischen die Türme stellen, Lehne fast senkrecht (ca. 70–80°). Mit beiden Knien auf die Sitzfläche knien – Schienbeine liegen auf dem Polster, Zehen hängen hinten über die Kante. Oberkörper zur Lehne: Brust fest oben an das Polster, Kopf knapp über der Oberkante. Linke Hand nimmt den Griff von oben links, rechte Hand den Griff von oben rechts. Start: Arme nach oben ausgestreckt in Richtung der oberen Rollen – volle Dehnung im Lat.\n\nAusführung: Schultern nach unten ziehen, dann beide Ellenbogen nach unten und leicht nach hinten seitlich an die Rippen ziehen (Latzug-Bahn). Unten kurz halten (ca. 1 s), dann 2–3 s langsam zurück nach oben bis in die volle Dehnung.\n• Brust bleibt die ganze Zeit an der Lehne\n• Kein Schwung, nicht mit dem Oberkörper reißen\n• Schultern weg von den Ohren\n• Unten kurz pausieren, oben voll strecken und dehnen\n• ISG/unterer Rücken: Hüfte bleibt ruhig auf den Knien, kein Hohlkreuz',
+  elbowNote: 'Ellenbogen heilt noch: neutraler Griff (Handflächen zueinander), Griff locker halten – kein Klammergriff. Ziehen über die Ellenbogen, nicht über die Hände. Bei Ziehen am Ellenbogen Gewicht runter.' };
 /* v1.9.7: Bizeps-Curl Kabel brustgestützt (Schrägbank, Gesicht zum Kabel) – sichtbar im Oberkörper-Plan (Arme/Bizeps), nach „Bizeps Kabel stehend (Arme ausgestreckt)“, Bild a-bizeps-kabel-brustgestuetzt.webp; bestehende Übungen/Reihenfolge/Sätze unverändert */
 const CHEST_CURL = { id: 'a-bizeps-kabel-brustgestuetzt', name: 'Bizeps-Curl Kabel brustgestützt (Schrägbank, Gesicht zum Kabel)', group: 'Arme', sub: 'Bizeps', unit: 'reps', perSide: false, target: 12, order: 14.5,
   desc: 'Warum: Trainiert den Bizeps in erhöhter Armposition (kurze Muskellänge, starke Spitzenkontraktion). Der Oberkörper ist gestützt – kein Mogeln, der Rücken bleibt entlastet.\n\nPlan: 2 Aufwärmsätze + 2 Arbeitssätze, 10–15 Wdh., letzter Satz nah ans Muskelversagen. Gesamtgewicht (Kabel). Fokus: Bizeps.\n\nSetup: Kabel oben – Rolle knapp über Kopfhöhe im Sitzen. Kurze gerade Stange einhängen. Verstellbare Bank steil auf ca. 70–75° stellen und mit dem Gesicht zum Kabelturm setzen: Brust fest an die Lehne, Oberkante der Lehne etwa auf Achsel- bzw. oberer Brusthöhe. Stange im Untergriff schulterbreit fassen. Ellenbogen stehen vor dem Körper, erhöht und schräg nach oben Richtung Rolle – frei in der Luft, nicht aufgestützt, und bleiben dort fixiert. Start: Arme fast gestreckt, in der Kabellinie, unten nicht ganz durchdrücken.\n\nAusführung: Beidarmig curlen, bis die Stange Richtung Stirn kommt. Oben kurz anspannen (hoch ca. 1 s), dann 1,5–2 s langsam zurück.\n• Ellenbogen bleiben fixiert – nicht nach unten oder vorne wandern\n• Brust bleibt fest an der Lehne\n• Kein Schwung\n• Arme unten nicht komplett durchdrücken',
@@ -340,6 +344,14 @@ async function loadAll() {
     const fr = exById(FRONT_RAISE.id);
     if (fr) { fr.name = FRONT_RAISE.name; fr.desc = FRONT_RAISE.desc; fr.elbowNote = FRONT_RAISE.elbowNote; await save('exercises', fr); }
     await setMeta('catalogVersion', 17);
+  }
+  if ((S.meta.catalogVersion || 0) < 18) {
+    // v2.0.0: Nur ergänzen: Latzug Kabel kniend brustgestützt sichtbar im Oberkörper-Plan (Rücken); Incline Row bleibt
+    if (!exById(LAT_KNEEL.id) && !S.exercises.some(x => x.name === LAT_KNEEL.name)) await save('exercises', { ...LAT_KNEEL, photo: null });
+    // v2.0.0: Bizeps-Curl Kabel brustgestützt aus der Auswahl nehmen (Markus: nichts gespürt). Eintrag und alte Sätze bleiben für den Verlauf
+    const cc = exById(CHEST_CURL.id);
+    if (cc) { cc.hidden = true; cc.retired = true; await save('exercises', cc); }
+    await setMeta('catalogVersion', 18);
   }
 }
 
@@ -552,7 +564,7 @@ function viewTrain() {
     const exs = S.exercises.filter(e => e.group === g && !e.hidden).sort((a, b) => (SUB_ORDER[a.sub] ?? 0) - (SUB_ORDER[b.sub] ?? 0) || a.order - b.order);
     if (!exs.length) return '';
     return `<div class="sec-h"><span>${g}${g === 'Reha' ? ' · Tennisarm' : ''}</span><span class="line"></span></div>${exs.map(e => exRow(e, act)).join('')}`;
-  }).join('') + `<button class="btn btn-outline-gold btn-sm" data-act="picker" style="margin-top:14px">＋ Weitere Übungen auswählen (${S.exercises.filter(e => e.hidden).length} im Katalog)</button>`;
+  }).join('') + `<button class="btn btn-outline-gold btn-sm" data-act="picker" style="margin-top:14px">＋ Weitere Übungen auswählen (${S.exercises.filter(e => e.hidden && !e.retired).length} im Katalog)</button>`;
   let head;
   if (act) {
     const st = sessionStats(act);
@@ -646,10 +658,11 @@ function viewEx(id) {
   };
 }
 const EX_IMG_SEQ = {
+  'r-latzug-kabel-kniend-brustgestuetzt': ['r-latzug-kabel-kniend-brustgestuetzt.webp', 'r-latzug-kabel-kniend-brustgestuetzt-2.webp'],
   's-frontheben-kabel-sitzend': ['s-frontheben-kabel-sitzend.webp', 's-frontheben-kabel-sitzend-2.webp'],
   'a-bizeps-kabel-brustgestuetzt': ['a-bizeps-kabel-brustgestuetzt.webp', 'a-bizeps-kabel-brustgestuetzt-2.webp']
 };
-const EX_IMG = new Set(["a-bizeps-kabel-brustgestuetzt", "b-guillotine", "b-fly-schraeg-kabel", "r-row-trapez-schraeg-breit", "bauch-crunch-maschine", "r-facepull", "r-revfly", "r-row-incline-kabel", "s-presse-kabel-liegend", "s-frontheben-kabel-sitzend", "s-seitheben-kabel-einarm", "s-seitheben-vorgebeugt", "x1", "x10", "x11", "x12", "x13", "x14", "x15", "x16", "x17", "x18", "x19", "x2", "x20", "x21", "x22", "x23", "x24", "x25", "x26", "x27", "x28", "x3", "x4", "x5", "x6", "x7", "x8", "x9"]);
+const EX_IMG = new Set(["a-bizeps-kabel-brustgestuetzt", "b-guillotine", "b-fly-schraeg-kabel", "r-row-trapez-schraeg-breit", "bauch-crunch-maschine", "r-facepull", "r-revfly", "r-row-incline-kabel", "r-latzug-kabel-kniend-brustgestuetzt", "s-presse-kabel-liegend", "s-frontheben-kabel-sitzend", "s-seitheben-kabel-einarm", "s-seitheben-vorgebeugt", "x1", "x10", "x11", "x12", "x13", "x14", "x15", "x16", "x17", "x18", "x19", "x2", "x20", "x21", "x22", "x23", "x24", "x25", "x26", "x27", "x28", "x3", "x4", "x5", "x6", "x7", "x8", "x9"]);
 const exImgs = ex => EX_IMG_SEQ[ex.id] ? EX_IMG_SEQ[ex.id].map(f => `./assets/ex/${f}`) : (EX_IMG.has(ex.id) ? [`./assets/ex/${ex.id}.webp`] : []);
 const exImg = ex => exImgs(ex)[0] || '';
 function setEdField(f, v, raw) {
@@ -938,7 +951,7 @@ let pick = { f: null, q: '', elbow: false, mode: null };
 function pickerList() {
   const q = pick.q.trim().toLowerCase();
   const fs = pick.mode === 'free' ? new Set(freeIds(activeSession())) : null;
-  let exs = S.exercises.filter(e => (q ? true : pick.f === 'Körpergewicht' ? e.bw : filterOf(e) === pick.f) && (!pick.elbow || e.elbow === 'e') && (!q || e.name.toLowerCase().includes(q) || filterOf(e).toLowerCase().includes(q)));
+  let exs = S.exercises.filter(e => !e.retired && (q ? true : pick.f === 'Körpergewicht' ? e.bw : filterOf(e) === pick.f) && (!pick.elbow || e.elbow === 'e') && (!q || e.name.toLowerCase().includes(q) || filterOf(e).toLowerCase().includes(q)));
   exs.sort((a, b) => PICK_FILTERS.indexOf(filterOf(a)) - PICK_FILTERS.indexOf(filterOf(b)) || (!!a.hidden - !!b.hidden) || a.name.localeCompare(b.name, 'de'));
   if (!exs.length) return '<div class="empty">Nichts gefunden. Eigene Übung über „Übungen verwalten“ anlegen.</div>';
   let out = '', last = '';
@@ -951,7 +964,7 @@ function pickerList() {
   return out;
 }
 function pickerChips() {
-  return (pick.mode === 'drop' ? ['Körpergewicht', ...PICK_FILTERS] : PICK_FILTERS).map(f => { const n = f === 'Körpergewicht' ? S.exercises.filter(e => e.bw).length : S.exercises.filter(e => filterOf(e) === f && (pick.mode === 'free' ? true : !e.hidden)).length; return `<button class="pchip ${pick.f === f && !pick.q ? 'on' : ''}" data-act="pickF" data-f="${f}">${f}<small>${n}</small></button>`; }).join('');
+  return (pick.mode === 'drop' ? ['Körpergewicht', ...PICK_FILTERS] : PICK_FILTERS).map(f => { const n = f === 'Körpergewicht' ? S.exercises.filter(e => e.bw).length : S.exercises.filter(e => !e.retired && filterOf(e) === f && (pick.mode === 'free' ? true : !e.hidden)).length; return `<button class="pchip ${pick.f === f && !pick.q ? 'on' : ''}" data-act="pickF" data-f="${f}">${f}<small>${n}</small></button>`; }).join('');
 }
 function openPicker(mode) {
   const act = activeSession(); const t = act ? act.type : (trainType || todayType() || 'upper');
