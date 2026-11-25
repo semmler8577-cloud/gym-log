@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '2.0.0';
+const APP_VERSION = '2.1.0';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -169,6 +169,110 @@ const CHEST_CURL = { id: 'a-bizeps-kabel-brustgestuetzt', name: 'Bizeps-Curl Kab
 const FRONT_RAISE = { id: 's-frontheben-kabel-sitzend', name: 'Frontheben Kabel sitzend (Schrägbank, Gesicht zum Kabel)', group: 'Schultern', unit: 'reps', perSide: false, elbow: 'e', target: 12, order: 10.6,
   desc: 'Warum: Trainiert die vordere Schulter über einen großen Bewegungsweg bis über Kopf. Rücken und Kopf sind an der Lehne gestützt.\n\nPlan: 2 Aufwärmsätze + 2 Arbeitssätze, 10–15 Wdh., letzter Satz nah ans Muskelversagen. Gesamtgewicht (Kabel). Fokus: vordere Schulter.\n\nSetup: Kabel ganz unten (untere Rolle). Verstellbare Bank als Schrägbank aufstellen – die Lehne zeigt vom Kabelturm weg. Hinsetzen wie beim Schrägbankdrücken: mit dem Gesicht zum Kabelturm, Füße zum Turm, Rücken und Kopf fest an der Lehne anlehnen. Gerade Stange am unteren Kabel (ggf. mit Gurt/Strap). Stange im Obergriff fassen. Arme fast gestreckt, leichte Beugung im Ellenbogen fixieren (nicht mitbeugen). Startposition: Arme nach vorn-unten Richtung untere Rolle, Stange etwa auf Hüft-/Oberschenkelhöhe.\n\nAusführung: Stange im Bogen nach vorn-oben führen, bis die Arme nach oben über Kopf zeigen (Richtung oberes Ende des Turms). 1–2 s heben, dann 2–3 s langsam zurück in die Startposition.\n• Rücken und Kopf bleiben fest an der Lehne – Becken nicht abheben, kein Hohlkreuz\n• Ellenbogenwinkel bleibt leicht gebeugt und unverändert\n• Kein Schwung\n• Unterer Rücken bleibt an der Lehne (Bandscheibe/ISG)',
   elbowNote: 'Ellenbogen heilt noch: moderates Gewicht, sauber und kontrolliert – kein Schmerz im Ellenbogen. Bei stechendem Schmerz Gewicht runter oder Übung heute weglassen. Unterer Rücken bleibt an der Lehne (Bandscheibe/ISG).' };
+/* v2.1.0: Schutzphase Hüfte nach MRT (24.11.2026: Cam-Form beidseitig ohne Labrumriss/Knorpelschaden; Ödem Gluteus maximus bds. und an den Sehnenanteilen von Rectus femoris und Iliopsoas bds., links stärker – Zerrung/Überlastung).
+   26.11.–09.12.2026 Schutzphase (Beintag dosiert, Isometrie), danach Aufbau ca. +10 % pro Woche. Nur Hinweise „Carters Vorschlag“ – keine bestehende Übung wird entfernt, ausgeblendet oder in Pflichtwerten/Vorbelegung geändert; Markus entscheidet selbst. Keine Sätze/Verläufe werden gelöscht. */
+const HP = { from: '2026-11-26', to: '2026-12-09', rampTo: '2027-01-13', factor: 0.65, lo: 0.6, hi: 0.7 };
+const hpPhase = (k = dkey()) => k >= HP.from && k <= HP.to ? 'schutz' : (k > HP.to && k <= HP.rampTo ? 'aufbau' : null);
+const HP_AMPEL = ['Schmerz bis 3/10 ist okay, wenn er am nächsten Morgen wieder weg ist.', 'Wird das Ziehen schlechter (beim Training, am Abend oder am nächsten Morgen): eine Stufe zurück – weniger Gewicht, weniger Sätze oder kleinerer Bewegungsumfang.', 'Stopp bei Leistenstechen, Einklemmen/Blockieren, Ausstrahlung ins Bein oder Nachtschmerz – dann Doc bzw. Orthopäde.'];
+const HP_RIR = 'RIR 2–3: Jeder Satz endet, wenn noch 2–3 saubere Wdh. gehen würden. Kein Muskelversagen, keine Drop-Sätze, keine Rekordjagd.';
+/* Regeln je Übung, per ID oder Name (auch für selbst angelegte Übungen). Reihenfolge zählt: erste passende Regel gilt. */
+const HP_RULES = [
+  { key: 'hlr', kind: 'pause', test: e => e.id === 'x18' || /hanging\s*leg|beinheben\s*h(ä|ae)ngend/i.test(e.name),
+    why: 'Hängendes Beinheben ist vor allem Hüftbeuger-Arbeit (Iliopsoas, Rectus femoris) unter hoher Last – genau die Muskeln mit Ödem.', alt: 'Bauch stattdessen über Crunch am Seilzug und Sit-ups.' },
+  { key: 'knieheben', kind: 'pause', test: e => e.id === 'x19' || /knieheben|beinheben|leg\s*raise|knee\s*raise/i.test(e.name),
+    why: 'Knieheben mit Gewicht zieht den Oberschenkel gegen Widerstand Richtung Brust – das ist Hüftbeuger-Last (Iliopsoas, Rectus femoris), dort sitzt das Ödem.', alt: 'Bauch stattdessen über Crunch am Seilzug und Sit-ups.' },
+  { key: 'thrust', kind: 'pause', test: e => /hip\s*thrust|glute\s*drive/i.test(e.name),
+    why: 'Schwere Hip Thrusts/Glute Drive belasten den großen Gesäßmuskel maximal – der hat beidseitig ein Ödem.', alt: 'Stattdessen „Brücke halten (isometrisch)“.' },
+  { key: 'squat', kind: 'pause', test: e => e.id === 'bw-kniebeuge' || e.id === 'bw-ausfall' || /kniebeuge|squat|ausfallschritt|lunge|sprung|sprünge|jump|sprint/i.test(e.name),
+    why: 'Tiefe Kniebeugen, Ausfallschritte, Sprünge und Sprints laden Gesäß und Hüftbeuger schwer oder explosiv – in der Schutzphase besser auslassen.', alt: 'Stattdessen „Wandsitzen (wenig tief)“.' },
+  { key: 'presse', kind: 'reduce', test: e => e.id === 'x23' || /beinpresse|leg\s*press/i.test(e.name), sets: 3, reps: '12–15',
+    why: 'Bleibt drin, weil die Beinpresse den Oberschenkel geführt und ohne Rückenlast trainiert. Leichter, damit Gesäß und vorderer Oberschenkel heilen können.',
+    cue: 'Hüftbeugung unter Last höchstens ca. 90°: Schlitten nur so weit runter, bis Oberschenkel und Oberkörper etwa einen rechten Winkel bilden. Becken bleibt am Polster, unten nicht einrollen. Knie in Richtung Fußspitzen.' },
+  { key: 'hack', kind: 'reduce', test: e => e.id === 'x24' || /hackenschmidt|hack\s*squat/i.test(e.name), sets: 3, reps: '12–15',
+    why: 'Bleibt drin, aber leicht und nicht tief – geführte Bewegung, Rücken am Polster.',
+    cue: 'Nur bis Oberschenkel etwa waagerecht bzw. Hüfte ca. 90°, nicht tief. Gleichmäßig 2 s runter, 1 s hoch. Knie über den Fußspitzen.' },
+  { key: 'strecker', kind: 'reduce', test: e => e.id === 'x25' || /beinstrecker|leg\s*extension/i.test(e.name), sets: 2, reps: '15–20',
+    why: 'Der Beinstrecker trifft den Rectus femoris direkt – der hat ein Ödem. Darum nur leicht: Durchblutung ja, schwere Last nein.',
+    cue: 'Ruhig 2 s hoch, oben 1 s halten, 2–3 s ablassen. Keine Drops, kein Muskelversagen.' },
+  { key: 'abd', kind: 'reduce', test: e => e.group === 'Beine' && !e.hp && /abdu[kc]t|abduktor|hip\s*abd/i.test(e.name), sets: 3, reps: '12–15',
+    why: 'Bleibt drin, weil die äußere Hüfte (Gluteus medius) die Hüfte stabilisiert. Leichter, weil der große Gesäßmuskel mitarbeitet und gereizt ist.',
+    cue: 'Kontrolliert öffnen, außen 1 s halten, 2 s zurück. Oberkörper aufrecht, nicht mit Schwung.' },
+  { key: 'seitbeugen', kind: 'light', test: e => e.id === 'x21' || /seitbeug/i.test(e.name), sets: 3, reps: 15, maxW: 15, startW: 12.5,
+    why: 'Seitbeugen kommen leicht zurück (MRT zeigt dafür keinen Grund mehr zum Pausieren), aber nicht schwer: 10–15 kg statt 40 kg.',
+    cue: 'Langsam 2 s runter, 2 s hoch, nur seitlich – keine Drehung, kein Schwung. Becken bleibt ruhig.' },
+  { key: 'bauchcap', kind: 'cap', test: e => e.group === 'Bauch',
+    why: 'Bleibt im Plan. In der Schutzphase gleiche Gewichte wie zuletzt, aber kein Steigern und kein Rekordversuch.',
+    cue: 'Sauber und kontrolliert, 1–2 Wdh. vor dem Versagen aufhören. Zieht es vorn in der Leiste oder Hüfte: Bewegungsumfang kleiner.' },
+  { key: 'beinkeep', kind: 'keep', test: e => e.group === 'Beine' && !e.hp,
+    why: 'Bleibt mit gleichem Gewicht (keine betroffene Muskelgruppe laut MRT), aber ohne Muskelversagen.',
+    cue: 'Sitz-Position: Becken bleibt am Polster, kein Hohlkreuz.' }
+];
+const hpRule = (ex, k = dkey()) => ex && hpPhase(k) && !ex.hp ? (HP_RULES.find(r => r.test(ex)) || null) : null;
+const r25 = w => Math.round(w / 2.5) * 2.5;
+const hpKg = (w, ps) => fmt(w, 2) + (ps ? ' kg p.S.' : ' kg');
+const hpDM = k => dateDE(k).slice(0, 6);
+/* Bezugswerte = letztes Training VOR der Schutzphase (sonst das letzte überhaupt), damit sich Vorschläge nicht aufschaukeln */
+function hpBase(ex) {
+  const ls = lastSessionSets(ex.id, fromKey(HP.from).getTime()) || lastSessionSets(ex.id, Date.now() + 1);
+  if (!ls) return null; const w = ls.sets.filter(x => !x.warmup && !isSec(ex)); if (!w.length) return null;
+  const top = w.reduce((a, b) => (b.weight || 0) > (a.weight || 0) ? b : a, w[0]);
+  return { date: dkey(ls.session.start), topW: top.weight || 0, reps: top.reps, ps: !!top.perSide, n: w.length, sets: w };
+}
+const HP_EX_SUG = { 'hp-bruecke-halten': '3 × 30 s halten, ohne Gewicht', 'hp-wandsitzen': '3 × 30 s halten, Knie nur 45–60° gebeugt', 'hp-einbeinstand-wand': '2–3 × 30 s pro Seite, links zuerst', 'hp-seitlage-abduktion': '3 × 12–15 pro Seite, 2 s oben halten, ohne Gewicht' };
+/* Liefert { line, base, rule } – reiner Hinweis, verändert nichts */
+function hpSuggest(ex, k = dkey()) {
+  const ph = hpPhase(k); if (!ph || !ex) return null;
+  if (ex.hp) return { line: 'Carters Vorschlag: ' + HP_EX_SUG[ex.id], rule: null, base: null, ph };
+  const r = hpRule(ex, k); if (!r) return null;
+  const b = hpBase(ex); const kg = w => b ? hpKg(w, b.ps) : '';
+  let line;
+  if (ph === 'aufbau') {
+    const wk = Math.floor((fromKey(k) - fromKey(HP.to)) / 6048e5) + 1;
+    if (!b || !b.topW) line = `Aufbau Woche ${wk}: ca. +10 % pro Woche, solange die Schmerz-Ampel grün ist`;
+    else { const tgt = Math.min(b.topW, r25(b.topW * (r.kind === 'pause' ? 0.4 : r.kind === 'light' ? r.startW / b.topW : r.kind === 'reduce' ? HP.factor : 1) * Math.pow(1.1, wk)));
+      line = `Aufbau Woche ${wk}: ca. ${kg(tgt)} (+10 %/Woche bis zum alten Wert ${kg(b.topW)})`; }
+    return { line: 'Carters Vorschlag · ' + line, rule: r, base: b, ph };
+  }
+  if (r.kind === 'reduce') line = b && b.topW ? `ca. ${kg(r25(b.topW * HP.factor))} (60–70 %: ${fmt(r25(b.topW * HP.lo), 2)}–${kg(r25(b.topW * HP.hi))}) · ${r.sets} Sätze × ${r.reps} · RIR 2–3` : `60–70 % vom letzten Gewicht · ${r.sets} Sätze × ${r.reps} · RIR 2–3`;
+  else if (r.kind === 'pause') line = b && b.topW ? `besser auslassen – oder sehr leicht ca. ${kg(r25(b.topW * 0.4))} · 2 Sätze × 12–15 · RIR 3` : 'besser auslassen – oder sehr leicht · 2 Sätze · RIR 3';
+  else if (r.kind === 'light') line = `${b ? kg(r.startW) : fmt(r.startW, 2) + ' kg'} (10–${r.maxW} kg${b && b.topW ? ' statt ' + kg(b.topW) : ''}) · ${r.sets} Sätze × ${r.reps} · langsam`;
+  else if (r.kind === 'cap') line = b && b.topW ? `höchstens ${kg(b.topW)} wie zuletzt · ${b.n} Sätze · RIR 2–3 · kein Rekordversuch` : 'gleiches Gewicht wie zuletzt · RIR 2–3 · kein Rekordversuch';
+  else line = b && b.topW ? `${kg(b.topW)} wie zuletzt · ${b.n} Sätze · RIR 2–3, kein Muskelversagen` : 'gleiches Gewicht wie zuletzt · RIR 2–3, kein Muskelversagen';
+  return { line: 'Carters Vorschlag: ' + line, rule: r, base: b, ph };
+}
+function hpCard(ex) {
+  const h = hpSuggest(ex); if (!h) return '';
+  const r = h.rule, b = h.base;
+  const ref = b && b.topW ? `<div class="small muted">Bezug: dein Training am ${dateDE(b.date)} – ${b.sets.map(x => setLabel(x, ex)).join(', ')}</div>` : '';
+  const why = ex.hp ? 'Zusätzliche Übung für die Schutzphase. Anleitung und Warum stehen unten bei „Ausführung“.' : r.why;
+  return `<div class="card hp-card"><div class="hp-t">🛡 ${h.ph === 'aufbau' ? 'Aufbau nach der Schutzphase Hüfte' : 'Schutzphase Hüfte · ' + hpDM(HP.from) + '–' + hpDM(HP.to) + '2026'}</div>
+    <div class="hp-line">${esc(h.line)}</div>${ref}
+    <div class="small" style="margin-top:8px"><b>Warum:</b> ${esc(why)}</div>
+    ${r && r.cue ? `<div class="small" style="margin-top:6px"><b>Wie:</b> ${esc(r.cue)}</div>` : ''}
+    ${r && r.alt ? `<div class="small" style="margin-top:6px"><b>Alternative:</b> ${esc(r.alt)}</div>` : ''}
+    ${!ex.hp ? `<div class="small" style="margin-top:6px">${esc(HP_RIR)}</div>` : ''}
+    <div class="small muted" style="margin-top:8px">Nur ein Vorschlag – deine Werte und die Vorbelegung bleiben, wie sie sind. Du entscheidest. Schmerz bis 3/10 okay, wenn er am nächsten Morgen weg ist; wird das Ziehen schlechter: eine Stufe zurück.</div></div>`;
+}
+function hpBanner() {
+  const ph = hpPhase(); if (!ph) return '';
+  const ul = a => `<ul class="hp-ul">${a.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
+  if (ph === 'aufbau') return `<div class="card hp-card"><div class="hp-t">🛡 Aufbau nach der Schutzphase Hüfte</div><div class="small">Bis ${hpDM(HP.rampTo)}: pro Woche ca. <b>+10 %</b> (Gewicht oder ein Satz mehr), bis du wieder auf deinen alten Werten bist – nur solange die Schmerz-Ampel grün ist.</div><div class="hp-t2">Schmerz-Ampel</div>${ul(HP_AMPEL)}</div>`;
+  return `<div class="card hp-card"><div class="hp-t">🛡 Schutzphase Hüfte · ${hpDM(HP.from)}–${hpDM(HP.to)}2026</div>
+    <div class="small">MRT 24.11.: Gelenk, Labrum und Knorpel ohne größere Schäden. Gereizt sind Gesäß (Gluteus maximus), Hüftbeuger und vorderer Oberschenkel (Rectus femoris) – links mehr. Das heilt mit <b>dosiertem</b> Training: weniger Volumen, kein Muskelversagen.</div>
+    <div class="hp-t2">Carters Vorschläge – du entscheidest</div>${ul(['Alle deine Übungen bleiben drin. Bei jeder Übung steht „Carters Vorschlag“ mit Gewicht, Sätzen und RIR – die Vorbelegung bleibt dein letzter Wert.', 'Gesäß, Hüftbeuger, vorderer Oberschenkel: ca. 60–70 % vom letzten Gewicht, weniger Sätze, ' + HP_RIR, 'Hüftbeugung unter Last höchstens ca. 90° – keine tiefen Kniebeugen/Beinpressen, keine schweren Hip Thrusts oder Glute Drive, keine Sprints oder Sprünge.', 'Neu dazu (Carters Vorschlag): Brücke halten, Wandsitzen, Einbeinstand an der Wand, Seitlage-Abduktion – Halteübungen beruhigen gereizte Muskeln und Sehnen.', 'Ab ' + hpDM(dkey(fromKey(HP.to).getTime() + 864e5)) + ': ca. +10 % pro Woche steigern.'])}
+    <div class="hp-t2">Schmerz-Ampel</div>${ul(HP_AMPEL)}</div>`;
+}
+/* Neue Übungen (Isometrie/langsam) – fester Teil des Beintags, eigene Bilder aus dem Hüft-Tab */
+const HP_EX = [
+  { id: 'hp-bruecke-halten', name: 'Brücke halten (isometrisch)', group: 'Beine', unit: 'sec', perSide: false, hp: true, target: 30, order: 50, img: ['./assets/mob/seq_bridge.webp'],
+    desc: 'Warum: Halteübungen (Isometrie) lassen den großen Gesäßmuskel arbeiten, ohne ihn zu zerren – das beruhigt gereizte Muskeln und Sehnen und hält die Kraft. Ersatz für schwere Hip Thrusts/Glute Drive.\n\nCarters Vorschlag (Schutzphase): 3 × 30 s halten, 45 s Pause. Ohne Zusatzgewicht. Wird es leicht: 45 s.\n\nSetup: Rückenlage auf der Matte, Knie gebeugt, Füße hüftbreit flach am Boden, Fersen ca. eine Handbreit vor dem Gesäß. Arme neben dem Körper.\n\nAusführung: Bauch leicht anspannen, Becken leicht nach hinten kippen, dann über die Fersen das Becken heben – nur bis Schulter, Hüfte und Knie eine Linie bilden. Gesäß fest anspannen und halten, ruhig weiteratmen. Langsam absenken.\n• Nicht höher drücken als die gerade Linie (kein Hohlkreuz)\n• Druck über die Fersen, Knie zeigen nach vorn\n• Arbeit im Gesäß, nicht im unteren Rücken oder in der Leiste\n• Schmerz höchstens 3/10' },
+  { id: 'hp-wandsitzen', name: 'Wandsitzen (wenig tief)', group: 'Beine', unit: 'sec', perSide: false, hp: true, target: 30, order: 51, img: ['./assets/mob/seq_wallsit.webp'],
+    desc: 'Warum: Trainiert den vorderen Oberschenkel als Halteübung, ohne den Rectus femoris zu zerren und mit wenig Hüftbeugung. Ersatz für schwere oder tiefe Kniebeugen.\n\nCarters Vorschlag (Schutzphase): 3 × 30 s halten, 60 s Pause. Wird es leicht: bis 45 s, nicht tiefer gehen.\n\nSetup: Rücken an eine glatte Wand lehnen, Füße hüftbreit und ca. eine Fußlänge vor der Wand.\n\nAusführung: Mit aufrechtem Oberkörper an der Wand nach unten rutschen, bis die Knie ca. 45–60° gebeugt sind – Oberschenkel deutlich über waagerecht, nicht in die Hocke. Halten, ruhig atmen, dann wieder hochdrücken.\n• Wenig tief: Hüftbeugung bleibt klar unter 90°\n• Knie über den Fußspitzen, nicht nach innen\n• Rücken und Becken bleiben an der Wand\n• Schmerz höchstens 3/10' },
+  { id: 'hp-einbeinstand-wand', name: 'Einbeinstand an der Wand', group: 'Beine', unit: 'sec', perSide: true, hp: true, target: 30, order: 52, img: ['./assets/mob/slbalance.webp'],
+    desc: 'Warum: Das Standbein muss das Becken waagerecht halten – das trainiert die seitliche Gesäßmuskulatur (Gluteus medius) und die Hüftstabilität, ganz ohne Gewicht. Das entlastet Gesäß und Hüftbeuger im Alltag und beim langen Stehen.\n\nCarters Vorschlag (Schutzphase): 2–3 × 30 s pro Seite, links zuerst.\n\nSetup: Seitlich neben eine Wand stellen, die wandnahe Hand locker an der Wand (nur zur Sicherheit, nicht abstützen).\n\nAusführung: Gewicht aufs wandferne Bein, Gesäß leicht anspannen, das wandnahe Bein anheben (Knie ca. 45° gebeugt). Becken bleibt waagerecht, Standbein-Knie leicht gebeugt. Halten, dann Seite wechseln.\n• Becken nicht zur Seite absacken lassen\n• Knie des Standbeins in der Beinachse\n• Oberkörper aufrecht, nicht zur Wand lehnen\n• Schmerz höchstens 3/10' },
+  { id: 'hp-seitlage-abduktion', name: 'Seitlage-Abduktion (langsam)', group: 'Beine', unit: 'reps', perSide: true, hp: true, bwOnly: true, target: 15, order: 53, img: ['./assets/mob/abduct.webp'],
+    desc: 'Warum: Kräftigt die äußere Hüfte (Gluteus medius) langsam und ohne Maschine. Diese Muskeln stabilisieren das Becken und nehmen Last vom großen Gesäßmuskel. Ersatz für die schwere Abduktoren-Maschine.\n\nCarters Vorschlag (Schutzphase): 3 × 12–15 pro Seite, oben 2 s halten, ohne Gewicht (Gewicht 0 lassen).\n\nSetup: Seitlage, unteres Bein leicht gebeugt, Kopf auf dem Arm. Oberes Bein gestreckt in Verlängerung des Körpers, Becken leicht nach vorn gekippt (nicht nach hinten aufdrehen).\n\nAusführung: Oberes Bein mit leicht nach vorn-unten zeigender Fußspitze langsam ca. 30–40° anheben (2 s), oben 2 s halten, 2–3 s langsam absenken.\n• Ferse führt, Fuß nicht nach oben drehen\n• Bein bleibt in Linie oder minimal hinter dem Körper, nicht nach vorn\n• Becken ruhig, nicht nach hinten kippen\n• Schmerz höchstens 3/10' }
+];
 /* v1.2.1: neue Standard-Übungen, die direkt im Plan sichtbar sind (Migration fügt fehlende per ID ein) */
 const EXTRA_EX = [
   { id: 's-presse-kabel-liegend', name: 'Schulterpresse Kabelzug (liegend)', group: 'Schultern', unit: 'reps', perSide: false, elbow: 'w', order: 10.5,
@@ -352,6 +456,11 @@ async function loadAll() {
     const cc = exById(CHEST_CURL.id);
     if (cc) { cc.hidden = true; cc.retired = true; await save('exercises', cc); }
     await setMeta('catalogVersion', 18);
+  }
+  if ((S.meta.catalogVersion || 0) < 19) {
+    // v2.1.0: Nur ergänzen – Schutzphasen-Übungen (Carters Vorschlag) sichtbar im Beintag. Bestehende Übungen/Sätze bleiben unverändert
+    for (const e of HP_EX) if (!exById(e.id) && !S.exercises.some(x => x.name === e.name)) await save('exercises', { ...e, photo: null });
+    await setMeta('catalogVersion', 19);
   }
 }
 
@@ -554,7 +663,7 @@ function exRow(ex, act) {
   const ls = lastSessionSets(ex.id, act ? act.start : Date.now() + 1);
   const sub = ls ? 'Zuletzt: ' + ls.sets.filter(x => !x.warmup).slice(0, 3).map(x => setLabel(x, ex)).join(', ') : 'Noch nicht trainiert';
   return `<a class="ex ${n ? 'done' : ''}" href="#/ex/${ex.id}"><div class="th" ${(ex.photo || exImg(ex)) ? `style="background-image:url('${ex.photo || exImg(ex)}');background-size:cover;background-color:#f4efe6"` : ''}>${(ex.photo || exImg(ex)) ? '' : GROUP_ICON[ex.group] || '•'}</div>
-    <div class="nm"><b>${esc(ex.name)}</b>${ex.elbow === 'e' ? '<i class="elbow-dot" title="ellenbogenfreundlich"></i>' : ''}<span>${ex.sub ? esc(ex.sub) + ' · ' : ''}${esc(sub)}</span></div><div class="cnt ${n ? 'has' : ''}">${n}</div></a>`;
+    <div class="nm"><b>${esc(ex.name)}</b>${ex.elbow === 'e' ? '<i class="elbow-dot" title="ellenbogenfreundlich"></i>' : ''}<span>${ex.sub ? esc(ex.sub) + ' · ' : ''}${esc(sub)}</span>${(() => { const h = hpSuggest(ex); return h ? `<span class="hp-sug">🛡 ${esc(h.line)}</span>` : ''; })()}</div><div class="cnt ${n ? 'has' : ''}">${n}</div></a>`;
 }
 function viewTrain() {
   const act = activeSession();
@@ -575,6 +684,7 @@ function viewTrain() {
     head = `<div class="seg"><button class="${type === 'upper' ? 'on' : ''}" data-act="ttype" data-type="upper">Oberkörper</button><button class="${type === 'lower' ? 'on' : ''}" data-act="ttype" data-type="lower">Bauch + Beine</button>${todayType() === 'free' || type === 'free' ? `<button class="${type === 'free' ? 'on' : ''}" data-act="ttype" data-type="free">Freie Wahl</button>` : ''}</div>
       <button class="btn btn-red" data-act="start" data-type="${type}">Training starten</button><div class="hint" style="text-align:center">Oder direkt eine Übung antippen – das Training startet automatisch.</div>`;
   }
+  if (type === 'lower') head += hpBanner();
   if (!day.free) head += `<button class="btn btn-ghost btn-sm" data-act="picker" style="margin-top:10px">🔍 Übungen suchen & auswählen</button>`;
   return { html: topbar(day.name, act ? 'Training aktiv' : (todayType() === type ? 'Heute laut Plan' : 'Trainingstag'), null, `<button class="icon-btn" data-act="go" data-to="#/exercises" aria-label="Übungen verwalten">✎</button>`) + head + list };
 }
@@ -600,7 +710,7 @@ function prefill(ex, act) {
   if (src) o = { weight: src.weight, reps: src.reps, perSide: src.perSide, warmup: src.warmup, drops: (src.drops || []).map(d => ({ ...d })) };
   else if (cur.length) { const l = cur[cur.length - 1]; o = { weight: l.weight, reps: l.reps, perSide: l.perSide, warmup: false, drops: [] }; }
   else if (ls) { const l = ls.sets[ls.sets.length - 1]; o = { weight: l.weight, reps: l.reps, perSide: l.perSide, warmup: false, drops: [] }; }
-  else o = { weight: isSec(ex) ? 0 : 10, reps: isSec(ex) ? 30 : 10, perSide: !!ex.perSide, warmup: false, drops: [] };
+  else o = { weight: isSec(ex) || ex.bwOnly ? 0 : 10, reps: isSec(ex) ? 30 : 10, perSide: !!ex.perSide, warmup: false, drops: [] };
   o.note = ''; o.editId = null; o.from = src ? 'last' : null;
   return o;
 }
@@ -613,6 +723,7 @@ function editorHTML(ex, act) {
   return `<div class="card gold-frame editor" id="editor">
    <div class="ed-title"><span class="gold">${editing ? (editing === 'A' ? 'Aufwärmsatz' : 'Satz ' + editing) + ' bearbeiten' : (ED.warmup ? 'Aufwärmsatz' : 'Satz ' + (n + 1))}</span><span class="ed-rest" id="ed-rest"></span></div>
    ${ED.from === 'last' && !editing ? '<div class="small muted" style="margin:-6px 0 10px">↺ Vorschlag vom letzten Training</div>' : ''}
+   ${(() => { const h = hpSuggest(ex); const ns = h && h.ph === 'schutz' && h.rule && h.rule.sets; return ns && !editing && n >= ns ? `<div class="small hp-sug" style="margin:-4px 0 10px">🛡 Carters Vorschlag: ${ns} Sätze sind erreicht – hier aufhören wäre ideal. Du entscheidest.</div>` : ''; })()}
    ${timed ? holdHTML(ex) : ''}
    <div class="steppers ${timed ? 'one' : ''}">
      <div class="stepper"><label>Gewicht (kg${ED.perSide ? ' / Seite' : ''})</label><div class="stp"><button data-step="weight" data-d="${sec ? -0.5 : -2.5}" aria-label="weniger Gewicht">−</button><input id="in-weight" data-f="weight" inputmode="decimal" value="${fmtIn(ED.weight)}"><button data-step="weight" data-d="${sec ? 0.5 : 2.5}" aria-label="mehr Gewicht">+</button></div></div>
@@ -651,6 +762,7 @@ function viewEx(id) {
     html: topbar(ex.name, ex.group + (isSec(ex) ? ' · isometrisch' : ''), '#/train', `<span style="display:flex;gap:8px"><button class="icon-btn" data-act="editEx" data-id="${ex.id}" aria-label="Übung bearbeiten">✎</button><button class="icon-btn" data-act="go" data-to="#/progress/${ex.id}" aria-label="Fortschritt">📈</button></span>`) +
       (exImgs(ex).length ? `<div class="card">${exImgs(ex).map(src => `<img class="mob-anat" src="${src}" alt="">`).join('')}<div class="muted small mob-anat-cap">${exImgs(ex).length > 1 ? 'Start → Ende · ' : ''}● rot = trainierte Muskulatur</div></div>` : '') +
       (ex.photo ? `<div class="photo-hero" style="background-image:url('${ex.photo}')" data-act="photo" data-id="${ex.id}"><span class="photo-edit">📷 Foto vom Gerät ändern</span></div>` : `<button class="btn btn-outline-gold btn-sm" data-act="photo" data-id="${ex.id}" style="margin-bottom:12px">📷 Foto vom Gerät aufnehmen</button>`) +
+      hpCard(ex) +
       (ex.desc || ex.elbowNote ? `<div class="card"><div class="small muted" style="letter-spacing:1px;text-transform:uppercase;font-weight:700;margin-bottom:6px">Ausführung</div>${ex.desc ? `<div style="font-size:14px;line-height:1.45;color:var(--tx2);white-space:pre-line">${esc(ex.desc)}</div>` : ''}${ex.elbowNote ? `<div style="margin-top:8px;font-size:14px">${elbowBadge(ex)} <span style="color:#ffd60a">${esc(ex.elbowNote)}</span></div>` : ''}</div>` : '') +
       lastHtml +
       (cur.length ? `<div class="sec-h"><span>Heute · ${pl(cur.filter(x => !x.warmup).length, 'Satz', 'Sätze')}</span><span class="line"></span></div>${setsHtml}` : '') +
@@ -663,7 +775,7 @@ const EX_IMG_SEQ = {
   'a-bizeps-kabel-brustgestuetzt': ['a-bizeps-kabel-brustgestuetzt.webp', 'a-bizeps-kabel-brustgestuetzt-2.webp']
 };
 const EX_IMG = new Set(["a-bizeps-kabel-brustgestuetzt", "b-guillotine", "b-fly-schraeg-kabel", "r-row-trapez-schraeg-breit", "bauch-crunch-maschine", "r-facepull", "r-revfly", "r-row-incline-kabel", "r-latzug-kabel-kniend-brustgestuetzt", "s-presse-kabel-liegend", "s-frontheben-kabel-sitzend", "s-seitheben-kabel-einarm", "s-seitheben-vorgebeugt", "x1", "x10", "x11", "x12", "x13", "x14", "x15", "x16", "x17", "x18", "x19", "x2", "x20", "x21", "x22", "x23", "x24", "x25", "x26", "x27", "x28", "x3", "x4", "x5", "x6", "x7", "x8", "x9"]);
-const exImgs = ex => EX_IMG_SEQ[ex.id] ? EX_IMG_SEQ[ex.id].map(f => `./assets/ex/${f}`) : (EX_IMG.has(ex.id) ? [`./assets/ex/${ex.id}.webp`] : []);
+const exImgs = ex => Array.isArray(ex.img) && ex.img.length ? ex.img : EX_IMG_SEQ[ex.id] ? EX_IMG_SEQ[ex.id].map(f => `./assets/ex/${f}`) : (EX_IMG.has(ex.id) ? [`./assets/ex/${ex.id}.webp`] : []);
 const exImg = ex => exImgs(ex)[0] || '';
 function setEdField(f, v, raw) {
   if (f === 'note') { ED.note = v; return; }

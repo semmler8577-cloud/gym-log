@@ -83,10 +83,10 @@ const EX = [
     steps: ['Aufrecht sitzen, beide Knie ca. 90° gebeugt, Füße etwas breiter als hüftbreit.', 'Hände hinter dem Körper abstützen.', 'Beide Knie gleichzeitig zur einen Seite zum Boden sinken lassen (vorderes Bein 90°, hinteres Bein 90°).', 'Kontrolliert über die Mitte zur anderen Seite wechseln. Ein Wechsel = eine Wdh.'],
     cues: ['Brust aufrecht, Wirbelsäule lang', 'Nur so tief, wie es schmerzfrei geht', 'Langsam durch die Mitte', 'Kribbeln, Ausstrahlung ins Bein oder einschießender Schmerz → Übung heute weglassen'],
     err: ['Knie auf den Boden zwingen', 'Rundrücken / zusammensacken', 'Knie verdrehen statt aus der Hüfte rotieren'] },
-  { id: 'hipflex', core: 1, n: 'Aktiver Hüftbeuger-Stretch im Ausfallschritt', sub: 'Becken nach vorn schieben & lösen · Gesäß aktiv', dose: '20 Wdh. pro Seite', t: 'reps', sets: 1, reps: 20, ps: true,
-    steps: ['Großer Ausfallschritt: hinteres Knie auf einer weichen Unterlage (oder Bein lang), vorderer Fuß flach, Oberkörper aufrecht, Hände an die Hüfte.', 'Gesäß der hinteren Seite fest anspannen und das Becken leicht nach hinten kippen (Schambein Richtung Bauchnabel).', 'Becken ruhig nach vorn schieben, bis vorne in der Hüfte/Leiste ein Ziehen kommt – dann wieder lösen (zurücknehmen).', '20 langsame Wiederholungen, dann Seite wechseln.'],
-    cues: ['Erst Po anspannen und Becken aufrichten – dann schieben. Solange Strecken im Rücken zieht: weniger tief', 'Becken aufgerichtet, nur ein kurzer Weg – nicht weit in die Streckung', 'Dehnung vorne an der Hüfte/Leiste des hinteren Beins', 'Rippen unten, Bauch leicht fest – nur die Hüfte bewegt sich', 'Kleine, fließende Bewegung ohne Schwung', 'Vorderes Knie über dem Fuß', 'Kribbeln, Ausstrahlung ins Bein oder einschießender Schmerz → Übung heute weglassen'],
-    err: ['Ins Hohlkreuz ausweichen statt Becken zu kippen', 'Zu weit nach vorn schieben – weniger ist mehr', 'Gesäß locker lassen', 'Wippen mit Schwung'] },
+  { id: 'hipflex', core: 1, n: 'Aktiver Hüftbeuger-Stretch im Ausfallschritt', sub: 'Sanft · Becken aufrichten · kleiner Weg · max. 2–3/10', dose: '10 Wdh. pro Seite, kleiner Weg, max. 2–3/10', t: 'reps', sets: 1, reps: 10, ps: true,
+    steps: ['Kleiner Ausfallschritt (nicht weit auseinander): hinteres Knie auf einer weichen Unterlage, vorderer Fuß flach, Oberkörper aufrecht, Hände an die Hüfte.', 'Zuerst den Po der hinteren Seite anspannen und das Becken aufrichten (Schambein Richtung Bauchnabel) – oft kommt dabei schon ein leichtes Ziehen vorn in der Hüfte.', 'Becken nur ein kurzes Stück nach vorn schieben, bis ein leichtes Ziehen kommt (höchstens 2–3/10), dann sofort wieder lösen – nicht in der Dehnung halten.', '10 langsame Wiederholungen, dann Seite wechseln.'],
+    cues: ['Sanft (Schutzphase Hüfte): Laut MRT sind Hüftbeuger und vorderer Oberschenkel gereizt – lockern, nicht dehnen', 'Erst Po anspannen und Becken aufrichten – dann schieben', 'Becken aufgerichtet, nur ein kurzer Weg – nicht weit in die Streckung', 'Schmerz höchstens 2–3/10 – mehr oder stechend: Weg kleiner machen oder heute weglassen', 'Kein Arm über Kopf, kein Nachfedern, kein Halten am Endpunkt', 'Rippen unten, Bauch leicht fest – kein Hohlkreuz', 'Vorderes Knie über dem Fuß', 'Kribbeln, Ausstrahlung ins Bein oder einschießender Schmerz → Übung heute weglassen'],
+    err: ['Großer Ausfallschritt / tief in die Dehnung gehen', 'Ins Hohlkreuz ausweichen statt Becken aufzurichten', 'Zu weit nach vorn schieben – weniger ist mehr', 'Gesäß locker lassen', 'Wippen mit Schwung'] },
   { id: 'hamfloss', core: 1, n: 'Hamstring-Floss in Rückenlage', sub: 'Beinrückseite & Nervengleiten · ohne Vorbeugen', dose: '10 pro Seite, langsam', t: 'reps', sets: 1, reps: 10, ps: true,
     steps: ['Rückenlage, Kopf liegt ab. Ein Bein aufgestellt (Fuß am Boden), der Rücken bleibt flach.', 'Das andere Bein anheben, bis die Hüfte ca. 90° gebeugt ist. Oberschenkel mit beiden Händen (oder Gurt/Handtuch) hinten halten, Knie gebeugt.', 'Knie langsam strecken, bis hinten am Oberschenkel ein sanfter Zug kommt – dann wieder beugen.', 'Ca. 2–3 s pro Richtung, 10× pro Seite. Optional: Fuß beim Strecken anziehen, beim Beugen locker lassen.'],
     cues: ['Ersetzt den Hamstring-Walk: morgens kein Vorbeugen – Bandscheiben sind morgens am vollsten', 'Rücken und Becken bleiben flach am Boden', 'Hüfte bleibt in Neutralstellung – Knie zeigt zur Decke, nicht nach innen drehen oder über die Körpermitte ziehen', 'Nur bis sanfter Zug (max. 3–4/10) – das Knie muss nicht ganz gerade werden, nicht ins Endgefühl strecken', 'Langsam und fließend, ruhig atmen', 'Kribbeln, Ausstrahlung ins Bein oder einschießender Schmerz → Übung heute weglassen'],
@@ -162,7 +162,7 @@ const EVE = [
     err: ['Becken dreht oder hebt ab', 'Knie beugt sich', 'Bewegung aus dem Fußgelenk statt aus der Hüfte', 'Hohlkreuz', 'Zu schnell oder ruckartig'],
     pics: [{ f: 'rollwiper_1', c: '1 · Startposition' }, { f: 'rollwiper_2', c: '2 · Bewegung' }, { f: 'rollwiper_3', c: '3 · Endposition' }, { f: 'rollwiper_4', c: '4 · Häufige Fehler' }] },
   // v1.8.7: optionale Abend-Übung im Wechsel; Hexenschuss-Pause bis 17.11. (LWS-Rotation)
-  { id: 'rumpfrot', eve: 1, n: 'Liegende Rumpfrotation (Knie zur Seite)', sub: 'Abend · im Wechsel · sanfte LWS-Rotation, kleiner Umfang', dose: '2×30 s pro Seite', t: 'time', sets: 2, secs: 30, ps: true,
+  { id: 'rumpfrot', eve: 1, n: 'Liegende Rumpfrotation (Knie zur Seite)', sub: 'Abend · sanfte LWS-Rotation, kleiner Umfang', dose: '2×30 s pro Seite', t: 'time', sets: 2, secs: 30, ps: true,
     steps: ['Rückenlage, Arme seitlich ausgebreitet, Schultern fest am Boden. Knie angewinkelt, Füße flach oder leicht angehoben, Knie und Füße bleiben zusammen.', 'Beide Knie langsam und kontrolliert zu einer Seite sinken lassen – nur ein kleiner Bewegungsumfang, nicht bis zum Boden.', 'Schultern und Schulterblätter bleiben die ganze Zeit am Boden. 30 s ruhig atmen.', 'Langsam zur Mitte zurück, Seite wechseln. 2 Runden pro Seite.'],
     cues: ['Nur ein sehr kleiner Weg – Knie nicht Richtung Boden und nicht ins Endgefühl', 'Schultern bleiben am Boden, die Drehung ist klein und ruhig', 'Kein Ziehen ins Bein, kein Druck im unteren Rücken, keine Rotation unter Last', 'Kribbeln, Ausstrahlung ins Bein oder einschießender Schmerz → abbrechen'],
     err: ['Knie fallen lassen / zu weit drehen', 'Schulter hebt vom Boden ab', 'Ruckartig oder mit Schwung drehen', 'Ausstrahlung oder Kribbeln ignorieren'] },
@@ -184,9 +184,9 @@ const EVE = [
     steps: ['Rückenlage, Kopf und gesamter Rücken bleiben flach am Boden, Arme entspannt.', 'Den einen Knöchel auf das gegenüberliegende Knie legen (Figur 4), Fuß aktiv angezogen.', 'Den stützenden Fuß am Boden lassen oder das Bein nur ganz leicht heranziehen – nicht fest zur Brust ziehen und nicht ins Endgefühl gehen.', '30 s ruhig atmen, langsam ablegen, Seite wechseln. 2 Runden pro Seite.'],
     cues: ['Nur schmerzfrei, kein Druck am Endpunkt', 'Kein festes Ziehen zur Brust – Knöchel aufs Knie legen reicht, Schwerkraft arbeitet', 'Kein Ziehen im Rücken – nur eine leichte Dehnung im Gesäß', 'Kopf und Rücken bleiben am Boden, nicht einrollen', 'Ruhig atmen, nicht tiefer in den Endpunkt gehen', 'Bei Kribbeln oder ausstrahlendem Schmerz abbrechen'],
     err: ['Kopf oder Schultern anheben / Rücken einrollen', 'Am Knie statt am Oberschenkel ziehen', 'In den Schmerz oder ins Ziehen im Rücken gehen', 'Kribbeln oder Ausstrahlung ignorieren'] },
-  { id: 'kniefersenrock', core: 1, eve: 1, n: 'Kniestand-Fersensitz-Rock (links betont)', sub: 'Abend · Hüfte, Lenden & Rücken lang ziehen, links betont', dose: '5 Wdh × 20 s halten · links 1–2 mehr', t: 'time', sets: 6, setsL: 6, setsR: 5, secs: 20, ps: true,
-    steps: ['Vierfüßlerstand, Zehen aufgestellt bzw. Fußrücken am Boden.', 'Das Gesäß langsam Richtung Fersen nach hinten schieben.', 'Arme lang nach vorn strecken, Rücken lang lassen.', '20 s halten, ruhig ausatmen. 5 Wiederholungen – links 1–2 mehr (6–7), da es links stark zieht und rechts gut geht.'],
-    cues: ['Nur ein kurzer Weg nach hinten – nicht auf die Fersen setzen, nicht ins Endgefühl', 'Wird es im Rücken stärker statt lockerer: weniger weit nach hinten', 'Links nicht tiefer oder länger ins Endgefühl als rechts', 'Lange, ruhige Ausatmung beim Halten', 'Rücken bleibt lang, nicht rund einsinken'],
+  { id: 'kniefersenrock', core: 1, eve: 1, n: 'Kniestand-Fersensitz-Rock (links betont)', sub: 'Abend · nur wenn schmerzfrei · kleiner Umfang', dose: '3×15 s pro Seite · kleiner Umfang · nur wenn schmerzfrei', t: 'time', sets: 3, setsL: 3, setsR: 3, secs: 15, ps: true,
+    steps: ['Vierfüßlerstand, Zehen aufgestellt bzw. Fußrücken am Boden.', 'Das Gesäß langsam Richtung Fersen nach hinten schieben.', 'Arme lang nach vorn strecken, Rücken lang lassen.', '15 s halten, ruhig ausatmen. 3 Runden pro Seite. Nur wenn es schmerzfrei bleibt – sonst heute weglassen.'],
+    cues: ['Nur wenn schmerzfrei: zieht es vorn in der Leiste oder klemmt es, heute weglassen', 'Nur ein kurzer Weg nach hinten – nicht auf die Fersen setzen, nicht ins Endgefühl', 'Wird es im Rücken stärker statt lockerer: weniger weit nach hinten', 'Knie hüftbreit, nicht zusammen – keine Beugung mit Innenrotation', 'Lange, ruhige Ausatmung beim Halten', 'Rücken bleibt lang, nicht rund einsinken'],
     err: ['Bis in den Schmerz gehen', 'Rücken rundet sich / Arme verkürzt', 'Ruckartig nach hinten schieben', 'Luft anhalten'] },
   { id: 'hipflexstand', core: 1, eve: 1, n: 'Hüftbeuger-Dehnung im Stehen (Fuß erhöht)', sub: 'Abend · Hüftbeuger, hinteres Bein gestreckt', dose: '2×30–45 s pro Seite', t: 'time', sets: 2, secs: 40, ps: true,
     steps: ['Vorderen Fuß auf eine Erhöhung stellen (Stufe oder Bank), hinteres Bein gestreckt am Boden.', 'Gesäß des hinteren Beins fest anspannen und das Becken leicht nach hinten kippen (Schambein Richtung Bauchnabel).', 'Dann die Hüfte nur ein kleines Stück nach vorn Richtung vorderes Knie schieben, bis es im Hüftbeuger des hinteren Beins zieht.', 'Oberkörper aufrecht, ruhig atmen, 30–45 s halten. Seite wechseln – 2 Sätze pro Seite.'],
@@ -206,20 +206,21 @@ const EVE = [
 
 const FAS = [
   { id: 'froll_g', core: 1, fas: 1, n: 'Blackroll Gesäß', sub: 'Faszien · Gesäßmuskulatur', dose: '90 s links, 60 s rechts', t: 'time', sets: 1, secs: 90, secsL: 90, secsR: 60, ps: true,
-    steps: ['Auf die Blackroll setzen, Hände hinten abstützen.', 'Gewicht auf eine Gesäßhälfte verlagern. Beide Füße bleiben am Boden – das Bein nicht überschlagen.', 'Langsam vor und zurück rollen, ca. 2–3 cm pro Sekunde.', 'Auf festen Punkten 10–20 s verweilen und ausatmen. Dann Seite wechseln.'],
-    cues: ['Druck nur „angenehm-intensiv“ (max. 6–7 von 10), nicht ins Endgefühl pressen', 'Bein nicht überschlagen, beide Füße am Boden', 'Ruhig atmen, nicht verkrampfen'], err: ['Zu schnell rollen', 'Auf das Steißbein/Kreuzbein rollen'] },
-  { id: 'froll_t', fas: 1, n: 'Blackroll Oberschenkel außen/vorne', sub: 'Faszien · Quadrizeps & Außenseite', dose: '60 s pro Seite', t: 'time', sets: 1, secs: 60, ps: true,
-    steps: ['Unterarmstütz, Blackroll unter dem vorderen Oberschenkel.', 'Langsam von knapp über dem Knie bis zur Hüfte rollen.', 'Für die Außenseite leicht auf die Seite drehen (nicht direkt auf den Knochen/Tractus pressen).', '60 s, dann anderes Bein.'],
-    cues: ['Bauch fest, kein Durchhängen im Rücken – zieht es im unteren Rücken: Außenseite in Seitlage rollen statt im Unterarmstütz', 'Gewicht mit dem anderen Bein/Armen dosieren'], err: ['Über das Knie rollen', 'Hohlkreuz im Unterarmstütz', 'Zähne zusammenbeißen – zu viel Druck'] },
+    steps: ['Auf die Blackroll setzen, Hände hinten abstützen.', 'Gewicht auf eine Gesäßhälfte verlagern. Beide Füße bleiben am Boden – das Bein nicht überschlagen.', 'Langsam vor und zurück rollen, ca. 2–3 cm pro Sekunde.', 'Auf festen Punkten höchstens 10–15 s verweilen und ausatmen. Dann Seite wechseln.'],
+    cues: ['Schutzphase: Der Gesäßmuskel ist laut MRT gereizt – Druck nur angenehm (max. 4–5 von 10), lieber langsam rollen als lange auf einem Punkt drücken', 'Links länger (90 s), rechts 60 s', 'Bein nicht überschlagen, beide Füße am Boden', 'Ruhig atmen, nicht verkrampfen'], err: ['Zu schnell rollen', 'Auf das Steißbein/Kreuzbein rollen'] },
+  { id: 'froll_t', fas: 1, n: 'Blackroll Oberschenkel vorne (sanft)', sub: 'Faszien · vorderer Oberschenkel / Rectus femoris · sanft', dose: '60 s pro Seite, sanft', t: 'time', sets: 1, secs: 60, ps: true,
+    steps: ['Unterarmstütz, Blackroll quer unter dem vorderen Oberschenkel, das andere Bein seitlich abgestellt und trägt mit.', 'Langsam (ca. 2–3 cm pro Sekunde) von knapp über dem Knie bis zur Oberschenkelmitte rollen, maximal bis eine Handbreit unter die Leiste.', 'Nicht auf Punkten verweilen und nicht drücken – nur gleichmäßig rollen. Für die Außenseite leicht auf die Seite drehen (nicht auf den Knochen pressen).', '60 s, dann anderes Bein.'],
+    cues: ['Warum: Der Rectus femoris ist laut MRT gereizt – sanftes Rollen fördert die Durchblutung, hartes Drücken würde ihn reizen', 'Druck höchstens 3–4/10, mit Armen und anderem Bein dosieren', 'Nicht in die Leiste und nicht auf den Hüftbeuger rollen – keine Triggerpunkt-Arbeit dort', 'Bauch fest, kein Durchhängen im Rücken – zieht es im unteren Rücken: in Seitlage rollen'],
+    err: ['Bis in die Leiste/Hüfte rollen', 'Auf einem Punkt verweilen und drücken', 'Über das Knie rollen', 'Hohlkreuz im Unterarmstütz'] },
   { id: 'ballpir', fas: 1, n: 'Faszien Ball Piriformis', sub: 'Faszien · tiefe Hüftmuskulatur', dose: '90 s links, 60 s rechts', t: 'time', sets: 1, secs: 90, secsL: 90, secsR: 60, ps: true,
     steps: ['Sitzen, kleinen (oder großen) Ball mittig unter eine Gesäßhälfte legen.', 'Beide Füße bleiben am Boden – das Bein nicht überschlagen.', 'Kleine Kreise und Vor-zurück-Bewegungen, druckempfindliche Stelle suchen.', 'Dort ruhig atmen und lösen lassen, dann Seite wechseln.'],
-    cues: ['Beide Füße am Boden, Bein nicht überschlagen', 'Sanfter Druck, nicht ins Endgefühl pressen', 'Kribbeln/Ausstrahlen ins Bein → Ball verschieben'], err: ['Auf den Ischiasnerv drücken (Kribbeln ignorieren)', 'Zu lange auf einem Punkt (> 30 s)'] },
+    cues: ['Beide Füße am Boden, Bein nicht überschlagen', 'Schutzphase: sanfter Druck (max. 4–5/10), kein hartes Triggerpunkt-Drücken – das Gesäß ist gereizt', 'Links länger (90 s), rechts 60 s', 'Kribbeln/Ausstrahlen ins Bein → Ball verschieben'], err: ['Auf den Ischiasnerv drücken (Kribbeln ignorieren)', 'Zu lange auf einem Punkt (> 15 s)', 'Zu viel Druck „damit es was bringt“'] },
   { id: 'duoball', fas: 1, n: 'Duoball LWS – Atmen & Sinken + Triggerpunkt rollen', sub: 'Faszien · Rückenstrecker · 2 Phasen', dose: '2 Phasen à 60–90 s', t: 'time', sets: 1, secs: 180,
     steps: ['Vorbereitung: Rückenlage, Knie gebeugt, Füße am Boden. Becken kurz anheben und den Duoball quer unter die Lendenwirbelsäule legen – die Ballhälften liegen links und rechts neben der Wirbelsäule, NIE auf der Wirbelsäule selbst. Dann sanft ablegen.', 'Phase 1 – Duoball LWS – Atmen & Sinken (60–90 s): Tief einatmen, lang ausatmen und dich mit jedem Atemzug ein Stück tiefer auf den Ball sinken lassen.', 'Phase 2 – Duoball LWS – Triggerpunkt rollen (60–90 s gesamt): Langsam über den Ball hoch und runter rollen, druckempfindliche Stellen suchen.', 'Auf jeder empfindlichen Stelle 20–30 s verweilen und ruhig weiteratmen. Linke Seite etwas länger bearbeiten.'],
     cues: ['Bis einschließlich Di 17.11. pausiert (Hexenschuss)', 'Abbrechen, wenn Schmerz ausstrahlt oder Kribbeln beginnt', 'NIE direkt auf der Wirbelsäule', 'Lange Ausatmung – loslassen statt drücken', 'Sanfter Druck – Bandscheibe schonen'], err: ['Ball auf den Dornfortsätzen', 'Ins Hohlkreuz drücken', 'Zu schnell oder mit viel Gewicht rollen', 'Ausstrahlung/Kribbeln ignorieren'] },
-  { id: 'shakti', fas: 1, n: 'Shakti-Matte Entspannung', sub: 'Faszien · Entspannung', dose: '10 Min', t: 'time', sets: 1, secs: 600,
-    steps: ['Matte auf eine ebene Unterlage legen, langsam darauf hinlegen (Rücken, ggf. dünnes Shirt am Anfang).', 'Beine lang oder angewinkelt, Arme locker neben den Körper.', 'Die ersten 1–2 Minuten sind intensiv – ruhig weiteratmen.', '10 Min liegen bleiben, langsam über die Seite aufstehen.'],
-    cues: ['Lange, ruhige Ausatmung', 'Ideal abends vor dem Schlafen'], err: ['Schnell aufspringen (Kreislauf)', 'Sich auf die Matte „fallen lassen“'] }
+  { id: 'shakti', fas: 1, n: 'Entspannen: Massagekissen oder Shakti-Matte', sub: 'Faszien · Entspannung zum Abschluss', dose: '10 Min', t: 'time', sets: 1, secs: 600,
+    steps: ['Massagekissen: auf dem Sofa oder Bett an den oberen bzw. unteren Rücken oder unter die Gesäßmitte legen (nicht in die Leiste oder vorn auf die Hüfte), Stufe sanft.', 'Oder Shakti-Matte: auf eine ebene Unterlage legen, langsam darauf hinlegen (Rücken, ggf. dünnes Shirt am Anfang), Beine lang oder angewinkelt.', 'Arme locker, die ersten 1–2 Minuten sind intensiv – ruhig weiteratmen.', '10 Min liegen bleiben, langsam über die Seite aufstehen.'],
+    cues: ['Warum: Senkt die Grundspannung nach dem Rollen und hilft beim Runterfahren vor dem Schlafen', 'Lange, ruhige Ausatmung', 'Massagekissen nicht vorn auf Hüftbeuger oder Leiste'], err: ['Schnell aufspringen (Kreislauf)', 'Sich auf die Matte „fallen lassen“', 'Massagekissen auf höchster Stufe direkt auf dem gereizten Gesäß'] }
 ];
 // v1.7.5: Abwechslung – Pool (täglich 3 nach Datum); v1.7.21: +Halber Frosch, +Seitlicher Ausfallschritt im Knien; v1.9.3: Halber Frosch fest in den Abend verschoben
 const ROT = [
@@ -291,7 +292,8 @@ const RET = [
 const HIP_AMPEL = {
   title: 'Schmerz-Ampel',
   items: [
-    'Bis 3/10 ist okay, wenn du am nächsten Morgen wieder auf dem Ausgangsniveau bist.',
+    'Bis 3/10 ist okay, wenn der Schmerz am nächsten Morgen wieder weg ist (Ausgangsniveau).',
+    'Wird das Ziehen schlechter: eine Stufe zurück – weniger Gewicht, weniger Sätze oder kleinerer Bewegungsumfang.',
     'Ziehen Richtung Steißbein ist nur ein Stopp, wenn es zunimmt.',
     'Stopp bei: Leistenstechen, hartes Anstoßgefühl, Blockieren oder Einklemmen, Instabilität links oder Wegknicken, Ausstrahlung, Nachtschmerz, Hinken, schmerzhaftes Knacken (schmerzloses Knacken ist meist harmlos). Dann aufhören und beim Arzt ansprechen.'
   ]
@@ -299,10 +301,10 @@ const HIP_AMPEL = {
 const STOP = HIP_AMPEL.items.join(' ');
 
 const HIP_ALLTAG = {
-  title: 'Alltag, Schlaf & Gym – bis zum MRT',
+  title: 'Alltag, Schlaf & Gym – Schutzphase Hüfte',
   items: [
     'Schlaf: Rückenlage oder rechte Seite mit Kissen zwischen den Knien.',
-    'Bis zum MRT nicht: Vorbeugen mit überkreuzten Beinen und ähnliches tiefes Vorbeugen im Stand.',
+    'Vorerst nicht: Vorbeugen mit überkreuzten Beinen und ähnliches tiefes Vorbeugen im Stand.',
     'Nicht im Hüftstand stehen, keine überschlagenen Beine.',
     'Tiefe Sitze und die Hocke meiden; bei Montagen knien mit Kniekissen.',
     'Langes Stehen alle 20–30 Min auflockern. Einlage weiter tragen.',
@@ -311,12 +313,14 @@ const HIP_ALLTAG = {
     'Gut geeignet: Rad, Crosstrainer, Gehen, Schwimmen (kein Brustbeinschlag, lieber Kraul-Beine).',
     'Bei Beinen und Hüfte lieber mehr Wiederholungen mit moderatem Gewicht als wenige schwere.',
     'Gym: Beinpresse und Hackenschmidt max. ca. 90° Hüftbeugung, Knie nicht nach innen.',
-    'Abduktoren-Maschine und Hip Thrust okay, wenn schmerzfrei.',
-    'Keine Rotation unter Last. Schwere Seitbeugen weglassen.'
+    'Abduktoren-Maschine nur leicht (ca. 60–70 %), keine schweren Hip Thrusts oder Glute Drive, keine Sprints oder Sprünge.',
+    'Kein aggressives Dehnen von Hüftbeuger und vorderem Oberschenkel: kein Couch-Stretch, keine tiefe Ausfallschritt-Dehnung.',
+    'Wegen der Cam-Form: keine tiefe Beugung mit Innenrotation oder Adduktion (Knie Richtung gegenüberliegende Schulter). Die Taube bleibt draußen; Figure-4 ist okay, wenn schmerzfrei.',
+    'Keine Rotation unter Last. Seitbeugen nur leicht (10–15 kg), langsam und kontrolliert.'
   ]
 };
 const HIP_MRT_Q = {
-  title: 'Fragen für das MRT-Gespräch',
+  title: 'Fragen für das Befund-Gespräch beim Orthopäden',
   items: [
     'Ist die Verkalkung eine Verdichtung am Pfannendach, Kalk im Knorpel oder Labrum, oder ein freier Gelenkkörper?',
     'Wie ist der Knorpel an der Stelle – gibt es Knorpelschäden oder ein Knochenödem?',
@@ -326,7 +330,7 @@ const HIP_MRT_Q = {
     'Wurde die Torsion von Oberschenkel und Pfanne mitgemessen?',
     'LCE-Winkel, Tönnis-Winkel, vordere Überdachung – echte oder grenzwertige Dysplasie?',
     'Wie sind Labrum und Knorpel, welcher Tönnis-Grad?',
-    'Gibt es eine Cam-Form, wie ist der Alpha-Winkel (Mischform)?',
+    'Cam-Form beidseitig: Wie groß ist der Alpha-Winkel, gibt es eine Mischform, und was heißt das fürs Training?',
     'Erklärt die Hüfte die Beschwerden in Rücken und Steißbein, oder die LWS mitbeurteilen?',
     'Ab welchen Befunden wäre eine OP sinnvoll, und wie lange ist eine Trainingschance (3–6 Monate)?',
     'Physio-Rezept mit Fokus Hüftstabilisation, Freigabe für Training und Arbeit?',
@@ -335,7 +339,9 @@ const HIP_MRT_Q = {
 };
 function hipAdviceHtml() {
   const ul = (a) => `<ul class="mob-ul">${a.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
-  return `<div class="sec-h muted small" style="margin:18px 2px 2px">◇ BIS ZUM MRT</div>
+  const ph = typeof hpPhase === 'function' ? hpPhase() : null;
+  const hp = ph ? `<div class="card hp-card"><div class="hp-t">🛡 ${ph === 'schutz' ? 'Schutzphase Hüfte · 26.11.–09.12.2026' : 'Aufbau nach der Schutzphase Hüfte'}</div><div class="small">MRT 24.11.: Gelenk, Labrum und Knorpel ohne größere Schäden. Gereizt sind Gesäß, Hüftbeuger und vorderer Oberschenkel (links mehr). Darum: Hüftbeuger nur sanft lockern, nicht dehnen; nichts erzwingen.${ph === 'schutz' ? ' Ab 10.12. im Gym ca. +10 % pro Woche steigern.' : ' Im Gym ca. +10 % pro Woche steigern, solange die Ampel grün ist.'}</div></div>` : '';
+  return `<div class="sec-h muted small" style="margin:18px 2px 2px">◇ NACH DEM MRT</div>${hp}
     <div class="card mob-ampel"><h3 class="mob-h3">${esc(HIP_AMPEL.title)}</h3>${ul(HIP_AMPEL.items)}</div>
     <div class="card mob-alltag"><h3 class="mob-h3">${esc(HIP_ALLTAG.title)}</h3>${ul(HIP_ALLTAG.items)}</div>
     <div class="card mob-mrt"><h3 class="mob-h3">${esc(HIP_MRT_Q.title)}</h3>${ul(HIP_MRT_Q.items)}</div>`;
@@ -399,7 +405,48 @@ const HIP2 = [
     err: ['Knie wandert über die Zehen oder nach innen', 'Zu tief beugen', 'Oberkörper kippt nach vorn'] }
 ];
 
-const ALL = [...EX, ...ROT, ...EVE, ...FAS, ...RET, ...MRET, ...HIP];
+
+/* ---------- v2.1.0: Hüft-Tab nach MRT-Befund (24.11.2026) ----------
+   Befund: Cam-Form beidseitig (ohne Labrumriss/Knorpelschaden), Ödem Gluteus maximus bds. + Sehnenanteile Rectus femoris/Iliopsoas bds., links stärker.
+   Morgen ab 26.11., Abend + Faszien ab 25.11. fester Plan (kein Wechsel). Alte Übungen bleiben in ALL → Verlauf/Serien/Export alter Tage unverändert. */
+const MV21 = [
+  { id: 'bridgehold', v21: 1, img: 'bridge', n: 'Brücke halten (isometrisch)', sub: 'Gesäß halten statt zerren · Schutzphase Hüfte', dose: '3×30–45 s halten, 30 s Pause', t: 'time', sets: 3, secs: 30, pause: 30,
+    steps: ['Rückenlage, Knie gebeugt, Füße hüftbreit flach am Boden, Fersen ca. eine Handbreit vor dem Gesäß. Arme neben dem Körper.', 'Bauch leicht anspannen, Becken leicht nach hinten kippen (unterer Rücken flach).', 'Über die Fersen das Becken heben – nur bis Schulter, Hüfte und Knie eine gerade Linie bilden.', 'Gesäß fest anspannen und halten (Timer 30 s), ruhig weiteratmen. Langsam absenken, 30 s Pause. 3 Runden. Wird es leicht: 45 s.'],
+    cues: ['Warum: Halteübungen beruhigen gereizte Muskeln und Sehnen (laut MRT Gesäß beidseitig) und halten trotzdem die Kraft', 'Nur bis zur geraden Linie – nicht überstrecken, kein Hohlkreuz', 'Druck über die Fersen, Knie zeigen nach vorn', 'Spannung im Gesäß, nicht im unteren Rücken oder in der Leiste', 'Schmerz höchstens 3/10, Krampf in der Beinrückseite: Füße näher ans Gesäß'],
+    err: ['Becken zu hoch drücken → Hohlkreuz', 'Luft anhalten', 'Knie fallen nach innen oder außen', 'Becken sinkt während des Haltens langsam ab'] },
+  { id: 'abductm', v21: 1, img: 'abduct', n: 'Seitlage-Abduktion (langsam)', sub: 'Äußere Hüfte (Gluteus medius) · links zuerst', dose: '2×10–12 pro Seite, 2 s oben halten, links zuerst', t: 'reps', sets: 2, reps: 12, ps: true,
+    steps: ['Seitlage auf der rechten Seite (links arbeitet zuerst), unteres Bein leicht gebeugt, Kopf auf dem Arm.', 'Oberes Bein gestreckt in Verlängerung des Körpers, Becken leicht nach vorn gekippt – nicht nach hinten aufdrehen.', 'Bein langsam ca. 30–40° anheben (2 s), die Ferse führt, Fußspitze zeigt leicht nach vorn-unten. Oben 2 s halten.', '2–3 s langsam absenken, Bein nicht ablegen. 10–12 Wdh., dann Seite wechseln. 2 Runden.'],
+    cues: ['Warum: Der Gluteus medius hält das Becken stabil und nimmt dem gereizten großen Gesäßmuskel Arbeit ab', 'Langsam – kein Schwung', 'Bein bleibt in Linie oder minimal hinter dem Körper, nicht nach vorn ziehen', 'Becken bleibt ruhig, oberer Hüftknochen zeigt nach vorn', 'Brennen außen an der Hüfte ist gewollt; Ziehen in der Leiste: weniger hoch heben'],
+    err: ['Fuß nach oben drehen (dann arbeitet der Hüftbeuger)', 'Bein nach vorn führen', 'Becken kippt nach hinten', 'Zu hoch heben'] },
+  { id: 'slbalm', v21: 1, img: 'slbalance', n: 'Einbeinstand an der Wand', sub: 'Hüftstabilität · Standbein · links zuerst', dose: '2×30 s pro Seite, links zuerst', t: 'time', sets: 2, secs: 30, ps: true, pause: 10,
+    steps: ['Seitlich neben eine Wand stellen, die wandnahe Hand locker an der Wand – nur zur Sicherheit, nicht abstützen.', 'Gewicht auf das wandferne Bein (zuerst links), Standbein-Knie leicht gebeugt, Gesäß leicht anspannen.', 'Das wandnahe Bein anheben, Knie ca. 45° gebeugt. Becken bleibt waagerecht.', '30 s halten (Timer), dann umdrehen und Seite wechseln. 2 Runden.'],
+    cues: ['Warum: Das Standbein muss das Becken waagerecht halten – das trainiert die seitliche Hüfte ganz ohne Gewicht und entlastet beim langen Stehen', 'Becken nicht zur Seite absacken lassen', 'Standbein-Knie in der Beinachse, nicht nach innen', 'Oberkörper aufrecht, nicht zur Wand lehnen', 'Wird es leicht: Augen kurz schließen'],
+    err: ['Hüfte des Standbeins schiebt seitlich raus', 'Knie durchgedrückt', 'Mit der Hand an der Wand abstützen'] }
+];
+const AV21 = [
+  { id: 'wallsitiso', v21: 1, eve: 1, img: 'wallsit', n: 'Wandsitzen wenig tief (isometrisch)', sub: 'Abend · vorderer Oberschenkel halten statt zerren', dose: '3×30 s, Knie 45–60°, 30 s Pause', t: 'time', sets: 3, secs: 30, pause: 30,
+    steps: ['Rücken an eine glatte Wand lehnen, Füße hüftbreit und ca. eine Fußlänge vor der Wand.', 'Mit aufrechtem Oberkörper an der Wand nach unten rutschen, bis die Knie ca. 45–60° gebeugt sind – die Oberschenkel bleiben deutlich über waagerecht.', '30 s halten (Timer), ruhig atmen.', 'Wieder hochdrücken, 30 s Pause. 3 Runden.'],
+    cues: ['Warum: Halten kräftigt den vorderen Oberschenkel (Rectus femoris), ohne ihn zu zerren – und die Hüfte bleibt klar unter 90° Beugung', 'Wenig tief – keine Hocke', 'Knie über den Fußspitzen, nicht nach innen', 'Rücken und Becken bleiben an der Wand', 'Schmerz höchstens 3/10'],
+    err: ['Zu tief rutschen', 'Knie wandern über die Zehen oder nach innen', 'Luft anhalten'] },
+  { id: 'hipflexiso', v21: 1, eve: 1, n: 'Hüftbeuger-Halten im Sitzen (isometrisch, sehr leicht)', sub: 'Abend · Hüftbeuger sanft aktivieren statt dehnen', dose: '5×10 s pro Seite, sehr leicht, links zuerst', t: 'time', sets: 5, secs: 10, ps: true, pause: 10,
+    steps: ['Aufrecht auf einen Stuhl setzen (Vorderkante), Füße hüftbreit flach am Boden, Knie ca. 90°, Hände locker auf den Oberschenkeln.', 'Becken aufrichten, Oberkörper lang – nicht nach hinten lehnen.', 'Das linke Knie nur 2–3 cm anheben, sodass der Fuß knapp über dem Boden schwebt. 10 s halten, ruhig atmen.', 'Absetzen, dann rechts. 5 Runden pro Seite (Timer wechselt automatisch).'],
+    cues: ['Warum: Laut MRT ist der Hüftbeuger gereizt. Sehr leichte Halte-Spannung fördert die Heilung und senkt die Spannung – Dehnen würde ihn jetzt eher reizen', 'Sehr leicht: Anstrengung höchstens 2–3/10', 'Nur 2–3 cm – nicht das Knie zur Brust ziehen', 'Oberkörper bleibt aufrecht, nicht nach hinten kippen', 'Ziehen oder Stechen in der Leiste: kleiner werden oder heute weglassen'],
+    err: ['Knie hoch Richtung Brust ziehen', 'Nach hinten lehnen', 'Mit den Händen mithelfen', 'Luft anhalten'] },
+  { id: 'atm9090', v21: 1, eve: 1, n: '90/90-Atmung mit Füßen an der Wand', sub: 'Abend · Becken neutral, Spannung abbauen', dose: '2 Min · ca. 8 lange Atemzüge', t: 'time', sets: 1, secs: 120,
+    steps: ['Rückenlage vor einer Wand, Hüfte und Knie ca. 90° gebeugt, die Füße flach an der Wand. Arme neben dem Körper, Kopf liegt ab.', 'Fersen sanft nach unten in die Wand drücken, bis die Beinrückseite leicht arbeitet – der untere Rücken wird flach, das Becken kippt leicht nach hinten.', 'Durch die Nase 4 s einatmen (Bauch und Flanken weiten sich), dann durch den Mund lang 6–8 s ausatmen: die Rippen sinken nach unten, der Bauch wird leicht fest.', '2 Minuten (Timer), ca. 8 Atemzüge. Danach Beine ablegen.'],
+    cues: ['Warum: Bringt das Becken in eine neutrale Lage und senkt die Grundspannung von Hüftbeuger und unterem Rücken – ruhiger Abschluss vor dem Schlafen', 'Lange Ausatmung, nicht pressen', 'Fersen leicht in die Wand ziehen, Gesäß bleibt am Boden', 'Schultern und Nacken locker'],
+    err: ['Ins Hohlkreuz atmen', 'Gesäß hebt ab', 'Kurz und hektisch atmen'] }
+];
+const V21 = { from: { m: '2026-11-26', a: '2026-11-25', f: '2026-11-25' },
+  m: ['warmwalk', 'catcow', 'hipflex', 'bridge', 'bridgehold', 'birddog', 'deadbug', 'sideplank', 'abductm', 'slbalm'],
+  a: ['wallsitiso', 'hipflexiso', 'beckenreset', 'psoasreset', 'rumpfrot', 'fig4', 'halbfrosch', 'kniefersenrock', 'atm9090'],
+  f: ['froll_g', 'ballpir', 'froll_t', 'shakti'],
+  mins: { m: 'ca. 15 Min', a: 'ca. 15–20 Min', f: 'ca. 15 Min' },
+  out: { m: '90/90 Hüftrotation, Hamstring-Floss, World\'s Greatest Stretch und Bein über die Rolle sind raus (Endrange/Rotation) – dafür Brücke halten, Seitlage-Abduktion und Einbeinstand.',
+    a: 'Raus nach Befund: Couch-Stretch, Hüftbeuger-Dehnung im Stehen, Taube, Türrahmen, Schildkröte, alle Rollen-Hüftrotationen, Hüft-Rotation und Diagonalschritt an der Wand (tiefe Beugung mit Innenrotation/Adduktion oder aggressive Dehnung).',
+    f: 'Duoball LWS ist raus – kein hartes Triggerpunkt-Drücken in der Schutzphase.' } };
+const v21On = (b, key) => !!(V21[b] && key >= V21.from[b]);
+const ALL = [...EX, ...ROT, ...EVE, ...FAS, ...RET, ...MRET, ...HIP, ...MV21, ...AV21];
 const byId = id => ALL.find(e => e.id === id);
 const im = ex => ex.img || ex.id;
 
@@ -409,17 +456,17 @@ const im = ex => ex.img || ex.id;
 // v1.8.6: Morgen k=1 – 9 Kern-Übungen + 1 im Wechsel (World's Greatest Stretch / Bein über die Rolle), damit die Routine kurz bleibt
 const BLK = { m: { pool: EX, k: 1 }, w: { pool: ROT, k: 3 }, a: { pool: EVE, k: 3 }, f: { pool: FAS, k: 3 }, h: { pool: HIP, k: 9 } };
 // v1.8.6: Logik in MOBCORE.planIds (getestet) – pausierte Übungen (Hexenschuss bis 17.11.) fallen raus, zählen nicht im Zähler
-function lineup(b, key) { if (b === 'h' && !MOBCORE.hipOpen(key)) return []; const B = BLK[b]; return MOBCORE.planIds(B.pool, B.k, key).map(byId); }
-const pausedNow = b => (b === 'a' ? [...BLK[b].pool, ...RET] : BLK[b].pool).filter(e => MOBCORE.pauseInfo(e.id, tk()));
-const pauseNote = b => { const p = pausedNow(b); return p.length ? `<div class="mob-pause muted small">⏸ ${p.map(e => esc(e.n)).join(', ')} – ${esc(MOBCORE.pauseInfo(p[0].id, tk()).label)}</div>` : ''; };
-const isRotToday = (e, b) => b !== 'w' && !e.core;
-const blockOf = e => e.hip ? 'h' : e.eve ? 'a' : e.fas ? 'f' : e.rot ? 'w' : (EX.includes(e) || MRET.includes(e)) ? 'm' : null;
+function lineup(b, key) { if (b === 'h' && !MOBCORE.hipOpen(key)) return []; if (v21On(b, key)) return V21[b].filter(id => !MOBCORE.pauseInfo(id, key)).map(byId); const B = BLK[b]; return MOBCORE.planIds(B.pool, B.k, key).map(byId); }
+const pausedNow = b => v21On(b, tk()) ? [] : (b === 'a' ? [...BLK[b].pool, ...RET] : BLK[b].pool).filter(e => MOBCORE.pauseInfo(e.id, tk()));
+const pauseNote = b => { if (v21On(b, tk())) return `<div class="mob-pause muted small">🛡 ${esc(V21.out[b])}</div>`; const p = pausedNow(b); return p.length ? `<div class="mob-pause muted small">⏸ ${p.map(e => esc(e.n)).join(', ')} – ${esc(MOBCORE.pauseInfo(p[0].id, tk()).label)}</div>` : ''; };
+const isRotToday = (e, b) => b !== 'w' && !e.core && !v21On(b, tk());
+const blockOf = e => e.hip ? 'h' : e.eve ? 'a' : e.fas ? 'f' : e.rot ? 'w' : (EX.includes(e) || MRET.includes(e) || MV21.includes(e)) ? 'm' : null;
 // heutige Liste eines Blocks: Tages-Lineup + heute bereits Abgehaktes (z. B. vor dem Update), damit nichts verschwindet
-function todayList(b, d) { const lu = lineup(b, tk()); return lu.concat([...BLK[b].pool, ...(b === 'm' ? MRET : [])].filter(e => !lu.includes(e) && d.today.done[e.id])); }
+function todayList(b, d) { const lu = lineup(b, tk()); return lu.concat([...BLK[b].pool, ...(b === 'm' ? [...MRET, ...MV21] : b === 'a' ? AV21 : [])].filter(e => !lu.includes(e) && d.today.done[e.id])); }
 
 /* ---------- v1.7.26: optionale Zusatzübungen (Morgen/Abend) ----------
    Extras liegen in d.today.extra.{m|a}; zählen NICHT zum Block-Zähler, werden aber geloggt. */
-const extraPool = b => (b === 'm' ? [...EX, ...ROT] : b === 'a' ? [...EVE, ...RET] : []).filter(e => !MOBCORE.pauseInfo(e.id, tk()));
+const extraPool = b => (b === 'm' ? [...EX, ...ROT, ...MV21] : b === 'a' ? [...EVE, ...RET, ...AV21] : []).filter(e => !MOBCORE.pauseInfo(e.id, tk()));
 function extrasOf(b, d) { const ids = (d.today.extra && d.today.extra[b]) || []; return ids.map(byId).filter(Boolean); }
 function blockList(b, d) {
   const base = todayList(b, d); const seen = new Set(base.map(e => e.id));
@@ -531,7 +578,7 @@ function viewList() {
   const eDone = lineup('a', tk()).filter(e => d.today.done[e.id]).length;
   const fDone = FT.filter(e => d.today.done[e.id]).length;
   const hDone = lineup('h', tk()).filter(e => d.today.done[e.id]).length;
-  const nCore = b => BLK[b].pool.filter(e => e.core && !MOBCORE.pauseInfo(e.id, tk())).length;
+  const nCore = b => v21On(b, tk()) ? lineup(b, tk()).length : BLK[b].pool.filter(e => e.core && !MOBCORE.pauseInfo(e.id, tk())).length;
   const st = (n, tot) => n >= tot ? '<span class="mob-st ok">✓ heute erledigt</span>' : n ? `<span class="mob-st part">${n}/${tot} · läuft</span>` : '<span class="mob-st">noch offen</span>';
   const hist = [...d.history].reverse().slice(0, 8).map(h => `<div class="mob-h"><span>${WD[fromKey(h.date).getDay()]} ${dateDE(h.date)}</span><span class="muted small">${h.note ? '📝 ' : ''}${h.done.filter(x => EX.some(e => e.id === x) || MRET.some(e => e.id === x)).length}/${planOf(h, 'm').length} Übungen${h.done.some(x => ROT.some(e => e.id === x)) ? ' · 🔄 Abwechslung' : ''}${h.done.some(x => [...EVE, ...RET].some(e => e.id === x)) ? ' · ☾ Abend' : ''}${h.done.some(x => FAS.some(e => e.id === x)) ? ' · ◎ Faszien' : ''}${h.done.some(x => HIP.some(e => e.id === x)) ? ' · ◇ HipFit' : ''}</span><button class="btn btn-ghost btn-sm" style="width:auto;padding:4px 10px;margin-left:6px" data-act="mobExp" data-date="${h.date}">Exportieren</button></div>`).join('') || '<div class="muted small">Noch keine Einheit – heute ist ein guter Tag zum Starten 🙂</div>';
   return {
@@ -541,23 +588,24 @@ function viewList() {
       <div class="card"><div class="mob-big">${s.total}</div><div class="muted small">Einheiten gesamt</div></div>
       <div class="card"><div class="mob-big">${s.week}</div><div class="muted small">diese Woche</div></div>
     </div>
-    <div class="card mob-note">⚠️ <b>Morgens kein langes Vorbeugen</b> (Bandscheibe), <b>kein tiefes Hohlkreuz</b>. <b>Bis zum MRT nicht:</b> Vorbeugen mit überkreuzten Beinen und ähnliches tiefes Vorbeugen im Stand. Nichts erzwingen – <b>schmerzfrei bleiben</b>. Bei <b>Kribbeln, Ausstrahlung ins Bein oder einschießendem Schmerz</b> die Übung weglassen.</div>
+    <div class="card mob-note">⚠️ <b>Morgens kein langes Vorbeugen</b> (Bandscheibe), <b>kein tiefes Hohlkreuz</b>. <b>Vorerst nicht:</b> Vorbeugen mit überkreuzten Beinen und ähnliches tiefes Vorbeugen im Stand. Nichts erzwingen – <b>schmerzfrei bleiben</b>. Bei <b>Kribbeln, Ausstrahlung ins Bein oder einschießendem Schmerz</b> die Übung weglassen.</div>
+    ${typeof hpPhase === 'function' && hpPhase() ? `<div class="card hp-card"><div class="hp-t">🛡 ${hpPhase() === 'schutz' ? 'Schutzphase Hüfte · 26.11.–09.12.2026' : 'Aufbau nach der Schutzphase Hüfte'}</div><div class="small">Nach dem MRT: Gesäß, Hüftbeuger und vorderer Oberschenkel sind gereizt (links mehr), das Gelenk ist ohne größere Schäden. Darum: aktivieren und halten statt dehnen, nichts ins Endgefühl, keine tiefe Beugung mit Innenrotation/Adduktion. ${hpPhase() === 'schutz' ? 'Ab 10.12. im Training ca. +10 % pro Woche steigern.' : 'Im Training ca. +10 % pro Woche steigern, solange die Ampel grün ist.'}</div><div class="hp-t2">Schmerz-Ampel</div><ul class="hp-ul">${HP_AMPEL.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>` : ''}
     <div class="mob-prog"><div style="width:${mPlan ? (nDone / mPlan * 100) : 0}%"></div></div>
     <div class="card mob-today"><b>Heute</b> · ${s.todayDone ? '<span class="mob-st ok">✓ Einheit abgeschlossen</span>' : '<span class="mob-st">Einheit noch offen</span>'}
       <div class="mob-tl"><span>☀️ Morgen-Routine</span>${st(nDone, mPlan)}</div><div class="mob-tl"><span>🔄 Abwechslung</span>${st(rDone, RT.length)}</div><div class="mob-tl"><span>☾ Abend</span>${st(eDone, aPlan)}</div>${hipOn ? `<div class="mob-tl"><span>◇ Hüft-Reha (HipFit)</span>${hDone >= hPlan && hPlan ? '<span class="mob-st ok">✓ heute erledigt</span>' : hDone ? `<span class="mob-st part">${hDone}/${hPlan} · läuft</span>` : `<span class="mob-st">${hWeek}/${MOBCORE.HIP_TARGET} diese Woche</span>`}</div>` : ''}<div class="mob-tl"><span>◎ Faszien</span>${st(fDone, FT.length)}</div></div>
-    <div class="sec-h muted small" style="margin:10px 2px 2px">☀️ MORGEN-ROUTINE · ${nDone}/${mPlan} erledigt</div><div class="mob-when">Morgens nach dem Aufstehen · ${nCore('m')} täglich + ${mPlan - nCore('m')} im Wechsel</div>
+    <div class="sec-h muted small" style="margin:10px 2px 2px">☀️ MORGEN-ROUTINE · ${nDone}/${mPlan} erledigt</div><div class="mob-when">Morgens nach dem Aufstehen · ${v21On('m', tk()) ? `${mPlan} Übungen täglich · ${V21.mins.m} · Durchblutung & Aktivierung ohne Endrange` : `${nCore('m')} täglich + ${mPlan - nCore('m')} im Wechsel`}</div>
     ${MT.map((e, i) => row(e, d, i + 1, 'm')).join('')}${pauseNote('m')}
     <button class="btn btn-outline-gold btn-sm" data-act="mobExtra" data-b="m" style="margin:4px 0 8px">＋ Zusatzübung</button>
     <div class="sec-h muted small" style="margin:18px 2px 2px">🔄 ABWECHSLUNG · ${rDone}/${RT.length} erledigt</div><div class="mob-when">Heute (${WD[new Date().getDay()]}) · täglich 3 andere – in ${Math.ceil(ROT.length / 3)} Tagen alle ${ROT.length}</div>
     ${RT.map((e, i) => row(e, d, i + 1, 'w')).join('')}${pauseNote('w')}
-    <div class="sec-h muted small" style="margin:18px 2px 2px">☾ ABEND (OPTIONAL) · ${eDone}/${aPlan} erledigt</div><div class="mob-when">Abends vor dem Schlafen · ${nCore('a')} täglich + ${aPlan - nCore('a')} im Wechsel</div>
+    <div class="sec-h muted small" style="margin:18px 2px 2px">☾ ABEND (OPTIONAL) · ${eDone}/${aPlan} erledigt</div><div class="mob-when">Abends vor dem Schlafen · ${v21On('a', tk()) ? `${aPlan} Übungen täglich · ${V21.mins.a} · Muskeln entspannen, sanfte Mobilität` : `${nCore('a')} täglich + ${aPlan - nCore('a')} im Wechsel`}</div>
     ${ET.map((e, i) => row(e, d, i + 1, 'a')).join('')}${pauseNote('a')}
     <button class="btn btn-outline-gold btn-sm" data-act="mobExtra" data-b="a" style="margin:4px 0 8px">＋ Zusatzübung</button>
     ${hipAdviceHtml()}
     ${hipOn ? `<div class="sec-h muted small" style="margin:18px 2px 2px">◇ HÜFT-REHA (HIPFIT) · ${hDone}/${hPlan} erledigt · ${hWeek}/${MOBCORE.HIP_TARGET} diese Woche</div><div class="mob-when">Vom Gelenkquartier empfohlen · Ziel ${MOBCORE.HIP_TARGET}× pro Woche, nicht jeden Tag nötig · Start 18.11.2026 · zu jeder Übung gibt es das HipFit-Video</div>
     ${HT.map((e, i) => row(e, d, i + 1, 'h')).join('')}
     <div class="card mob-locked"><div class="muted small"><b>Phase 2</b> – nach MRT und wenn der Rücken ruhig ist, noch nicht aktiv: ${HIP2.map(e => esc(e.n)).join(', ')}.</div></div>` : ''}
-    <div class="sec-h muted small" style="margin:18px 2px 2px">◎ FASZIEN (OPTIONAL)</div><div class="mob-when">Blackroll · Duoball/Bälle · Shakti-Matte – ideal abends · ${nCore('f')} täglich + ${FT.length - nCore('f')} im Wechsel</div>
+    <div class="sec-h muted small" style="margin:18px 2px 2px">◎ FASZIEN (OPTIONAL)</div><div class="mob-when">${v21On('f', tk()) ? `Gesäß lockern (links länger), vorderen Oberschenkel sanft · danach Massagekissen oder Shakti-Matte – ideal abends · ${V21.mins.f}` : `Blackroll · Duoball/Bälle · Shakti-Matte – ideal abends · ${nCore('f')} täglich + ${FT.length - nCore('f')} im Wechsel`}</div>
     ${FT.map((e, i) => row(e, d, i + 1, 'f')).join('')}${pauseNote('f')}
     <div style="height:6px"></div>
     ${s.todayDone ? `<button class="btn btn-outline-gold" data-act="mobFinish">✓ Heute erledigt – Eintrag aktualisieren</button>` : `<button class="btn btn-red" data-act="mobFinish">Einheit abschließen ✓</button>`}

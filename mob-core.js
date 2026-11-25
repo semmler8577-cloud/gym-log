@@ -53,7 +53,7 @@
        Endgrad-Mobilität, Rotation unter Last, tiefe Vorbeuge. v1.9.1 zusätzlich: tuer (überkreuzter Stand),
        turtle, rollbecken, rollschien, rollknie, rollwiper, hipwallstep (Rotation unter Last), duoball, sphinx, sphinxrot, hamwalk.
        fig4/recpig bleiben mit Cue (kein Zug ins Endgefühl). rumpfrot bleibt mit kleinem Weg. */
-    { until: '2027-01-31', why: 'MRT', label: 'pausiert bis nach MRT',
+    { until: '2027-01-31', why: 'MRT', label: 'pausiert bis 31.01.2027 (Hüft-Schutz nach MRT)',
       ids: ['couch', 'pigeon', 'pigeonq', 'wgs', 'n9090', 'kneel', 'hipflexstand', 'halfhero', 'hipwallrot',
             'tuer', 'turtle', 'rollbecken', 'rollschien', 'rollknie', 'rollwiper', 'hipwallstep', 'duoball', 'sphinx', 'sphinxrot', 'hamwalk'] }
   ];

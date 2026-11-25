@@ -508,3 +508,10 @@ body.scan-open #tabs{visibility:hidden}
 .mob-ampel{border-color:rgba(230,140,0,.45);background:rgba(230,140,0,.07)}
 .mob-mrt{border-color:rgba(255,255,255,.12)}
 .mob-alltag .mob-h3,.mob-mrt .mob-h3,.mob-ampel .mob-h3{margin-bottom:6px}
+/* v2.1.0 Schutzphase Hüfte – Carters Vorschlag */
+.hp-card{border-color:rgba(212,175,55,.5);background:rgba(212,175,55,.07);font-size:14px;line-height:1.45}
+.hp-t{font-weight:800;color:#D4AF37;margin-bottom:6px}
+.hp-t2{font-weight:700;margin:10px 0 4px;font-size:13px;letter-spacing:.5px;text-transform:uppercase;color:var(--tx2)}
+.hp-ul{margin:0;padding-left:18px}.hp-ul li{margin:3px 0}
+.hp-line{font-weight:700;font-size:15px;margin-bottom:4px}
+.hp-sug{display:block;color:#D4AF37;font-size:12px;margin-top:2px;line-height:1.35}
