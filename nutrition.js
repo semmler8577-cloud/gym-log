@@ -32,6 +32,8 @@ async function load() {
     for (const f of C.FOODS) if (!fById(f.id)) { const nf = Object.assign(JSON.parse(JSON.stringify(f)), { builtin: true, updated: Date.now() });
       if (nf.id === 'skyr-sauce' && skyr) { nf.portions[0].v = C.skyrSauce(skyr.per100); nf.note += ' Berechnet mit „' + skyr.name + '“ (100 g).'; }
       await put('foods', nf); }
+    // v2.1.1: unveränderte alte Start-Produkte auf Etikettwerte (26.11.2026) aktualisieren – selbst geänderte bleiben
+    for (const f of C.FOODS) { const st = fById(f.id); if (C.needsFix && C.needsFix(st)) await put('foods', Object.assign(JSON.parse(JSON.stringify(f)), { builtin: true, fav: st.fav, barcode: st.barcode || null, updated: Date.now() })); }
     for (const c of C.COMBOS) if (!cById(c.id)) await put('combos', Object.assign(JSON.parse(JSON.stringify(c)), { builtin: true }));
     await setM('seedVersion', C.SEED_VERSION);
   }
