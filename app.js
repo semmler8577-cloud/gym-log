@@ -1,6 +1,6 @@
 /* Voccola Gym Log – Vanilla JS, offline, keine Tracker. Daten bleiben im Browser (IndexedDB). */
 'use strict';
-const APP_VERSION = '2.1.1';
+const APP_VERSION = '2.1.2';
 
 /* ---------- Helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -120,6 +120,7 @@ const FREE_PRESET = [['r-revfly', 'Reverse Butterfly (hintere Schulter)'], ['r-f
   ['x19', 'Knieheben am Beinstrecker'], ['x21', 'Seitbeugen'], ['x20', 'Crunch am Seilzug']];
 /* v1.8.0: Ernährung (nutri-core.js + nutrition.js, eigene IndexedDB vgl-food), Tab „Essen“, Backup inkl. Ernährung + Hüfte */
 /* v1.8.3: hipwallrot/hipwallstep: Texte nach Zac-Video, 4 Schritt-Bilder je Übung (ex.pics); Kombi FRoSTA + Skyr-Sauce + 2 Brötchen (SEED 3) */
+/* v2.1.2: Incline Cable Pullover im Oberkörper-Plan (Rücken, nach Latzug kniend, Migration 20) */
 /* v2.1.1: Ernährung – alle Start-Produkte mit Markus' Etiketten abgeglichen (SEED 4, unveränderte alte Werte werden ersetzt), Standardziel 3000 kcal / 165 P / 405 KH / 80 F */
 /* v1.7.28: hipwallstep anatomical (no photoreal likeness); heel-at-wall clear */
 /* v1.7.27: hipwallrot/hipwallstep images fixed (small knee arrow; wall+flat heel+reach). */
@@ -160,6 +161,10 @@ const INCLINE_ROW = { id: 'r-row-incline-kabel', name: 'Incline Row (Seilzug, Sc
 const LAT_KNEEL = { id: 'r-latzug-kabel-kniend-brustgestuetzt', name: 'Latzug Kabel kniend brustgestützt (Schrägbank, beidseitig von oben)', group: 'Rücken', unit: 'reps', perSide: false, elbow: 'e', target: 12, order: 6.6,
   desc: 'Warum: Die Brust liegt fest an der Lehne – das nimmt den unteren Rücken komplett raus und verhindert Schwung. So arbeitet fast nur der Latissimus. Ideal für dein ISG.\n\nPlan: 1 Aufwärmsatz + 3 Arbeitssätze, 10–15 Wdh., letzter Satz nah ans Muskelversagen. Gesamtgewicht (Kabel). Fokus: Latissimus.\n\nSetup: Beide Kabel ganz oben (obere Rollen) am Doppel-Kabelturm, an jedem Kabel ein einzelner D-Griff. Verstellbare Bank vor/zwischen die Türme stellen, Lehne fast senkrecht (ca. 70–80°). Mit beiden Knien auf die Sitzfläche knien – Schienbeine liegen auf dem Polster, Zehen hängen hinten über die Kante. Oberkörper zur Lehne: Brust fest oben an das Polster, Kopf knapp über der Oberkante. Linke Hand nimmt den Griff von oben links, rechte Hand den Griff von oben rechts. Start: Arme nach oben ausgestreckt in Richtung der oberen Rollen – volle Dehnung im Lat.\n\nAusführung: Schultern nach unten ziehen, dann beide Ellenbogen nach unten und leicht nach hinten seitlich an die Rippen ziehen (Latzug-Bahn). Unten kurz halten (ca. 1 s), dann 2–3 s langsam zurück nach oben bis in die volle Dehnung.\n• Brust bleibt die ganze Zeit an der Lehne\n• Kein Schwung, nicht mit dem Oberkörper reißen\n• Schultern weg von den Ohren\n• Unten kurz pausieren, oben voll strecken und dehnen\n• ISG/unterer Rücken: Hüfte bleibt ruhig auf den Knien, kein Hohlkreuz',
   elbowNote: 'Ellenbogen heilt noch: neutraler Griff (Handflächen zueinander), Griff locker halten – kein Klammergriff. Ziehen über die Ellenbogen, nicht über die Hände. Bei Ziehen am Ellenbogen Gewicht runter.' };
+/* v2.1.2: Incline Cable Pullover (Schrägbank, Kabel von hinten oben) – im Oberkörper-Plan (Rücken), direkt nach dem Latzug kniend (gleiche Station: Schrägbank + obere Rolle). Lat-Isolation mit gestreckten Armen; der stehende „Pullover am Kabel (Seil)“ bleibt als Variante im Katalog */
+const INCLINE_PULLOVER = { id: 'r-pullover-kabel-schraeg', name: 'Incline Cable Pullover (Schrägbank, Kabel von hinten oben)', group: 'Rücken', unit: 'reps', perSide: false, elbow: 'e', target: 12, order: 6.7,
+  desc: 'Warum: Lat-Isolation mit fast gestreckten Armen – der Latissimus arbeitet über den ganzen Weg, ohne dass Bizeps und Griff zuerst müde werden. Gut nach Rudern und Latzug. Mit: großer Rundmuskel (Teres major), langer Trizepskopf, untere Brust/Sägemuskel.\n\nPlan: 3 Sätze × 10–15 Wdh., RPE ca. 8 (1–2 Wdh. Reserve), Pause 60–90 s. Gesamtgewicht (Kabel).\n\nSetup: Gleiche Station wie Incline Row/Latzug kniend – Schrägbank auf ca. 30–45°, mit dem Rücken zum Kabelturm, Kabel an der oberen Rolle hinter/über dem Kopf. Seil oder gerade Stange.\n\nAusführung: Arme fast gestreckt, Bogen bis zur Hüfte, Lat anspannen, 2–3 s zurück in die Dehnung.\n• Ellenbogen leicht gebeugt und fest – der Winkel ändert sich nicht (kein Trizepsdrücken)\n• Schultern unten, Brust raus, unten kurz den Lat anspannen\n• Oben nur so weit zurück, wie die Schulter ruhig bleibt\n• Hüfte (Schutzphase): Sitzposition aufrecht, Hüfte nicht tief gebeugt – Füße fest am Boden, nicht nach vorn rutschen, kein Hohlkreuz',
+  elbowNote: 'Ellenbogen: Seil mit neutralem Griff, locker halten – kein Klammergriff. Der Zug kommt aus dem Lat, nicht aus den Unterarmen. Zieht es am Ellenbogen: Gewicht runter.' };
 /* v1.9.7: Bizeps-Curl Kabel brustgestützt (Schrägbank, Gesicht zum Kabel) – sichtbar im Oberkörper-Plan (Arme/Bizeps), nach „Bizeps Kabel stehend (Arme ausgestreckt)“, Bild a-bizeps-kabel-brustgestuetzt.webp; bestehende Übungen/Reihenfolge/Sätze unverändert */
 const CHEST_CURL = { id: 'a-bizeps-kabel-brustgestuetzt', name: 'Bizeps-Curl Kabel brustgestützt (Schrägbank, Gesicht zum Kabel)', group: 'Arme', sub: 'Bizeps', unit: 'reps', perSide: false, target: 12, order: 14.5,
   desc: 'Warum: Trainiert den Bizeps in erhöhter Armposition (kurze Muskellänge, starke Spitzenkontraktion). Der Oberkörper ist gestützt – kein Mogeln, der Rücken bleibt entlastet.\n\nPlan: 2 Aufwärmsätze + 2 Arbeitssätze, 10–15 Wdh., letzter Satz nah ans Muskelversagen. Gesamtgewicht (Kabel). Fokus: Bizeps.\n\nSetup: Kabel oben – Rolle knapp über Kopfhöhe im Sitzen. Kurze gerade Stange einhängen. Verstellbare Bank steil auf ca. 70–75° stellen und mit dem Gesicht zum Kabelturm setzen: Brust fest an die Lehne, Oberkante der Lehne etwa auf Achsel- bzw. oberer Brusthöhe. Stange im Untergriff schulterbreit fassen. Ellenbogen stehen vor dem Körper, erhöht und schräg nach oben Richtung Rolle – frei in der Luft, nicht aufgestützt, und bleiben dort fixiert. Start: Arme fast gestreckt, in der Kabellinie, unten nicht ganz durchdrücken.\n\nAusführung: Beidarmig curlen, bis die Stange Richtung Stirn kommt. Oben kurz anspannen (hoch ca. 1 s), dann 1,5–2 s langsam zurück.\n• Ellenbogen bleiben fixiert – nicht nach unten oder vorne wandern\n• Brust bleibt fest an der Lehne\n• Kein Schwung\n• Arme unten nicht komplett durchdrücken',
@@ -462,6 +467,11 @@ async function loadAll() {
     // v2.1.0: Nur ergänzen – Schutzphasen-Übungen (Carters Vorschlag) sichtbar im Beintag. Bestehende Übungen/Sätze bleiben unverändert
     for (const e of HP_EX) if (!exById(e.id) && !S.exercises.some(x => x.name === e.name)) await save('exercises', { ...e, photo: null });
     await setMeta('catalogVersion', 19);
+  }
+  if ((S.meta.catalogVersion || 0) < 20) {
+    // v2.1.2: Nur ergänzen – Incline Cable Pullover sichtbar im Oberkörper-Plan (Rücken) nach dem Latzug kniend. Bestehende Übungen/Sätze/Reihenfolge bleiben unverändert
+    if (!exById(INCLINE_PULLOVER.id) && !S.exercises.some(x => x.name === INCLINE_PULLOVER.name)) await save('exercises', { ...INCLINE_PULLOVER, photo: null });
+    await setMeta('catalogVersion', 20);
   }
 }
 
